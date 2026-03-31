@@ -1,1 +1,38 @@
 # etl_osm
+
+### 🛠 Development Setup
+This project uses a Python virtual environment to manage dependencies. Follow these steps to get your local environment running.
+#### 1. Initialize the Virtual Environment
+Create a new environment folder named .venv in the root directory:
+```Bash
+python -m venv .venv
+```
+#### 2. Activate the Environment
+You must activate the environment every time you open a new terminal session.
+- Windows (Command Prompt):
+```DOS
+.venv\Scripts\activate
+```
+- Windows (PowerShell):
+```PowerShell
+.\.venv\Scripts\Activate.ps1
+```
+- macOS / Linux:
+```Bashsource 
+.venv/bin/activate
+```
+#### 3. Install Dependencies
+Once activated |  install the required packages defined in `requirements.txt`:
+```Bash
+pip install -r requirements.txt
+```
+##### 💡 Useful `venv` Commands
+
+|Action | Command | Description |
+|---|---|---|
+Deactivate | `deactivate` | Exit the virtual environment and return to global Python.
+Check Packages | `pip list` | See all libraries currently installed in the environment.
+Export Deps | `pip freeze > requirements.txt` | Save your current environment state to the requirements file.
+Check Version | `python --version` | Confirms you are using the correct Python executable.
+
+**Note**: Do not commit the `.venv` folder to GitHub. Ensure `.venv/` is added to your `.gitignore` file.

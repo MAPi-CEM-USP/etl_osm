@@ -17,7 +17,7 @@
             <meta name="viewport" content="width=device-width,
                 initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
             <style>
-                #map_57882a7414db773c644b752a43fda6dd {
+                #map_728b7fb9ab3ce690e065d69639e23f10 {
                     position: relative;
                     width: 100.0%;
                     height: 100.0%;
@@ -54,21 +54,68 @@
 <body>
     
     
-    <div style="position: fixed; 
-         bottom: 50px; right: 50px; width: 250px; height: auto; 
+    <div id="custom-legend" style="position: fixed; 
+         bottom: 50px; right: 50px; width: 280px; height: auto; 
          background-color: white; border:2px solid grey; z-index:9999; font-size:14px;
-         padding: 10px; border-radius: 5px;">
-         <p style="margin: 0 0 10px 0; font-weight: bold; font-size: 16px;">Legend</p>
-    <p style="margin: 5px 0;"><i style="background:#1f77b4; width: 18px; height: 18px; float: left; margin-right: 8px; border-radius: 50%; border: 1px solid #555;"></i><span>allotments</span></p></div>
+         padding: 10px; border-radius: 5px; max-height: 70vh; overflow-y: auto;">
+         <p style="margin: 0 0 15px 0; font-weight: bold; font-size: 16px;">Legend</p>
+         <div id="legend-items"></div>
+    </div>
     
-            <div class="folium-map" id="map_57882a7414db773c644b752a43fda6dd" ></div>
+    
+    <script>
+    // Usa um intervalo para verificar se o mapa já terminou de ser renderizado pelo Folium
+    var checkExist = setInterval(function() {
+        var myMap = window["map_728b7fb9ab3ce690e065d69639e23f10"];
+        
+        // Se o mapa ainda não existe, não faz nada e tenta novamente em 100ms
+        if (!myMap) return;
+        
+        // Se o mapa foi encontrado, paramos de checar e montamos a legenda!
+        clearInterval(checkExist);
+        
+        var tagNames = ["allotments"];
+        var colorMap = {"allotments": "#1f77b4"};
+        var fgVars = {"allotments": "feature_group_116761622a628620d874394597a6a073"}; // <-- O segredo mágico que liga o Python ao JS
+        
+        var legendItems = document.getElementById('legend-items');
+        
+        tagNames.forEach(function(tag, index) {
+            var color = colorMap[tag];
+            var item = document.createElement('div');
+            item.style.margin = '8px 0';
+            item.style.display = 'flex';
+            item.style.alignItems = 'center';
+            item.innerHTML = '<input type="checkbox" id="checkbox_' + index + '" checked style="margin-right: 8px; cursor: pointer; width: 16px; height: 16px;">' +
+                             '<i style="background:' + color + '; width: 18px; height: 18px; display: inline-block; margin-right: 8px; border-radius: 50%; border: 1px solid #555;"></i>' +
+                             '<label for="checkbox_' + index + '" style="margin: 0; cursor: pointer; user-select: none; flex-grow: 1;">' + tag + '</label>';
+            legendItems.appendChild(item);
+            
+            // Controle dos Checkboxes
+            var checkbox = document.getElementById('checkbox_' + index);
+            checkbox.addEventListener('change', function() {
+                var layer = window[fgVars[tag]]; // Busca a camada exata pelo nome interno gerado
+                if (layer) {
+                    if (checkbox.checked) {
+                        myMap.addLayer(layer);
+                    } else {
+                        myMap.removeLayer(layer);
+                    }
+                }
+            });
+        });
+    }, 100);
+    </script>
+    
+    
+            <div class="folium-map" id="map_728b7fb9ab3ce690e065d69639e23f10" ></div>
         
 </body>
 <script>
     
     
-            var map_57882a7414db773c644b752a43fda6dd = L.map(
-                "map_57882a7414db773c644b752a43fda6dd",
+            var map_728b7fb9ab3ce690e065d69639e23f10 = L.map(
+                "map_728b7fb9ab3ce690e065d69639e23f10",
                 {
                     center: [-23.650080199720747, -46.648096605284884],
                     crs: L.CRS.EPSG3857,
@@ -85,7 +132,7 @@
 
         
     
-            var tile_layer_443ccdb88c551c7eae851cae66395177 = L.tileLayer(
+            var tile_layer_7a1c6aaac26d5f7d5c68f34208e7c8d7 = L.tileLayer(
                 "https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png",
                 {
   "minZoom": 0,
@@ -102,214 +149,223 @@
             );
         
     
-            tile_layer_443ccdb88c551c7eae851cae66395177.addTo(map_57882a7414db773c644b752a43fda6dd);
+            tile_layer_7a1c6aaac26d5f7d5c68f34208e7c8d7.addTo(map_728b7fb9ab3ce690e065d69639e23f10);
         
     
-            var circle_marker_e8e26dfc1626b5e0a58c1bb1ed52b287 = L.circleMarker(
+            var feature_group_116761622a628620d874394597a6a073 = L.featureGroup(
+                {
+}
+            );
+        
+    
+            var circle_marker_430a67246bbebcb6c1d0250653911dfc = L.circleMarker(
                 [-23.756259540024697, -46.705468427204515],
                 {"bubblingMouseEvents": true, "color": "#1f77b4", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#1f77b4", "fillOpacity": 0.7, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 4, "stroke": true, "weight": 3}
-            ).addTo(map_57882a7414db773c644b752a43fda6dd);
+            ).addTo(feature_group_116761622a628620d874394597a6a073);
         
     
-        var popup_27a0bfd82f0228a3341c000f3fa41568 = L.popup({
+        var popup_8278e92d4fd49782b1ccf932a60bf340 = L.popup({
   "maxWidth": 300,
 });
 
         
             
-                var html_a0e69ba0639db01f0fc8740e7fd3a44c = $(`<div id="html_a0e69ba0639db01f0fc8740e7fd3a44c" style="width: 100.0%; height: 100.0%;"><div style='font-family: Arial; font-size: 12px; width: 250px;'><b>OSM Feature Details</b><br><hr><b>Geometry Type:</b> Point<br><b>landuse:</b> allotments<br><b>name:</b> nan<br></div></div>`)[0];
-                popup_27a0bfd82f0228a3341c000f3fa41568.setContent(html_a0e69ba0639db01f0fc8740e7fd3a44c);
+                var html_562e8aa0ea6f988d1f9a697cab9ea138 = $(`<div id="html_562e8aa0ea6f988d1f9a697cab9ea138" style="width: 100.0%; height: 100.0%;"><div style='font-family: Arial; font-size: 12px; width: 250px;'><b>OSM Feature Details</b><br><hr><b>Geometry Type:</b> Point<br><b>landuse:</b> allotments<br><b>name:</b> nan<br></div></div>`)[0];
+                popup_8278e92d4fd49782b1ccf932a60bf340.setContent(html_562e8aa0ea6f988d1f9a697cab9ea138);
             
         
 
-        circle_marker_e8e26dfc1626b5e0a58c1bb1ed52b287.bindPopup(popup_27a0bfd82f0228a3341c000f3fa41568)
+        circle_marker_430a67246bbebcb6c1d0250653911dfc.bindPopup(popup_8278e92d4fd49782b1ccf932a60bf340)
         ;
 
         
     
     
-            var circle_marker_0b1f28811cb30a44880761e399855c41 = L.circleMarker(
+            var circle_marker_9e4cc296ed2641138f189f06eb3f6e66 = L.circleMarker(
                 [-23.71151156431734, -46.778832540877374],
                 {"bubblingMouseEvents": true, "color": "#1f77b4", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#1f77b4", "fillOpacity": 0.7, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 4, "stroke": true, "weight": 3}
-            ).addTo(map_57882a7414db773c644b752a43fda6dd);
+            ).addTo(feature_group_116761622a628620d874394597a6a073);
         
     
-        var popup_66cd8f5d5343c64329b3bf9ec48fdb5e = L.popup({
+        var popup_d2642c73758bec68120d8e0331a2af36 = L.popup({
   "maxWidth": 300,
 });
 
         
             
-                var html_745cd5c2c9a8ab5db913b206d3ecaf77 = $(`<div id="html_745cd5c2c9a8ab5db913b206d3ecaf77" style="width: 100.0%; height: 100.0%;"><div style='font-family: Arial; font-size: 12px; width: 250px;'><b>OSM Feature Details</b><br><hr><b>Geometry Type:</b> Point<br><b>landuse:</b> allotments<br><b>name:</b> nan<br></div></div>`)[0];
-                popup_66cd8f5d5343c64329b3bf9ec48fdb5e.setContent(html_745cd5c2c9a8ab5db913b206d3ecaf77);
+                var html_cdc6adacc1af50f345e9bf906b1ceda3 = $(`<div id="html_cdc6adacc1af50f345e9bf906b1ceda3" style="width: 100.0%; height: 100.0%;"><div style='font-family: Arial; font-size: 12px; width: 250px;'><b>OSM Feature Details</b><br><hr><b>Geometry Type:</b> Point<br><b>landuse:</b> allotments<br><b>name:</b> nan<br></div></div>`)[0];
+                popup_d2642c73758bec68120d8e0331a2af36.setContent(html_cdc6adacc1af50f345e9bf906b1ceda3);
             
         
 
-        circle_marker_0b1f28811cb30a44880761e399855c41.bindPopup(popup_66cd8f5d5343c64329b3bf9ec48fdb5e)
+        circle_marker_9e4cc296ed2641138f189f06eb3f6e66.bindPopup(popup_d2642c73758bec68120d8e0331a2af36)
         ;
 
         
     
     
-            var circle_marker_fb3456a59768438e9883cbb7eeca728f = L.circleMarker(
+            var circle_marker_891e1e5a187b97b181282ad6bcf087f9 = L.circleMarker(
                 [-23.54956974954999, -46.755900537366266],
                 {"bubblingMouseEvents": true, "color": "#1f77b4", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#1f77b4", "fillOpacity": 0.7, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 4, "stroke": true, "weight": 3}
-            ).addTo(map_57882a7414db773c644b752a43fda6dd);
+            ).addTo(feature_group_116761622a628620d874394597a6a073);
         
     
-        var popup_7ff41325d9ac5479171b5d3aa4044860 = L.popup({
+        var popup_b6391a4740df5d9949f9906a45f6d7a3 = L.popup({
   "maxWidth": 300,
 });
 
         
             
-                var html_bc241f23379a0b8d5a5d2f76810d98c6 = $(`<div id="html_bc241f23379a0b8d5a5d2f76810d98c6" style="width: 100.0%; height: 100.0%;"><div style='font-family: Arial; font-size: 12px; width: 250px;'><b>OSM Feature Details</b><br><hr><b>Geometry Type:</b> Point<br><b>landuse:</b> allotments<br><b>name:</b> nan<br></div></div>`)[0];
-                popup_7ff41325d9ac5479171b5d3aa4044860.setContent(html_bc241f23379a0b8d5a5d2f76810d98c6);
+                var html_09e39a23299a8c54f7c48e044c8af5c9 = $(`<div id="html_09e39a23299a8c54f7c48e044c8af5c9" style="width: 100.0%; height: 100.0%;"><div style='font-family: Arial; font-size: 12px; width: 250px;'><b>OSM Feature Details</b><br><hr><b>Geometry Type:</b> Point<br><b>landuse:</b> allotments<br><b>name:</b> nan<br></div></div>`)[0];
+                popup_b6391a4740df5d9949f9906a45f6d7a3.setContent(html_09e39a23299a8c54f7c48e044c8af5c9);
             
         
 
-        circle_marker_fb3456a59768438e9883cbb7eeca728f.bindPopup(popup_7ff41325d9ac5479171b5d3aa4044860)
+        circle_marker_891e1e5a187b97b181282ad6bcf087f9.bindPopup(popup_b6391a4740df5d9949f9906a45f6d7a3)
         ;
 
         
     
     
-            var circle_marker_d07c3144c2725df5a6c6ffba82fd15d4 = L.circleMarker(
+            var circle_marker_b98099211dbe975165dd3ea377338877 = L.circleMarker(
                 [-23.57087334604634, -46.72868540508242],
                 {"bubblingMouseEvents": true, "color": "#1f77b4", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#1f77b4", "fillOpacity": 0.7, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 4, "stroke": true, "weight": 3}
-            ).addTo(map_57882a7414db773c644b752a43fda6dd);
+            ).addTo(feature_group_116761622a628620d874394597a6a073);
         
     
-        var popup_89f5378efed812515b7dd1092e9ca880 = L.popup({
+        var popup_aa1412d70c443cacc18e11fcedfdd220 = L.popup({
   "maxWidth": 300,
 });
 
         
             
-                var html_9243402b5a221cafeed91b08eeebc614 = $(`<div id="html_9243402b5a221cafeed91b08eeebc614" style="width: 100.0%; height: 100.0%;"><div style='font-family: Arial; font-size: 12px; width: 250px;'><b>OSM Feature Details</b><br><hr><b>Geometry Type:</b> Point<br><b>landuse:</b> allotments<br><b>name:</b> Horta Comunitária Mirante do Boturoca<br></div></div>`)[0];
-                popup_89f5378efed812515b7dd1092e9ca880.setContent(html_9243402b5a221cafeed91b08eeebc614);
+                var html_ba18eb9f2f3c1a14ba9baed633cede4f = $(`<div id="html_ba18eb9f2f3c1a14ba9baed633cede4f" style="width: 100.0%; height: 100.0%;"><div style='font-family: Arial; font-size: 12px; width: 250px;'><b>OSM Feature Details</b><br><hr><b>Geometry Type:</b> Point<br><b>landuse:</b> allotments<br><b>name:</b> Horta Comunitária Mirante do Boturoca<br></div></div>`)[0];
+                popup_aa1412d70c443cacc18e11fcedfdd220.setContent(html_ba18eb9f2f3c1a14ba9baed633cede4f);
             
         
 
-        circle_marker_d07c3144c2725df5a6c6ffba82fd15d4.bindPopup(popup_89f5378efed812515b7dd1092e9ca880)
+        circle_marker_b98099211dbe975165dd3ea377338877.bindPopup(popup_aa1412d70c443cacc18e11fcedfdd220)
         ;
 
         
     
     
-            var circle_marker_604d163325b7ddff30cb9363ebd08f8a = L.circleMarker(
+            var circle_marker_16efc0c95ab02f83bceb79334c1b0c95 = L.circleMarker(
                 [-23.56544688435426, -46.732082559031916],
                 {"bubblingMouseEvents": true, "color": "#1f77b4", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#1f77b4", "fillOpacity": 0.7, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 4, "stroke": true, "weight": 3}
-            ).addTo(map_57882a7414db773c644b752a43fda6dd);
+            ).addTo(feature_group_116761622a628620d874394597a6a073);
         
     
-        var popup_f54f3bb2cc2694e95e5157d941ebf330 = L.popup({
+        var popup_0eca3179b6ec9e5d1e499bae779b5bf5 = L.popup({
   "maxWidth": 300,
 });
 
         
             
-                var html_86e54bb52f063aaf61afe0fcd486b7bb = $(`<div id="html_86e54bb52f063aaf61afe0fcd486b7bb" style="width: 100.0%; height: 100.0%;"><div style='font-family: Arial; font-size: 12px; width: 250px;'><b>OSM Feature Details</b><br><hr><b>Geometry Type:</b> Point<br><b>landuse:</b> allotments<br><b>name:</b> Agrofloresta Taiobas do Matão<br></div></div>`)[0];
-                popup_f54f3bb2cc2694e95e5157d941ebf330.setContent(html_86e54bb52f063aaf61afe0fcd486b7bb);
+                var html_1876d07d174900bdfe6fe4a4ffca22a5 = $(`<div id="html_1876d07d174900bdfe6fe4a4ffca22a5" style="width: 100.0%; height: 100.0%;"><div style='font-family: Arial; font-size: 12px; width: 250px;'><b>OSM Feature Details</b><br><hr><b>Geometry Type:</b> Point<br><b>landuse:</b> allotments<br><b>name:</b> Agrofloresta Taiobas do Matão<br></div></div>`)[0];
+                popup_0eca3179b6ec9e5d1e499bae779b5bf5.setContent(html_1876d07d174900bdfe6fe4a4ffca22a5);
             
         
 
-        circle_marker_604d163325b7ddff30cb9363ebd08f8a.bindPopup(popup_f54f3bb2cc2694e95e5157d941ebf330)
+        circle_marker_16efc0c95ab02f83bceb79334c1b0c95.bindPopup(popup_0eca3179b6ec9e5d1e499bae779b5bf5)
         ;
 
         
     
     
-            var circle_marker_45958f905fde270784195ba678d33c32 = L.circleMarker(
+            var circle_marker_45c610dac527c8c3a0dfdb2ad487bf90 = L.circleMarker(
                 [-23.63285736273231, -46.72173995190958],
                 {"bubblingMouseEvents": true, "color": "#1f77b4", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#1f77b4", "fillOpacity": 0.7, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 4, "stroke": true, "weight": 3}
-            ).addTo(map_57882a7414db773c644b752a43fda6dd);
+            ).addTo(feature_group_116761622a628620d874394597a6a073);
         
     
-        var popup_befac1a70fe738112f510f2b2bab86dc = L.popup({
+        var popup_9018dd20b23b50d2dd13204e84e22f72 = L.popup({
   "maxWidth": 300,
 });
 
         
             
-                var html_171c94f7b25a5333d3451a570aadbcc0 = $(`<div id="html_171c94f7b25a5333d3451a570aadbcc0" style="width: 100.0%; height: 100.0%;"><div style='font-family: Arial; font-size: 12px; width: 250px;'><b>OSM Feature Details</b><br><hr><b>Geometry Type:</b> Point<br><b>landuse:</b> allotments<br><b>name:</b> nan<br></div></div>`)[0];
-                popup_befac1a70fe738112f510f2b2bab86dc.setContent(html_171c94f7b25a5333d3451a570aadbcc0);
+                var html_f675f212faba6b7aa34e0afc32964bba = $(`<div id="html_f675f212faba6b7aa34e0afc32964bba" style="width: 100.0%; height: 100.0%;"><div style='font-family: Arial; font-size: 12px; width: 250px;'><b>OSM Feature Details</b><br><hr><b>Geometry Type:</b> Point<br><b>landuse:</b> allotments<br><b>name:</b> nan<br></div></div>`)[0];
+                popup_9018dd20b23b50d2dd13204e84e22f72.setContent(html_f675f212faba6b7aa34e0afc32964bba);
             
         
 
-        circle_marker_45958f905fde270784195ba678d33c32.bindPopup(popup_befac1a70fe738112f510f2b2bab86dc)
+        circle_marker_45c610dac527c8c3a0dfdb2ad487bf90.bindPopup(popup_9018dd20b23b50d2dd13204e84e22f72)
         ;
 
         
     
     
-            var circle_marker_75c1622e08cb5bce2ffe7a32328e4112 = L.circleMarker(
+            var circle_marker_9fdc17233bcb74427fa507e576ea1baf = L.circleMarker(
                 [-23.579151815745856, -46.44557353324978],
                 {"bubblingMouseEvents": true, "color": "#1f77b4", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#1f77b4", "fillOpacity": 0.7, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 4, "stroke": true, "weight": 3}
-            ).addTo(map_57882a7414db773c644b752a43fda6dd);
+            ).addTo(feature_group_116761622a628620d874394597a6a073);
         
     
-        var popup_1b8c3323a6486265a21a5c64f740ee4f = L.popup({
+        var popup_88cd8e6e6bdc1eaa0f9a716a1adf327e = L.popup({
   "maxWidth": 300,
 });
 
         
             
-                var html_6a4e71d5673feb59d4e5fbd76dfd687c = $(`<div id="html_6a4e71d5673feb59d4e5fbd76dfd687c" style="width: 100.0%; height: 100.0%;"><div style='font-family: Arial; font-size: 12px; width: 250px;'><b>OSM Feature Details</b><br><hr><b>Geometry Type:</b> Point<br><b>landuse:</b> allotments<br><b>name:</b> Projeto Cabaça<br></div></div>`)[0];
-                popup_1b8c3323a6486265a21a5c64f740ee4f.setContent(html_6a4e71d5673feb59d4e5fbd76dfd687c);
+                var html_2c16378fa8af6a774820af113a393332 = $(`<div id="html_2c16378fa8af6a774820af113a393332" style="width: 100.0%; height: 100.0%;"><div style='font-family: Arial; font-size: 12px; width: 250px;'><b>OSM Feature Details</b><br><hr><b>Geometry Type:</b> Point<br><b>landuse:</b> allotments<br><b>name:</b> Projeto Cabaça<br></div></div>`)[0];
+                popup_88cd8e6e6bdc1eaa0f9a716a1adf327e.setContent(html_2c16378fa8af6a774820af113a393332);
             
         
 
-        circle_marker_75c1622e08cb5bce2ffe7a32328e4112.bindPopup(popup_1b8c3323a6486265a21a5c64f740ee4f)
+        circle_marker_9fdc17233bcb74427fa507e576ea1baf.bindPopup(popup_88cd8e6e6bdc1eaa0f9a716a1adf327e)
         ;
 
         
     
     
-            var circle_marker_de8ad5db1e21f7bf8d6b23ed05bcf0bc = L.circleMarker(
+            var circle_marker_5462d65491126e41f75d228396106c2a = L.circleMarker(
                 [-23.526253538370618, -46.67260320384673],
                 {"bubblingMouseEvents": true, "color": "#1f77b4", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#1f77b4", "fillOpacity": 0.7, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 4, "stroke": true, "weight": 3}
-            ).addTo(map_57882a7414db773c644b752a43fda6dd);
+            ).addTo(feature_group_116761622a628620d874394597a6a073);
         
     
-        var popup_ca528c0af033d299c357e84469906b2c = L.popup({
+        var popup_638dc8a24588e23c3110ceba047f709f = L.popup({
   "maxWidth": 300,
 });
 
         
             
-                var html_342f4587e610f78d418ac4b1b62d7414 = $(`<div id="html_342f4587e610f78d418ac4b1b62d7414" style="width: 100.0%; height: 100.0%;"><div style='font-family: Arial; font-size: 12px; width: 250px;'><b>OSM Feature Details</b><br><hr><b>Geometry Type:</b> Point<br><b>landuse:</b> allotments<br><b>name:</b> nan<br></div></div>`)[0];
-                popup_ca528c0af033d299c357e84469906b2c.setContent(html_342f4587e610f78d418ac4b1b62d7414);
+                var html_5878eddef005a08c6f6707a39e455f50 = $(`<div id="html_5878eddef005a08c6f6707a39e455f50" style="width: 100.0%; height: 100.0%;"><div style='font-family: Arial; font-size: 12px; width: 250px;'><b>OSM Feature Details</b><br><hr><b>Geometry Type:</b> Point<br><b>landuse:</b> allotments<br><b>name:</b> nan<br></div></div>`)[0];
+                popup_638dc8a24588e23c3110ceba047f709f.setContent(html_5878eddef005a08c6f6707a39e455f50);
             
         
 
-        circle_marker_de8ad5db1e21f7bf8d6b23ed05bcf0bc.bindPopup(popup_ca528c0af033d299c357e84469906b2c)
+        circle_marker_5462d65491126e41f75d228396106c2a.bindPopup(popup_638dc8a24588e23c3110ceba047f709f)
         ;
 
         
     
     
-            var circle_marker_9e6dd70bbf7229e610304cc7c10a63c5 = L.circleMarker(
+            var circle_marker_7a18556f87aad8882bb43cb6b5ae8d4d = L.circleMarker(
                 [-23.725356550726318, -46.678043533271605],
                 {"bubblingMouseEvents": true, "color": "#1f77b4", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#1f77b4", "fillOpacity": 0.7, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 4, "stroke": true, "weight": 3}
-            ).addTo(map_57882a7414db773c644b752a43fda6dd);
+            ).addTo(feature_group_116761622a628620d874394597a6a073);
         
     
-        var popup_253ff5fa530567f082be55f8153d706b = L.popup({
+        var popup_eb722020c404b4249b78d58d179c356e = L.popup({
   "maxWidth": 300,
 });
 
         
             
-                var html_3dd9740659b13cb7ca8af647ccd59fe5 = $(`<div id="html_3dd9740659b13cb7ca8af647ccd59fe5" style="width: 100.0%; height: 100.0%;"><div style='font-family: Arial; font-size: 12px; width: 250px;'><b>OSM Feature Details</b><br><hr><b>Geometry Type:</b> Point<br><b>landuse:</b> allotments<br><b>name:</b> nan<br></div></div>`)[0];
-                popup_253ff5fa530567f082be55f8153d706b.setContent(html_3dd9740659b13cb7ca8af647ccd59fe5);
+                var html_72c366a7e86d9bf3fe526c8369482988 = $(`<div id="html_72c366a7e86d9bf3fe526c8369482988" style="width: 100.0%; height: 100.0%;"><div style='font-family: Arial; font-size: 12px; width: 250px;'><b>OSM Feature Details</b><br><hr><b>Geometry Type:</b> Point<br><b>landuse:</b> allotments<br><b>name:</b> nan<br></div></div>`)[0];
+                popup_eb722020c404b4249b78d58d179c356e.setContent(html_72c366a7e86d9bf3fe526c8369482988);
             
         
 
-        circle_marker_9e6dd70bbf7229e610304cc7c10a63c5.bindPopup(popup_253ff5fa530567f082be55f8153d706b)
+        circle_marker_7a18556f87aad8882bb43cb6b5ae8d4d.bindPopup(popup_eb722020c404b4249b78d58d179c356e)
         ;
 
         
     
+    
+            feature_group_116761622a628620d874394597a6a073.addTo(map_728b7fb9ab3ce690e065d69639e23f10);
+        
 </script>
 </html>

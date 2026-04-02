@@ -5,6 +5,7 @@ import folium
 import matplotlib.pyplot as plt
 import matplotlib.colors as mcolors
 import os
+import json
 
 # 2. Fetch and process features
 def fetch_and_process_features(city_geom, key, tags):
@@ -61,7 +62,7 @@ def fetch_and_process_features(city_geom, key, tags):
 
 # 3. Create map
 def create_map(features_points, city_geom, key, columns_to_show=None):
-    """Create folium map with colored markers and lines - handles lines and points"""
+    """Create folium map with colored icons and working checkboxes for toggling visibility"""
     if columns_to_show is None:
         columns_to_show = ['name']
     
@@ -84,13 +85,20 @@ def create_map(features_points, city_geom, key, columns_to_show=None):
         for i, tag in enumerate(unique_tags)
     }
     
-    # Add markers/lines
+    # Criar FeatureGroups para cada tag
+    feature_groups = {}
+    for tag in sorted(unique_tags):
+        feature_groups[tag] = folium.FeatureGroup(name=str(tag), show=True)
+    
+    # Add markers/lines aos FeatureGroups
     for idx, row in features_points.iterrows():
         if row.geometry.is_empty:
             continue
         
         geom = row.geometry
-        color = color_map.get(row[key], 'gray')
+        tag_value = row[key]
+        color = color_map.get(tag_value, 'gray')
+        fg = feature_groups[tag_value]
         
         # Build popup HTML
         popup_html = "<div style='font-family: Arial; font-size: 12px; width: 250px;'>"
@@ -117,7 +125,7 @@ def create_map(features_points, city_geom, key, columns_to_show=None):
                 weight=2,
                 opacity=0.8,
                 popup=popup
-            ).add_to(m)
+            ).add_to(fg)
         
         # Plot multilinestrings
         elif geom.geom_type == 'MultiLineString':
@@ -129,7 +137,7 @@ def create_map(features_points, city_geom, key, columns_to_show=None):
                     weight=2,
                     opacity=0.8,
                     popup=popup
-                ).add_to(m)
+                ).add_to(fg)
         
         # Plot points (including converted centroids)
         else:
@@ -142,23 +150,79 @@ def create_map(features_points, city_geom, key, columns_to_show=None):
                 fill=True,
                 fillColor=color,
                 fillOpacity=0.7
-            ).add_to(m)
+            ).add_to(fg)
     
-    # Add legend
+    # 1. Adicionar todos os FeatureGroups ao mapa E pegar os nomes reais das variáveis JS
+    fg_js_names = {}
+    for tag, fg in feature_groups.items():
+        fg.add_to(m)
+        # Salva o nome interno bizarro que o Folium gera (ex: feature_group_8a3b...)
+        fg_js_names[tag] = fg.get_name() 
+    
+    # Criar legenda HTML customizada com checkboxes e ícones
     legend_html = '''
-    <div style="position: fixed; 
-         bottom: 50px; right: 50px; width: 250px; height: auto; 
+    <div id="custom-legend" style="position: fixed; 
+         bottom: 50px; right: 50px; width: 280px; height: auto; 
          background-color: white; border:2px solid grey; z-index:9999; font-size:14px;
-         padding: 10px; border-radius: 5px;">
-         <p style="margin: 0 0 10px 0; font-weight: bold; font-size: 16px;">Legend</p>
+         padding: 10px; border-radius: 5px; max-height: 70vh; overflow-y: auto;">
+         <p style="margin: 0 0 15px 0; font-weight: bold; font-size: 16px;">Legend</p>
+         <div id="legend-items"></div>
+    </div>
     '''
     
-    for tag, color in sorted(color_map.items()):
-        legend_html += f'<p style="margin: 5px 0;"><i style="background:{color}; width: 18px; height: 18px; float: left; margin-right: 8px; border-radius: 50%; border: 1px solid #555;"></i><span>{tag}</span></p>'
-    
-    legend_html += '</div>'
-    
     m.get_root().html.add_child(folium.Element(legend_html))
+    
+    map_var_name = m.get_name()
+    tag_list = sorted(color_map.keys())
+    
+    # 2. Script hiper-robusto que funciona em qualquer ambiente
+    script = f'''
+    <script>
+    // Usa um intervalo para verificar se o mapa já terminou de ser renderizado pelo Folium
+    var checkExist = setInterval(function() {{
+        var myMap = window["{map_var_name}"];
+        
+        // Se o mapa ainda não existe, não faz nada e tenta novamente em 100ms
+        if (!myMap) return;
+        
+        // Se o mapa foi encontrado, paramos de checar e montamos a legenda!
+        clearInterval(checkExist);
+        
+        var tagNames = {json.dumps(tag_list)};
+        var colorMap = {json.dumps(color_map)};
+        var fgVars = {json.dumps(fg_js_names)}; // <-- O segredo mágico que liga o Python ao JS
+        
+        var legendItems = document.getElementById('legend-items');
+        
+        tagNames.forEach(function(tag, index) {{
+            var color = colorMap[tag];
+            var item = document.createElement('div');
+            item.style.margin = '8px 0';
+            item.style.display = 'flex';
+            item.style.alignItems = 'center';
+            item.innerHTML = '<input type="checkbox" id="checkbox_' + index + '" checked style="margin-right: 8px; cursor: pointer; width: 16px; height: 16px;">' +
+                             '<i style="background:' + color + '; width: 18px; height: 18px; display: inline-block; margin-right: 8px; border-radius: 50%; border: 1px solid #555;"></i>' +
+                             '<label for="checkbox_' + index + '" style="margin: 0; cursor: pointer; user-select: none; flex-grow: 1;">' + tag + '</label>';
+            legendItems.appendChild(item);
+            
+            // Controle dos Checkboxes
+            var checkbox = document.getElementById('checkbox_' + index);
+            checkbox.addEventListener('change', function() {{
+                var layer = window[fgVars[tag]]; // Busca a camada exata pelo nome interno gerado
+                if (layer) {{
+                    if (checkbox.checked) {{
+                        myMap.addLayer(layer);
+                    }} else {{
+                        myMap.removeLayer(layer);
+                    }}
+                }}
+            }});
+        }});
+    }}, 100);
+    </script>
+    '''
+    
+    m.get_root().html.add_child(folium.Element(script))
     
     return m
 

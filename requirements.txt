@@ -43,8 +43,10 @@ parso==0.8.6
 pillow==12.1.1
 platformdirs==4.9.4
 prompt_toolkit==3.0.52
+protomaps==0.0.1
 psutil==7.2.2
 pure_eval==0.2.3
+pyarrow==23.0.1
 Pygments==2.20.0
 pyogrio==0.12.1
 pyparsing==3.3.2

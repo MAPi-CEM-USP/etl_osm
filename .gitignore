@@ -206,5 +206,17 @@ marimo/_static/
 marimo/_lsp/
 __marimo__/
 
-Dados/
+
 cache/
+
+# 1. Ignore everything INSIDE the Dados folder
+Dados/*
+
+# 2. Un-ignore the Saída folder itself so Git is allowed to look inside
+!Dados/Saída/
+
+# 3. Ignore everything INSIDE the Saída folder
+Dados/Saída/*
+
+# 4. Finally, un-ignore the specific .pmtiles files
+!Dados/Saída/*.pmtiles

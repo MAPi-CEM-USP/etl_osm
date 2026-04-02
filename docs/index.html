@@ -5,57 +5,171 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Meus Mapas</title>
     <style>
-        /* Estilos básicos para deixar a página mais bonita */
         body {
             font-family: Arial, sans-serif;
             background-color: #f4f4f9;
             color: #333;
-            max-width: 800px;
+            max-width: 1200px;
             margin: 0 auto;
             padding: 40px 20px;
-            text-align: center;
         }
         h1 {
             color: #2c3e50;
+            text-align: center;
         }
         p {
             color: #666;
-            margin-bottom: 30px;
+            text-align: center;
+            margin-bottom: 40px;
         }
-        .lista-mapas {
-            display: flex;
-            flex-direction: column;
-            gap: 15px; /* Espaço entre os botões */
-            align-items: center;
+        .mapa-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(500px, 1fr));
+            gap: 30px;
+            margin-bottom: 40px;
         }
-        .lista-mapas a {
-            display: block;
+        .mapa-item {
+            background: white;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            transition: transform 0.3s ease;
+        }
+        .mapa-item:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+        }
+        .mapa-titulo {
+            padding: 15px;
+            background-color: #3498db;
+            color: white;
+            font-weight: bold;
+            text-align: center;
+        }
+        .mapa-preview {
             width: 100%;
-            max-width: 300px;
-            padding: 15px 20px;
+            height: 400px;
+            border: none;
+        }
+        .mapa-botoes {
+            padding: 15px;
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+        }
+        .mapa-botoes a {
+            flex: 1;
+            padding: 10px;
             background-color: #3498db;
             color: white;
             text-decoration: none;
-            border-radius: 8px;
+            border-radius: 5px;
+            text-align: center;
             font-weight: bold;
             transition: background-color 0.3s ease;
+            font-size: 0.9em;
         }
-        .lista-mapas a:hover {
+        .mapa-botoes a:hover {
             background-color: #2980b9;
         }
     </style>
 </head>
 <body>
 
-    <h1>Coleção de Mapas</h1>
-    <p>Escolha um dos mapas abaixo para visualizar:</p>
+    <h1>Coleção de Mapas - São Paulo</h1>
+    <p>Preview interativo dos mapas de features OSM. Clique em "Tela Inteira" para visualizar em maior tamanho.</p>
 
-    <div class="lista-mapas">
+    <div class="mapa-container">
         
-        <a href="mapas/features_map_amenities.html">Mapa Amenities - São Paulo</a>
-        
-        
+        <div class="mapa-item">
+            <div class="mapa-titulo">Amenity</div>
+            <iframe class="mapa-preview" src="mapas/features_map_amenity.html"></iframe>
+            <div class="mapa-botoes">
+                <a href="mapas/features_map_amenity.html" target="_blank">Tela Inteira</a>
+            </div>
         </div>
+
+        <div class="mapa-item">
+            <div class="mapa-titulo">Leisure</div>
+            <iframe class="mapa-preview" src="mapas/features_map_leisure.html"></iframe>
+            <div class="mapa-botoes">
+                <a href="mapas/features_map_leisure.html" target="_blank">Tela Inteira</a>
+            </div>
+        </div>
+
+        <div class="mapa-item">
+            <div class="mapa-titulo">Shop</div>
+            <iframe class="mapa-preview" src="mapas/features_map_shop.html"></iframe>
+            <div class="mapa-botoes">
+                <a href="mapas/features_map_shop.html" target="_blank">Tela Inteira</a>
+            </div>
+        </div>
+
+        <div class="mapa-item">
+            <div class="mapa-titulo">Landuse</div>
+            <iframe class="mapa-preview" src="mapas/features_map_landuse.html"></iframe>
+            <div class="mapa-botoes">
+                <a href="mapas/features_map_landuse.html" target="_blank">Tela Inteira</a>
+            </div>
+        </div>
+
+        <div class="mapa-item">
+            <div class="mapa-titulo">Railway</div>
+            <iframe class="mapa-preview" src="mapas/features_map_railway.html"></iframe>
+            <div class="mapa-botoes">
+                <a href="mapas/features_map_railway.html" target="_blank">Tela Inteira</a>
+            </div>
+        </div>
+
+        <div class="mapa-item">
+            <div class="mapa-titulo">Public Transport</div>
+            <iframe class="mapa-preview" src="mapas/features_map_public_transport.html"></iframe>
+            <div class="mapa-botoes">
+                <a href="mapas/features_map_public_transport.html" target="_blank">Tela Inteira</a>
+            </div>
+        </div>
+
+        <div class="mapa-item">
+            <div class="mapa-titulo">Highway</div>
+            <iframe class="mapa-preview" src="mapas/features_map_highway.html"></iframe>
+            <div class="mapa-botoes">
+                <a href="mapas/features_map_highway.html" target="_blank">Tela Inteira</a>
+            </div>
+        </div>
+
+        <div class="mapa-item">
+            <div class="mapa-titulo">Footway</div>
+            <iframe class="mapa-preview" src="mapas/features_map_footway.html"></iframe>
+            <div class="mapa-botoes">
+                <a href="mapas/features_map_footway.html" target="_blank">Tela Inteira</a>
+            </div>
+        </div>
+
+        <div class="mapa-item">
+            <div class="mapa-titulo">Cycleway</div>
+            <iframe class="mapa-preview" src="mapas/features_map_cycleway.html"></iframe>
+            <div class="mapa-botoes">
+                <a href="mapas/features_map_cycleway.html" target="_blank">Tela Inteira</a>
+            </div>
+        </div>
+
+        <div class="mapa-item">
+            <div class="mapa-titulo">Water</div>
+            <iframe class="mapa-preview" src="mapas/features_map_water.html"></iframe>
+            <div class="mapa-botoes">
+                <a href="mapas/features_map_water.html" target="_blank">Tela Inteira</a>
+            </div>
+        </div>
+
+        <div class="mapa-item">
+            <div class="mapa-titulo">Hazard</div>
+            <iframe class="mapa-preview" src="mapas/features_map_hazard.html"></iframe>
+            <div class="mapa-botoes">
+                <a href="mapas/features_map_hazard.html" target="_blank">Tela Inteira</a>
+            </div>
+        </div>
+
+    </div>
 
 </body>
 </html>

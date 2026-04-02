@@ -1,0 +1,315 @@
+<!DOCTYPE html>
+<html>
+<head>
+    
+    <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
+    <script src="https://cdn.jsdelivr.net/npm/leaflet@1.9.3/dist/leaflet.js"></script>
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Leaflet.awesome-markers/2.0.2/leaflet.awesome-markers.js"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/leaflet@1.9.3/dist/leaflet.css"/>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/css/bootstrap.min.css"/>
+    <link rel="stylesheet" href="https://netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap-glyphicons.css"/>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.2.0/css/all.min.css"/>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/Leaflet.awesome-markers/2.0.2/leaflet.awesome-markers.css"/>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/python-visualization/folium/folium/templates/leaflet.awesome.rotate.min.css"/>
+    
+            <meta name="viewport" content="width=device-width,
+                initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+            <style>
+                #map_0178d038a5507116afa748b9e0a013d5 {
+                    position: relative;
+                    width: 100.0%;
+                    height: 100.0%;
+                    left: 0.0%;
+                    top: 0.0%;
+                }
+                .leaflet-container { font-size: 1rem; }
+            </style>
+
+            <style>html, body {
+                width: 100%;
+                height: 100%;
+                margin: 0;
+                padding: 0;
+            }
+            </style>
+
+            <style>#map {
+                position:absolute;
+                top:0;
+                bottom:0;
+                right:0;
+                left:0;
+                }
+            </style>
+
+            <script>
+                L_NO_TOUCH = false;
+                L_DISABLE_3D = false;
+            </script>
+
+        
+</head>
+<body>
+    
+    
+    <div style="position: fixed; 
+         bottom: 50px; right: 50px; width: 250px; height: auto; 
+         background-color: white; border:2px solid grey; z-index:9999; font-size:14px;
+         padding: 10px; border-radius: 5px;">
+         <p style="margin: 0 0 10px 0; font-weight: bold; font-size: 16px;">Legend</p>
+    <p style="margin: 5px 0;"><i style="background:#1f77b4; width: 18px; height: 18px; float: left; margin-right: 8px; border-radius: 50%; border: 1px solid #555;"></i><span>allotments</span></p></div>
+    
+            <div class="folium-map" id="map_0178d038a5507116afa748b9e0a013d5" ></div>
+        
+</body>
+<script>
+    
+    
+            var map_0178d038a5507116afa748b9e0a013d5 = L.map(
+                "map_0178d038a5507116afa748b9e0a013d5",
+                {
+                    center: [-23.650080199720747, -46.648096605284884],
+                    crs: L.CRS.EPSG3857,
+                    ...{
+  "zoom": 11,
+  "zoomControl": true,
+  "preferCanvas": false,
+}
+
+                }
+            );
+
+            
+
+        
+    
+            var tile_layer_41768ae318f493c27380b8abda6fff1f = L.tileLayer(
+                "https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png",
+                {
+  "minZoom": 0,
+  "maxZoom": 20,
+  "maxNativeZoom": 20,
+  "noWrap": false,
+  "attribution": "\u0026copy; \u003ca href=\"https://www.openstreetmap.org/copyright\"\u003eOpenStreetMap\u003c/a\u003e contributors \u0026copy; \u003ca href=\"https://carto.com/attributions\"\u003eCARTO\u003c/a\u003e",
+  "subdomains": "abcd",
+  "detectRetina": false,
+  "tms": false,
+  "opacity": 1,
+}
+
+            );
+        
+    
+            tile_layer_41768ae318f493c27380b8abda6fff1f.addTo(map_0178d038a5507116afa748b9e0a013d5);
+        
+    
+            var circle_marker_12638c580ee5771550ea1a390f5746fb = L.circleMarker(
+                [-23.756259540024697, -46.705468427204515],
+                {"bubblingMouseEvents": true, "color": "#1f77b4", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#1f77b4", "fillOpacity": 0.7, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 4, "stroke": true, "weight": 3}
+            ).addTo(map_0178d038a5507116afa748b9e0a013d5);
+        
+    
+        var popup_ff93b405e901f3f5d1503f9fcd862002 = L.popup({
+  "maxWidth": 300,
+});
+
+        
+            
+                var html_b06ac09c46d1f3388d8622b3f4e470de = $(`<div id="html_b06ac09c46d1f3388d8622b3f4e470de" style="width: 100.0%; height: 100.0%;"><div style='font-family: Arial; font-size: 12px; width: 250px;'><b>OSM Feature Details</b><br><hr><b>Geometry Type:</b> Point<br><b>name:</b> nan<br></div></div>`)[0];
+                popup_ff93b405e901f3f5d1503f9fcd862002.setContent(html_b06ac09c46d1f3388d8622b3f4e470de);
+            
+        
+
+        circle_marker_12638c580ee5771550ea1a390f5746fb.bindPopup(popup_ff93b405e901f3f5d1503f9fcd862002)
+        ;
+
+        
+    
+    
+            var circle_marker_ca7b79af04ba0a48105fd921382bd1b7 = L.circleMarker(
+                [-23.71151156431734, -46.778832540877374],
+                {"bubblingMouseEvents": true, "color": "#1f77b4", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#1f77b4", "fillOpacity": 0.7, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 4, "stroke": true, "weight": 3}
+            ).addTo(map_0178d038a5507116afa748b9e0a013d5);
+        
+    
+        var popup_63d455fa008a4898c639a15b0eaf99aa = L.popup({
+  "maxWidth": 300,
+});
+
+        
+            
+                var html_ff986d93179c660df6776ebf631344fe = $(`<div id="html_ff986d93179c660df6776ebf631344fe" style="width: 100.0%; height: 100.0%;"><div style='font-family: Arial; font-size: 12px; width: 250px;'><b>OSM Feature Details</b><br><hr><b>Geometry Type:</b> Point<br><b>name:</b> nan<br></div></div>`)[0];
+                popup_63d455fa008a4898c639a15b0eaf99aa.setContent(html_ff986d93179c660df6776ebf631344fe);
+            
+        
+
+        circle_marker_ca7b79af04ba0a48105fd921382bd1b7.bindPopup(popup_63d455fa008a4898c639a15b0eaf99aa)
+        ;
+
+        
+    
+    
+            var circle_marker_3be0118eb4c5052e690d61c7fb5f8f74 = L.circleMarker(
+                [-23.54956974954999, -46.755900537366266],
+                {"bubblingMouseEvents": true, "color": "#1f77b4", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#1f77b4", "fillOpacity": 0.7, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 4, "stroke": true, "weight": 3}
+            ).addTo(map_0178d038a5507116afa748b9e0a013d5);
+        
+    
+        var popup_ab1fb5f5c8adaa854dade9c7e3f1f069 = L.popup({
+  "maxWidth": 300,
+});
+
+        
+            
+                var html_3251abf33b1f22455d92c52b1c1ed2da = $(`<div id="html_3251abf33b1f22455d92c52b1c1ed2da" style="width: 100.0%; height: 100.0%;"><div style='font-family: Arial; font-size: 12px; width: 250px;'><b>OSM Feature Details</b><br><hr><b>Geometry Type:</b> Point<br><b>name:</b> nan<br></div></div>`)[0];
+                popup_ab1fb5f5c8adaa854dade9c7e3f1f069.setContent(html_3251abf33b1f22455d92c52b1c1ed2da);
+            
+        
+
+        circle_marker_3be0118eb4c5052e690d61c7fb5f8f74.bindPopup(popup_ab1fb5f5c8adaa854dade9c7e3f1f069)
+        ;
+
+        
+    
+    
+            var circle_marker_3e96d7e01340c6a11464ab501def0990 = L.circleMarker(
+                [-23.57087334604634, -46.72868540508242],
+                {"bubblingMouseEvents": true, "color": "#1f77b4", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#1f77b4", "fillOpacity": 0.7, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 4, "stroke": true, "weight": 3}
+            ).addTo(map_0178d038a5507116afa748b9e0a013d5);
+        
+    
+        var popup_f7af8e33ae617bc0aad4c2ea8e84a4fd = L.popup({
+  "maxWidth": 300,
+});
+
+        
+            
+                var html_41ee83ea4ad44aff1a93ac6a6748ae4a = $(`<div id="html_41ee83ea4ad44aff1a93ac6a6748ae4a" style="width: 100.0%; height: 100.0%;"><div style='font-family: Arial; font-size: 12px; width: 250px;'><b>OSM Feature Details</b><br><hr><b>Geometry Type:</b> Point<br><b>name:</b> Horta Comunitária Mirante do Boturoca<br></div></div>`)[0];
+                popup_f7af8e33ae617bc0aad4c2ea8e84a4fd.setContent(html_41ee83ea4ad44aff1a93ac6a6748ae4a);
+            
+        
+
+        circle_marker_3e96d7e01340c6a11464ab501def0990.bindPopup(popup_f7af8e33ae617bc0aad4c2ea8e84a4fd)
+        ;
+
+        
+    
+    
+            var circle_marker_fc778b5bf83cdaf43b8d015071879fbf = L.circleMarker(
+                [-23.56544688435426, -46.732082559031916],
+                {"bubblingMouseEvents": true, "color": "#1f77b4", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#1f77b4", "fillOpacity": 0.7, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 4, "stroke": true, "weight": 3}
+            ).addTo(map_0178d038a5507116afa748b9e0a013d5);
+        
+    
+        var popup_150f1c92549a34fb9db72ccaccbb8780 = L.popup({
+  "maxWidth": 300,
+});
+
+        
+            
+                var html_6013c60c520883050b71365118755957 = $(`<div id="html_6013c60c520883050b71365118755957" style="width: 100.0%; height: 100.0%;"><div style='font-family: Arial; font-size: 12px; width: 250px;'><b>OSM Feature Details</b><br><hr><b>Geometry Type:</b> Point<br><b>name:</b> Agrofloresta Taiobas do Matão<br></div></div>`)[0];
+                popup_150f1c92549a34fb9db72ccaccbb8780.setContent(html_6013c60c520883050b71365118755957);
+            
+        
+
+        circle_marker_fc778b5bf83cdaf43b8d015071879fbf.bindPopup(popup_150f1c92549a34fb9db72ccaccbb8780)
+        ;
+
+        
+    
+    
+            var circle_marker_c62deb11cba81b1e0716a153ce8b234e = L.circleMarker(
+                [-23.63285736273231, -46.72173995190958],
+                {"bubblingMouseEvents": true, "color": "#1f77b4", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#1f77b4", "fillOpacity": 0.7, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 4, "stroke": true, "weight": 3}
+            ).addTo(map_0178d038a5507116afa748b9e0a013d5);
+        
+    
+        var popup_50bbb8a5f977fb42f8986accba39bac1 = L.popup({
+  "maxWidth": 300,
+});
+
+        
+            
+                var html_ae16d4ae064a9f88e7f4d0beac0be316 = $(`<div id="html_ae16d4ae064a9f88e7f4d0beac0be316" style="width: 100.0%; height: 100.0%;"><div style='font-family: Arial; font-size: 12px; width: 250px;'><b>OSM Feature Details</b><br><hr><b>Geometry Type:</b> Point<br><b>name:</b> nan<br></div></div>`)[0];
+                popup_50bbb8a5f977fb42f8986accba39bac1.setContent(html_ae16d4ae064a9f88e7f4d0beac0be316);
+            
+        
+
+        circle_marker_c62deb11cba81b1e0716a153ce8b234e.bindPopup(popup_50bbb8a5f977fb42f8986accba39bac1)
+        ;
+
+        
+    
+    
+            var circle_marker_12117a11cc3e8ec2da5a119c578ae52d = L.circleMarker(
+                [-23.579151815745856, -46.44557353324978],
+                {"bubblingMouseEvents": true, "color": "#1f77b4", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#1f77b4", "fillOpacity": 0.7, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 4, "stroke": true, "weight": 3}
+            ).addTo(map_0178d038a5507116afa748b9e0a013d5);
+        
+    
+        var popup_a7a663a287228f65499fe3a1767700bb = L.popup({
+  "maxWidth": 300,
+});
+
+        
+            
+                var html_e995af32e13b9be8a86f4b6e7cf67b19 = $(`<div id="html_e995af32e13b9be8a86f4b6e7cf67b19" style="width: 100.0%; height: 100.0%;"><div style='font-family: Arial; font-size: 12px; width: 250px;'><b>OSM Feature Details</b><br><hr><b>Geometry Type:</b> Point<br><b>name:</b> Projeto Cabaça<br></div></div>`)[0];
+                popup_a7a663a287228f65499fe3a1767700bb.setContent(html_e995af32e13b9be8a86f4b6e7cf67b19);
+            
+        
+
+        circle_marker_12117a11cc3e8ec2da5a119c578ae52d.bindPopup(popup_a7a663a287228f65499fe3a1767700bb)
+        ;
+
+        
+    
+    
+            var circle_marker_4d0c178684b5ab68077959a7dac2818b = L.circleMarker(
+                [-23.526253538370618, -46.67260320384673],
+                {"bubblingMouseEvents": true, "color": "#1f77b4", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#1f77b4", "fillOpacity": 0.7, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 4, "stroke": true, "weight": 3}
+            ).addTo(map_0178d038a5507116afa748b9e0a013d5);
+        
+    
+        var popup_4416f7170efd0ab3f0b048c9dd467cd1 = L.popup({
+  "maxWidth": 300,
+});
+
+        
+            
+                var html_21d4f411fff89516fb5070fcd5cd849b = $(`<div id="html_21d4f411fff89516fb5070fcd5cd849b" style="width: 100.0%; height: 100.0%;"><div style='font-family: Arial; font-size: 12px; width: 250px;'><b>OSM Feature Details</b><br><hr><b>Geometry Type:</b> Point<br><b>name:</b> nan<br></div></div>`)[0];
+                popup_4416f7170efd0ab3f0b048c9dd467cd1.setContent(html_21d4f411fff89516fb5070fcd5cd849b);
+            
+        
+
+        circle_marker_4d0c178684b5ab68077959a7dac2818b.bindPopup(popup_4416f7170efd0ab3f0b048c9dd467cd1)
+        ;
+
+        
+    
+    
+            var circle_marker_b6ae7c93341bfc69336ac117d83df28c = L.circleMarker(
+                [-23.725356550726318, -46.678043533271605],
+                {"bubblingMouseEvents": true, "color": "#1f77b4", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#1f77b4", "fillOpacity": 0.7, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 4, "stroke": true, "weight": 3}
+            ).addTo(map_0178d038a5507116afa748b9e0a013d5);
+        
+    
+        var popup_f6c0e3c9156ffdbef418e9ad465a53fd = L.popup({
+  "maxWidth": 300,
+});
+
+        
+            
+                var html_b6f0da31dcd469ba139858653b34c93a = $(`<div id="html_b6f0da31dcd469ba139858653b34c93a" style="width: 100.0%; height: 100.0%;"><div style='font-family: Arial; font-size: 12px; width: 250px;'><b>OSM Feature Details</b><br><hr><b>Geometry Type:</b> Point<br><b>name:</b> nan<br></div></div>`)[0];
+                popup_f6c0e3c9156ffdbef418e9ad465a53fd.setContent(html_b6f0da31dcd469ba139858653b34c93a);
+            
+        
+
+        circle_marker_b6ae7c93341bfc69336ac117d83df28c.bindPopup(popup_f6c0e3c9156ffdbef418e9ad465a53fd)
+        ;
+
+        
+    
+</script>
+</html>

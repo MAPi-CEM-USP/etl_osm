@@ -88,6 +88,33 @@ def _build_popup(row, columns_to_show):
     html += "</div>"
     return folium.Popup(html, max_width=300)
 
+def _categorize_bike_features(row):
+    """Categoriza features de bike/pedestrian em: ciclovias, ciclofaixas, ciclorrotas, calçadas."""
+    # Verifica ciclovias (highway = cycleway)
+    if pd.notna(row.get('highway')) and row['highway'] == 'cycleway':
+        return 'Ciclovias'
+    
+    # Valores para ciclofaixas
+    ciclofaixa_values = ['yes', 'lane', 'track', 'shoulder']
+    # Valores para ciclorrotas
+    ciclorota_values = ['shared', 'shared_lane', 'share_busway', 'shared_parking_lane']
+    
+    # Verifica ciclofaixas (cycleway tags com valores específicos)
+    for col in ['cycleway', 'cycleway:left', 'cycleway:right', 'cycleway:both']:
+        if pd.notna(row.get(col)) and row[col] in ciclofaixa_values:
+            return 'Ciclofaixas'
+    
+    # Verifica ciclorrotas (cycleway tags com valores de compartilhamento)
+    for col in ['cycleway', 'cycleway:left', 'cycleway:right', 'cycleway:both']:
+        if pd.notna(row.get(col)) and row[col] in ciclorota_values:
+            return 'Ciclorrotas'
+    
+    # Verifica calçadas (highway = footway)
+    if pd.notna(row.get('highway')) and row['highway'] == 'footway':
+        return 'Calçadas'
+    
+    return None
+
 def _add_interactive_legend(folium_map, tag_list, color_map, fg_js_names):
     """Injeta HTML e JavaScript para criar a legenda com checkboxes funcionais."""
     legend_html = '''
@@ -137,18 +164,30 @@ def _add_interactive_legend(folium_map, tag_list, color_map, fg_js_names):
 # ==========================================
 # CRIAÇÃO DO MAPA
 # ==========================================
-def create_map(features_points, city_geom, key, columns_to_show=None):
-    """Cria o mapa Folium com ícones, linhas e a legenda interativa."""
+def create_map(features_points, city_geom, key, columns_to_show=None, use_custom_type=False):
+    """Cria o mapa Folium com ícones, linhas e a legenda interativa.
+    
+    Args:
+        use_custom_type: Se True, usa a coluna '_type' para categorização personalizada (ex: bike categories)
+    """
     columns_to_show = columns_to_show or ['name']
     center = [city_geom.geometry.iloc[0].centroid.y, city_geom.geometry.iloc[0].centroid.x]
     
     m = folium.Map(location=center, zoom_start=11, tiles='Cartodb Positron')
     
-    # Se key é None, usamos a coluna '_key' que rastreia qual tag original foi processada
-    grouping_column = '_key' if key is None else key
+    # Determina qual coluna usar para agrupamento
+    if use_custom_type and '_type' in features_points.columns:
+        grouping_column = '_type'
+    elif key is None:
+        grouping_column = '_key'
+    else:
+        grouping_column = key
+    
+    # Remove NaN values para evitar linhas vazias na legenda
+    features_clean = features_points.dropna(subset=[grouping_column])
     
     # Prepara o colormap
-    unique_tags = sorted(features_points[grouping_column].unique())
+    unique_tags = sorted(features_clean[grouping_column].unique())
     cmap = plt.colormaps.get_cmap('tab20')
     color_map = {tag: mcolors.to_hex(cmap(i / max(len(unique_tags) - 1, 1))) for i, tag in enumerate(unique_tags)}
     
@@ -156,7 +195,7 @@ def create_map(features_points, city_geom, key, columns_to_show=None):
     feature_groups = {tag: folium.FeatureGroup(name=str(tag), show=True) for tag in unique_tags}
     
     # Adiciona as geometrias no mapa
-    for _, row in features_points.iterrows():
+    for _, row in features_clean.iterrows():
         if row.geometry.is_empty: continue
             
         geom = row.geometry
@@ -217,11 +256,12 @@ def save_files(m, features_points, save_path, key, tags_name=None):
     except UnicodeEncodeError:
         print(f"Warning: Could not save PMTiles due to encoding issues. Skipping PMTiles export.")
 
-def process_key(key=None, tags=None, city_geom=None, save_path="Dados/Saída/", columns_to_show=None, tags_name=None):
+def process_key(key=None, tags=None, city_geom=None, save_path="Dados/Saída/", columns_to_show=None, tags_name=None, use_custom_type=False):
     """
     Função principal que orquestra a execução ponta a ponta.
     Se key é None, processa todas as chaves em tags simultaneamente.
     tags_name: nome da variável tags para usar no output (ex: 'amenities', 'buildings')
+    use_custom_type: Se True, aplica categorização personalizada (ex: bike infrastructure categories)
     """
     if key is None:
         # Processa todas as chaves simultaneamente
@@ -229,7 +269,12 @@ def process_key(key=None, tags=None, city_geom=None, save_path="Dados/Saída/", 
         print(f"\n{'='*50}\nProcessing all tags ({output_name})...\n{'='*50}")
         
         features_points = fetch_and_process_features(city_geom, None, tags)
-        m = create_map(features_points, city_geom, None, columns_to_show)
+        
+        # Aplica categorização personalizada se solicitado
+        if use_custom_type:
+            features_points['_type'] = features_points.apply(_categorize_bike_features, axis=1)
+        
+        m = create_map(features_points, city_geom, None, columns_to_show, use_custom_type=use_custom_type)
         save_files(m, features_points, save_path, None, tags_name)
         
         print(f"✓ Completed processing all tags\n")
@@ -239,7 +284,12 @@ def process_key(key=None, tags=None, city_geom=None, save_path="Dados/Saída/", 
         print(f"\n{'='*50}\nProcessing {key}...\n{'='*50}")
         
         features_points = fetch_and_process_features(city_geom, key, tags)
-        m = create_map(features_points, city_geom, key, columns_to_show)
+        
+        # Aplica categorização personalizada se solicitado
+        if use_custom_type:
+            features_points['_type'] = features_points.apply(_categorize_bike_features, axis=1)
+        
+        m = create_map(features_points, city_geom, key, columns_to_show, use_custom_type=use_custom_type)
         save_files(m, features_points, save_path, key, None)
         
         print(f"✓ Completed {key}\n")

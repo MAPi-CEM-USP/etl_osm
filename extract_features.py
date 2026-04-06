@@ -14,6 +14,20 @@ CRS_WGS84 = 4326
 CRS_LOCAL_UTM = 31983  # SIRGAS 2000 / UTM zone 23S
 
 # ==========================================
+# CONFIGURAÇÃO DE CORES - BIKE INFRASTRUCTURE
+# ==========================================
+# Cores hex para cada categoria de infraestrutura de bicicleta
+BIKE_INFRASTRUCTURE_COLORS = {
+    'Calçadas': '#00AA00',        # Green
+    'Ciclovias': '#001F7F',       # Dark blue
+    'Ciclofaixas': '#0074E4',     # Blue
+    'Ciclorrotas': '#87CEEB'      # Light blue
+}
+
+# Categorias que devem ter linhas tracejadas
+BIKE_INFRASTRUCTURE_DASH_LINES = {'Ciclorrotas'}
+
+# ==========================================
 # PROCESSAMENTO DE DADOS
 # ==========================================
 def fetch_and_process_features(city_geom, key, tags):
@@ -169,6 +183,7 @@ def create_map(features_points, city_geom, key, columns_to_show=None, use_custom
     
     Args:
         use_custom_type: Se True, usa a coluna '_type' para categorização personalizada (ex: bike categories)
+                         Aplica automaticamente cores predefinidas para bike infrastructure.
     """
     columns_to_show = columns_to_show or ['name']
     center = [city_geom.geometry.iloc[0].centroid.y, city_geom.geometry.iloc[0].centroid.x]
@@ -188,8 +203,15 @@ def create_map(features_points, city_geom, key, columns_to_show=None, use_custom
     
     # Prepara o colormap
     unique_tags = sorted(features_clean[grouping_column].unique())
-    cmap = plt.colormaps.get_cmap('tab20')
-    color_map = {tag: mcolors.to_hex(cmap(i / max(len(unique_tags) - 1, 1))) for i, tag in enumerate(unique_tags)}
+    
+    # Usa cores predefinidas para bike infrastructure ou gera automaticamente
+    if use_custom_type and grouping_column == '_type':
+        color_map = {tag: BIKE_INFRASTRUCTURE_COLORS.get(tag, '#808080') for tag in unique_tags}
+        dash_lines = BIKE_INFRASTRUCTURE_DASH_LINES
+    else:
+        cmap = plt.colormaps.get_cmap('tab20')
+        color_map = {tag: mcolors.to_hex(cmap(i / max(len(unique_tags) - 1, 1))) for i, tag in enumerate(unique_tags)}
+        dash_lines = set()
     
     # Inicializa as FeatureGroups
     feature_groups = {tag: folium.FeatureGroup(name=str(tag), show=True) for tag in unique_tags}
@@ -199,15 +221,21 @@ def create_map(features_points, city_geom, key, columns_to_show=None, use_custom
         if row.geometry.is_empty: continue
             
         geom = row.geometry
-        color = color_map.get(row[grouping_column], 'gray')
-        fg = feature_groups[row[grouping_column]]
+        tag = row[grouping_column]
+        color = color_map.get(tag, 'gray')
+        fg = feature_groups[tag]
         popup = _build_popup(row, columns_to_show)
         
         if geom.geom_type in ['LineString', 'MultiLineString']:
             geoms_to_plot = [geom] if geom.geom_type == 'LineString' else geom.geoms
             for line in geoms_to_plot:
                 coords = [(c[1], c[0]) for c in line.coords]
-                folium.PolyLine(coords, color=color, weight=2, opacity=0.8, popup=popup).add_to(fg)
+                # Usa dasharray para linhas tracejadas
+                dash_array = '5, 5' if tag in dash_lines else None
+                folium.PolyLine(
+                    coords, color=color, weight=2, opacity=0.8, 
+                    popup=popup, dash_array=dash_array
+                ).add_to(fg)
         else:
             # Pontos (originais ou gerados por centroide)
             folium.CircleMarker(
@@ -262,6 +290,7 @@ def process_key(key=None, tags=None, city_geom=None, save_path="Dados/Saída/", 
     Se key é None, processa todas as chaves em tags simultaneamente.
     tags_name: nome da variável tags para usar no output (ex: 'amenities', 'buildings')
     use_custom_type: Se True, aplica categorização personalizada (ex: bike infrastructure categories)
+                     Aplica cores predefinidas para bike infrastructure.
     """
     if key is None:
         # Processa todas as chaves simultaneamente

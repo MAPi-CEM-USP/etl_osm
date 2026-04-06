@@ -145,7 +145,7 @@ def _add_interactive_legend(folium_map, tag_list, color_map, fg_js_names):
     <script>
     var checkExist = setInterval(function() {{
         var myMap = window["{folium_map.get_name()}"];
-        if (!myMap) return;
+        if (!myMap || typeof myMap.removeLayer !== 'function') return;
         clearInterval(checkExist);
         
         var tagNames = {json.dumps(tag_list)};

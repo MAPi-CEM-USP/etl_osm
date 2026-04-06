@@ -129,51 +129,65 @@ def _categorize_bike_features(row):
     
     return None
 
-def _add_interactive_legend(folium_map, tag_list, color_map, fg_js_names):
-    """Injeta HTML e JavaScript para criar a legenda com checkboxes funcionais."""
+def _add_native_legend(folium_map, color_map):
+    """Adiciona legenda de cores visível ao mapa usando folium.Element."""
+    
     legend_html = '''
-    <div id="custom-legend" style="position: fixed; bottom: 50px; right: 50px; width: 280px; 
-         background-color: white; border:2px solid grey; z-index:9999; font-size:14px;
-         padding: 10px; border-radius: 5px; max-height: 70vh; overflow-y: auto;">
-         <p style="margin: 0 0 15px 0; font-weight: bold; font-size: 16px;">Legenda</p>
-         <div id="legend-items"></div>
+    <div id="legend-container" style="
+        position: fixed;
+        bottom: 50px;
+        left: 50px;
+        width: 220px;
+        background-color: white;
+        border: 2px solid #ccc;
+        border-radius: 5px;
+        padding: 12px;
+        z-index: 9999;
+        font-size: 13px;
+        box-shadow: 0 2px 6px rgba(0,0,0,0.2);
+        font-family: Arial, sans-serif;
+    ">
+        <div style="font-weight: bold; font-size: 14px; margin-bottom: 10px; color: #333;">Legenda</div>
+        <div id="legend-items"></div>
     </div>
     '''
-    folium_map.get_root().html.add_child(folium.Element(legend_html))
     
-    script = f'''
+    script = f"""
     <script>
-    var checkExist = setInterval(function() {{
-        var myMap = window["{folium_map.get_name()}"];
-        if (!myMap || typeof myMap.removeLayer !== 'function') return;
-        clearInterval(checkExist);
-        
-        var tagNames = {json.dumps(tag_list)};
         var colorMap = {json.dumps(color_map)};
-        var fgVars = {json.dumps(fg_js_names)}; 
+        var container = document.getElementById('legend-items');
         
-        var legendItems = document.getElementById('legend-items');
-        
-        tagNames.forEach(function(tag, index) {{
+        for (var tag in colorMap) {{
             var color = colorMap[tag];
+            
             var item = document.createElement('div');
-            item.style.margin = '8px 0';
             item.style.display = 'flex';
             item.style.alignItems = 'center';
-            item.innerHTML = '<input type="checkbox" id="checkbox_' + index + '" checked style="margin-right: 8px; cursor: pointer;">' +
-                             '<i style="background:' + color + '; width: 16px; height: 16px; display: inline-block; margin-right: 8px; border-radius: 50%;"></i>' +
-                             '<label for="checkbox_' + index + '" style="margin: 0; cursor: pointer; flex-grow: 1;">' + tag + '</label>';
-            legendItems.appendChild(item);
+            item.style.marginBottom = '8px';
+            item.style.gap = '8px';
             
-            document.getElementById('checkbox_' + index).addEventListener('change', function(e) {{
-                var layer = window[fgVars[tag]];
-                if (layer) e.target.checked ? myMap.addLayer(layer) : myMap.removeLayer(layer);
-            }});
-        }});
-    }}, 100);
+            var box = document.createElement('div');
+            box.style.width = '16px';
+            box.style.height = '16px';
+            box.style.borderRadius = '50%';
+            box.style.border = '1px solid #999';
+            box.style.backgroundColor = color;
+            box.style.flexShrink = '0';
+            
+            var label = document.createElement('div');
+            label.style.color = '#333';
+            label.style.fontSize = '13px';
+            label.textContent = tag;
+            label.title = tag;
+            
+            item.appendChild(box);
+            item.appendChild(label);
+            container.appendChild(item);
+        }}
     </script>
-    '''
-    folium_map.get_root().html.add_child(folium.Element(script))
+    """
+    
+    folium_map.get_root().html.add_child(folium.Element(legend_html + script))
 
 # ==========================================
 # CRIAÇÃO DO MAPA
@@ -243,11 +257,16 @@ def create_map(features_points, city_geom, key, columns_to_show=None, use_custom
                 fill=True, fillColor=color, fillOpacity=0.7, popup=popup
             ).add_to(fg)
     
-    # Extrai as variáveis internas do JS geradas pelo Folium
-    fg_js_names = {tag: fg.add_to(m).get_name() for tag, fg in feature_groups.items()}
+    # Adiciona FeatureGroups ao mapa
+    for tag, fg in feature_groups.items():
+        fg.add_to(m)
     
-    # Adiciona a legenda controlável
-    _add_interactive_legend(m, unique_tags, color_map, fg_js_names)
+    # Adiciona LayerControl nativo do Folium (funciona no GitHub Pages)
+    # Isso cria checkboxes para cada FeatureGroup automaticamente
+    folium.LayerControl().add_to(m)
+    
+    # Adiciona legenda visual de cores
+    _add_native_legend(m, color_map)
     
     return m
 
@@ -270,6 +289,7 @@ def save_files(m, features_points, save_path, key, tags_name=None):
     m.save(html_file)
     print(f"Map saved: {html_file}")
     
+
     # Parquet
     pq_file = os.path.join(save_path, f"features_{file_suffix}.parquet")
     features_points.to_parquet(pq_file, compression="snappy")

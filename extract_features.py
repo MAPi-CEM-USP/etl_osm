@@ -123,8 +123,8 @@ def _categorize_bike_features(row):
         if pd.notna(row.get(col)) and row[col] in ciclorota_values:
             return 'Ciclorrotas'
     
-    # Verifica calçadas (highway = footway)
-    if pd.notna(row.get('highway')) and row['highway'] == 'footway':
+    # Verifica calçadas (bicycle = yes & highway = pedestrian)
+    if pd.notna(row.get('bicycle')) and row['bicycle'] == 'yes' and pd.notna(row.get('highway')) and row['highway'] == 'pedestrian':
         return 'Calçadas'
     
     return None

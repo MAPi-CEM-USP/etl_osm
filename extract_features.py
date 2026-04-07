@@ -75,7 +75,7 @@ def fetch_and_process_features(city_geom, key, tags):
     if is_line.any():
         midpoints_gdf = gdf.loc[is_line].copy()
         midpoints_gdf.geometry = midpoints_gdf.geometry.interpolate(0.5, normalized=True)
-        gdf = gpd.GeoDataFrame(pd.concat([gdf, midpoints_gdf], ignore_index=True), geometry='geometry')
+        #gdf = gpd.GeoDataFrame(pd.concat([gdf, midpoints_gdf], ignore_index=True), geometry='geometry')
 
     # 7. Retorna para Lat/Lon padrão e filtra os que estão estritamente dentro da cidade
     gdf = gdf.to_crs(epsg=CRS_WGS84)

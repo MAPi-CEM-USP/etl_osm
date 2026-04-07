@@ -103,29 +103,59 @@ def _build_popup(row, columns_to_show):
     return folium.Popup(html, max_width=300)
 
 def _categorize_bike_features(row):
-    """Categoriza features de bike/pedestrian em: ciclovias, ciclofaixas, ciclorrotas, calçadas."""
-    # Verifica ciclovias (highway = cycleway)
+    """Categoriza features de bike/pedestrian baseado nas especificações OSM.
+    
+    Categorias:
+    - Ciclovias: Vias protegidas e exclusivas (highway=cycleway ou cycleway=track)
+    - Calçadas compartilhadas: Calçadas com circulação compartilhada (dashed lines)
+    - Ciclofaixas: Vias exclusivas sem segregação física (cycleway=lane)
+    - Ciclorrotas: Ruas compartilhadas com preferência pra bicicletas (dashed lines)
+    """
+    
+    # 1. CICLOVIAS - Ciclovias protegidas e exclusivas
+    # highway = cycleway
     if pd.notna(row.get('highway')) and row['highway'] == 'cycleway':
         return 'Ciclovias'
     
-    # Valores para ciclofaixas
-    ciclofaixa_values = ['yes', 'lane', 'track', 'shoulder']
-    # Valores para ciclorrotas
-    ciclorota_values = ['shared', 'shared_lane', 'share_busway', 'shared_parking_lane']
+    # cycleway = track (e variantes)
+    track_cols = ['cycleway', 'cycleway:left', 'cycleway:right']
+    for col in track_cols:
+        if pd.notna(row.get(col)) and row[col] in ['track', 'opposite_track']:
+            return 'Ciclovias'
     
-    # Verifica ciclofaixas (cycleway tags com valores específicos)
-    for col in ['cycleway', 'cycleway:left', 'cycleway:right', 'cycleway:both']:
-        if pd.notna(row.get(col)) and row[col] in ciclofaixa_values:
+    # 2. CALÇADAS COMPARTILHADAS - Calçadas com sinalização para circulação compartilhada
+    # (highway=footway & bicycle=designated) OR (highway=pedestrian & bicycle=designated) OR (highway=pedestrian & bicycle=yes)
+    sidewalk_conditions = [
+        (pd.notna(row.get('highway')) and row['highway'] == 'footway' and 
+         pd.notna(row.get('bicycle')) and row['bicycle'] == 'designated'),
+        (pd.notna(row.get('highway')) and row['highway'] == 'pedestrian' and 
+         pd.notna(row.get('bicycle')) and row['bicycle'] == 'designated'),
+        (pd.notna(row.get('highway')) and row['highway'] == 'pedestrian' and 
+         pd.notna(row.get('bicycle')) and row['bicycle'] == 'yes')
+    ]
+    
+    if any(sidewalk_conditions):
+        return 'Calçadas compartilhadas'
+    
+    # cycleway = sidepath (e variantes)
+    sidepath_cols = ['cycleway', 'cycleway:left', 'cycleway:right']
+    for col in sidepath_cols:
+        if pd.notna(row.get(col)) and row[col] == 'sidepath':
+            return 'Calçadas compartilhadas'
+    
+    # 3. CICLOFAIXAS - Vias exclusivas sem segregação física
+    # cycleway = lane (e variantes)
+    lane_cols = ['cycleway', 'cycleway:left', 'cycleway:right', 'cycleway:both']
+    for col in lane_cols:
+        if pd.notna(row.get(col)) and row[col] in ['lane', 'opposite_lane']:
             return 'Ciclofaixas'
     
-    # Verifica ciclorrotas (cycleway tags com valores de compartilhamento)
-    for col in ['cycleway', 'cycleway:left', 'cycleway:right', 'cycleway:both']:
-        if pd.notna(row.get(col)) and row[col] in ciclorota_values:
+    # 4. CICLORROTAS - Ruas compartilhadas com preferência para bicicletas
+    # cycleway = buffered_lane, shared_lane, share_busway (e variantes)
+    shared_cols = ['cycleway', 'cycleway:left', 'cycleway:right']
+    for col in shared_cols:
+        if pd.notna(row.get(col)) and row[col] in ['buffered_lane', 'shared_lane', 'share_busway', 'opposite_share_busway']:
             return 'Ciclorrotas'
-    
-    # Verifica calçadas (bicycle = yes & highway = pedestrian)
-    if pd.notna(row.get('bicycle')) and row['bicycle'] == 'yes' and pd.notna(row.get('highway')) and row['highway'] == 'pedestrian':
-        return 'Calçadas'
     
     return None
 

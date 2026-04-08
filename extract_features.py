@@ -205,18 +205,18 @@ def _categorize_footway_features(row):
     # 5. CALÇADAS FORMAIS - Calçadas estruturadas
     # Critérios: sidewalk tags, surface (asphalt/concrete), width, maxheight (indica via formal)
     # ou foot=designated, ou área com surface
-    if pd.notna(row.get('highway')) and row['highway'] == 'footway':
-        formal_indicators = [
-            pd.notna(row.get('sidewalk')) and row['sidewalk'] in ['yes', 'both', 'left', 'right'],
-            #pd.notna(row.get('surface')) and row['surface'] in ['asphalt', 'concrete', 'paving_stones', 'cobblestone'],
-            #pd.notna(row.get('width')),
-            pd.notna(row.get('foot')) and row['foot'] in ['designated', 'yes']
-            #pd.notna(row.get('lit')) and row['lit'] in ['yes', 'automatic'],
-            #pd.notna(row.get('maxheight')),
-            #pd.notna(row.get('access')) and row['access'] != 'private'
+    formal_indicators = [
+        (pd.notna(row.get('highway')) and row['highway'] == 'footway'),
+        (pd.notna(row.get('sidewalk')) and row['sidewalk'] in ['yes', 'both', 'left', 'right']),
+        (pd.notna(row.get('foot')) and row['foot'] in ['designated', 'yes'])
+        #pd.notna(row.get('surface')) and row['surface'] in ['asphalt', 'concrete', 'paving_stones', 'cobblestone'],
+        #pd.notna(row.get('width')),
+        #pd.notna(row.get('lit')) and row['lit'] in ['yes', 'automatic'],
+        #pd.notna(row.get('maxheight')),
+        #pd.notna(row.get('access')) and row['access'] != 'private'
         ]
         
-        #if sum(formal_indicators) >= 1:  # Pelo menos 1 indicador de infraestrutura formal
+    if any(formal_indicators):  # Pelo menos 1 indicador de infraestrutura formal
         return 'Calçadas Formais'
     
     return None

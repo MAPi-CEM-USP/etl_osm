@@ -28,6 +28,21 @@ BIKE_INFRASTRUCTURE_COLORS = {
 BIKE_INFRASTRUCTURE_DASH_LINES = {'Ciclorrotas'}
 
 # ==========================================
+# CONFIGURAÇÃO DE CORES - FOOTWAY INFRASTRUCTURE
+# ==========================================
+# Cores hex para cada categoria de infraestrutura de pedestres
+FOOTWAY_INFRASTRUCTURE_COLORS = {
+    'Faixas de Pedestres': '#FF4444',     # Red
+    'Calçadas Formais': '#00AA00',        # Green
+    'Calçadas Informais': '#FFAA00',      # Orange
+    'Áreas Pedestrianizadas': '#9933FF',  # Purple
+    'Corredores': '#0074E4'               # Blue
+}
+
+# Categorias que devem ter linhas tracejadas
+FOOTWAY_INFRASTRUCTURE_DASH_LINES = {'Áreas Pedestrianizadas'}
+
+# ==========================================
 # PROCESSAMENTO DE DADOS
 # ==========================================
 def fetch_and_process_features(city_geom, key, tags):
@@ -159,6 +174,53 @@ def _categorize_bike_features(row):
     
     return None
 
+def _categorize_footway_features(row):
+    """Categoriza features de pedestres/footway baseado nas especificações OSM.
+    
+    Categorias:
+    - Faixas de Pedestres: Cruzamentos de pedestres (highway=footway & footway=crossing)
+    - Calçadas Formais: Calçadas estruturadas (sidewalk tags, surface, width, etc)
+    - Calçadas Informais: Calçadas sem infraestrutura formal (informal=yes)
+    - Áreas Pedestrianizadas: Zonas exclusivas de pedestres (highway=pedestrian)
+    - Corredores: Corredores internos/entre edifícios (highway=corridor)
+    """
+    
+    # 1. FAIXAS DE PEDESTRES - Cruzamentos de pedestres
+    if pd.notna(row.get('highway')) and row['highway'] == 'footway':
+        if pd.notna(row.get('footway')) and row['footway'] == 'crossing':
+            return 'Faixas de Pedestres'
+    
+    # 2. CORREDORES - Corredores/passagens entre edifícios
+    if pd.notna(row.get('highway')) and row['highway'] == 'corridor':
+        return 'Corredores'
+    
+    # 3. ÁREAS PEDESTRIANIZADAS - Zonas exclusivas de pedestres
+    if pd.notna(row.get('highway')) and row['highway'] == 'pedestrian':
+        return 'Vias de Pedestres'
+    
+    # 4. CALÇADAS INFORMAIS - Calçadas sem infraestrutura formal
+    if pd.notna(row.get('informal')) and row['informal'] == 'yes':
+        return 'Calçadas Informais'
+
+    # 5. CALÇADAS FORMAIS - Calçadas estruturadas
+    # Critérios: sidewalk tags, surface (asphalt/concrete), width, maxheight (indica via formal)
+    # ou foot=designated, ou área com surface
+    if pd.notna(row.get('highway')) and row['highway'] == 'footway':
+        formal_indicators = [
+            pd.notna(row.get('sidewalk')) and row['sidewalk'] in ['yes', 'both', 'left', 'right'],
+            #pd.notna(row.get('surface')) and row['surface'] in ['asphalt', 'concrete', 'paving_stones', 'cobblestone'],
+            #pd.notna(row.get('width')),
+            pd.notna(row.get('foot')) and row['foot'] in ['designated', 'yes']
+            #pd.notna(row.get('lit')) and row['lit'] in ['yes', 'automatic'],
+            #pd.notna(row.get('maxheight')),
+            #pd.notna(row.get('access')) and row['access'] != 'private'
+        ]
+        
+        #if sum(formal_indicators) >= 1:  # Pelo menos 1 indicador de infraestrutura formal
+        return 'Calçadas Formais'
+    
+    return None
+
 def _add_native_legend(folium_map, color_map):
     """Adiciona legenda de cores visível ao mapa usando folium.Element."""
     
@@ -222,12 +284,13 @@ def _add_native_legend(folium_map, color_map):
 # ==========================================
 # CRIAÇÃO DO MAPA
 # ==========================================
-def create_map(features_points, city_geom, key, columns_to_show=None, use_custom_type=False):
+def create_map(features_points, city_geom, key, columns_to_show=None, use_custom_type=False, custom_type='bike'):
     """Cria o mapa Folium com ícones, linhas e a legenda interativa.
     
     Args:
-        use_custom_type: Se True, usa a coluna '_type' para categorização personalizada (ex: bike categories)
-                         Aplica automaticamente cores predefinidas para bike infrastructure.
+        use_custom_type: Se True, usa a coluna '_type' para categorização personalizada
+        custom_type: Tipo de categorização ('bike' ou 'footway')
+                     Aplica automaticamente cores predefinidas para o tipo especificado.
     """
     columns_to_show = columns_to_show or ['name']
     center = [city_geom.geometry.iloc[0].centroid.y, city_geom.geometry.iloc[0].centroid.x]
@@ -248,10 +311,14 @@ def create_map(features_points, city_geom, key, columns_to_show=None, use_custom
     # Prepara o colormap
     unique_tags = sorted(features_clean[grouping_column].unique())
     
-    # Usa cores predefinidas para bike infrastructure ou gera automaticamente
+    # Usa cores predefinidas para tipo customizado ou gera automaticamente
     if use_custom_type and grouping_column == '_type':
-        color_map = {tag: BIKE_INFRASTRUCTURE_COLORS.get(tag, '#808080') for tag in unique_tags}
-        dash_lines = BIKE_INFRASTRUCTURE_DASH_LINES
+        if custom_type == 'footway':
+            color_map = {tag: FOOTWAY_INFRASTRUCTURE_COLORS.get(tag, '#808080') for tag in unique_tags}
+            dash_lines = FOOTWAY_INFRASTRUCTURE_DASH_LINES
+        else:  # default para bike
+            color_map = {tag: BIKE_INFRASTRUCTURE_COLORS.get(tag, '#808080') for tag in unique_tags}
+            dash_lines = BIKE_INFRASTRUCTURE_DASH_LINES
     else:
         cmap = plt.colormaps.get_cmap('tab20')
         color_map = {tag: mcolors.to_hex(cmap(i / max(len(unique_tags) - 1, 1))) for i, tag in enumerate(unique_tags)}
@@ -334,13 +401,15 @@ def save_files(m, features_points, save_path, key, tags_name=None):
     except UnicodeEncodeError:
         print(f"Warning: Could not save PMTiles due to encoding issues. Skipping PMTiles export.")
 
-def process_key(key=None, tags=None, city_geom=None, save_path="Dados/Saída/", columns_to_show=None, tags_name=None, use_custom_type=False):
+def process_key(key=None, tags=None, city_geom=None, save_path="Dados/Saída/", columns_to_show=None, tags_name=None, use_custom_type=False, custom_type='bike'):
     """
     Função principal que orquestra a execução ponta a ponta.
     Se key é None, processa todas as chaves em tags simultaneamente.
     tags_name: nome da variável tags para usar no output (ex: 'amenities', 'buildings')
-    use_custom_type: Se True, aplica categorização personalizada (ex: bike infrastructure categories)
-                     Aplica cores predefinidas para bike infrastructure.
+    use_custom_type: Se True, aplica categorização personalizada
+    custom_type: Tipo de categorização ('bike' ou 'footway')
+                 - 'bike': Categorização de infraestrutura de bicicletas
+                 - 'footway': Categorização de infraestrutura de pedestres
     """
     if key is None:
         # Processa todas as chaves simultaneamente
@@ -351,9 +420,12 @@ def process_key(key=None, tags=None, city_geom=None, save_path="Dados/Saída/", 
         
         # Aplica categorização personalizada se solicitado
         if use_custom_type:
-            features_points['_type'] = features_points.apply(_categorize_bike_features, axis=1)
+            if custom_type == 'footway':
+                features_points['_type'] = features_points.apply(_categorize_footway_features, axis=1)
+            else:  # default para bike
+                features_points['_type'] = features_points.apply(_categorize_bike_features, axis=1)
         
-        m = create_map(features_points, city_geom, None, columns_to_show, use_custom_type=use_custom_type)
+        m = create_map(features_points, city_geom, None, columns_to_show, use_custom_type=use_custom_type, custom_type=custom_type)
         save_files(m, features_points, save_path, None, tags_name)
         
         print(f"✓ Completed processing all tags\n")
@@ -366,9 +438,12 @@ def process_key(key=None, tags=None, city_geom=None, save_path="Dados/Saída/", 
         
         # Aplica categorização personalizada se solicitado
         if use_custom_type:
-            features_points['_type'] = features_points.apply(_categorize_bike_features, axis=1)
+            if custom_type == 'footway':
+                features_points['_type'] = features_points.apply(_categorize_footway_features, axis=1)
+            else:  # default para bike
+                features_points['_type'] = features_points.apply(_categorize_bike_features, axis=1)
         
-        m = create_map(features_points, city_geom, key, columns_to_show, use_custom_type=use_custom_type)
+        m = create_map(features_points, city_geom, key, columns_to_show, use_custom_type=use_custom_type, custom_type=custom_type)
         save_files(m, features_points, save_path, key, None)
         
         print(f"✓ Completed {key}\n")

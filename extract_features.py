@@ -370,38 +370,66 @@ def create_map(features_points, city_geom, key, columns_to_show=None, use_custom
 # ==========================================
 # FUNÇÕES DE EXPORTAÇÃO E ORQUESTRAÇÃO
 # ==========================================
-def save_files(m, features_points, save_path, key, tags_name=None):
-    """Salva os resultados em HTML, Parquet e PMTiles."""
-    os.makedirs(save_path, exist_ok=True)
-    
-    # Define o suffix do arquivo baseado na chave
-    if key is None:
-        file_suffix = tags_name if tags_name else "all"
-    else:
-        file_suffix = key
-    
-    # HTML
-    html_file = f"docs/mapas/features_map_{file_suffix}.html"
-    os.makedirs(os.path.dirname(html_file), exist_ok=True)
+def save_files(m, features_points, save_path, key, tags_name=None, cd_mun=None, theme_name=None):
+    """Salva os resultados em HTML, Parquet e PMTiles com organização por cd_mun e tema."""
+    if cd_mun is None or str(cd_mun).strip() == "":
+        raise ValueError("cd_mun is required and cannot be empty.")
+
+    if theme_name is None or str(theme_name).strip() == "":
+        raise ValueError("theme_name is required and cannot be empty.")
+
+    cd_mun = str(cd_mun)
+    theme_name = str(theme_name)
+    features_points = features_points.copy()
+
+    if "id" in features_points.columns:
+        features_points["id"] = features_points["id"].astype(str)
+
+    # Dados: organização por tema (Dados/Saída/{theme}/features_{cd_mun}.{ext})
+    data_theme_dir = os.path.join(save_path, theme_name)
+    os.makedirs(data_theme_dir, exist_ok=True)
+
+    # Docs: organização por município/tema (docs/mapas/{cd_mun}/{theme}/features_map.html)
+    html_dir = os.path.join("docs", "mapas", cd_mun, theme_name)
+    os.makedirs(html_dir, exist_ok=True)
+    html_file = os.path.join(html_dir, "features_map.html")
     m.save(html_file)
     print(f"Map saved: {html_file}")
-    
 
-    # Parquet
-    pq_file = os.path.join(save_path, f"features_{file_suffix}.parquet")
+    manifest_file = os.path.join("docs", "mapas", "manifest.json")
+    manifest = {}
+    if os.path.exists(manifest_file):
+        try:
+            with open(manifest_file, "r", encoding="utf-8") as f:
+                manifest = json.load(f)
+        except json.JSONDecodeError:
+            manifest = {}
+    manifest.setdefault(cd_mun, {})[theme_name] = f"mapas/{cd_mun}/{theme_name}/features_map.html"
+    with open(manifest_file, "w", encoding="utf-8") as f:
+        json.dump(manifest, f, ensure_ascii=False, indent=2, sort_keys=True)
+
+    pq_file = os.path.join(data_theme_dir, f"features_{cd_mun}.parquet")
     features_points.to_parquet(pq_file, compression="snappy")
     print(f"Parquet saved: {pq_file}")
-    
-    # PMTiles
-    pmt_file = os.path.join(save_path, f"features_{file_suffix}.pmtiles")
-    if os.path.exists(pmt_file): os.remove(pmt_file)
+
+    pmt_file = os.path.join(data_theme_dir, f"features_{cd_mun}.pmtiles")
+    if os.path.exists(pmt_file):
+        os.remove(pmt_file)
     try:
-        features_points.to_file(pmt_file, driver="PMTiles", engine="pyogrio", encoding="utf-8", MINZOOM=0, MAXZOOM=14, NAME=f"layer_{file_suffix}")
+        features_points.to_file(
+            pmt_file,
+            driver="PMTiles",
+            engine="pyogrio",
+            encoding="utf-8",
+            MINZOOM=0,
+            MAXZOOM=14,
+            NAME=f"layer_{theme_name}_{cd_mun}"
+        )
         print(f"PMTiles saved: {pmt_file}")
     except UnicodeEncodeError:
-        print(f"Warning: Could not save PMTiles due to encoding issues. Skipping PMTiles export.")
+        print("Warning: Could not save PMTiles due to encoding issues. Skipping PMTiles export.")
 
-def process_key(key=None, tags=None, city_geom=None, save_path="Dados/Saída/", columns_to_show=None, tags_name=None, use_custom_type=False, custom_type='bike'):
+def process_key(key=None, tags=None, city_geom=None, save_path="Dados/Saída/", columns_to_show=None, tags_name=None, use_custom_type=False, custom_type='bike', cd_mun=None, theme_name=None):
     """
     Função principal que orquestra a execução ponta a ponta.
     Se key é None, processa todas as chaves em tags simultaneamente.
@@ -411,10 +439,17 @@ def process_key(key=None, tags=None, city_geom=None, save_path="Dados/Saída/", 
                  - 'bike': Categorização de infraestrutura de bicicletas
                  - 'footway': Categorização de infraestrutura de pedestres
     """
+    if cd_mun is None or str(cd_mun).strip() == "":
+        raise ValueError("cd_mun is required and cannot be empty.")
+
+    resolved_theme_name = theme_name if theme_name else (tags_name if key is None else key)
+    if resolved_theme_name is None or str(resolved_theme_name).strip() == "":
+        raise ValueError("theme_name could not be resolved. Provide theme_name explicitly.")
+
     if key is None:
         # Processa todas as chaves simultaneamente
         output_name = tags_name if tags_name else "all"
-        print(f"\n{'='*50}\nProcessing all tags ({output_name})...\n{'='*50}")
+        print(f"\n{'='*50}\nProcessing all tags ({output_name}) for cd_mun={cd_mun}...\n{'='*50}")
         
         features_points = fetch_and_process_features(city_geom, None, tags)
         
@@ -426,13 +461,13 @@ def process_key(key=None, tags=None, city_geom=None, save_path="Dados/Saída/", 
                 features_points['_type'] = features_points.apply(_categorize_bike_features, axis=1)
         
         m = create_map(features_points, city_geom, None, columns_to_show, use_custom_type=use_custom_type, custom_type=custom_type)
-        save_files(m, features_points, save_path, None, tags_name)
+        save_files(m, features_points, save_path, None, tags_name, cd_mun=cd_mun, theme_name=resolved_theme_name)
         
         print(f"✓ Completed processing all tags\n")
         return features_points
     else:
         # Processa uma chave específica
-        print(f"\n{'='*50}\nProcessing {key}...\n{'='*50}")
+        print(f"\n{'='*50}\nProcessing {key} for cd_mun={cd_mun}...\n{'='*50}")
         
         features_points = fetch_and_process_features(city_geom, key, tags)
         
@@ -444,7 +479,7 @@ def process_key(key=None, tags=None, city_geom=None, save_path="Dados/Saída/", 
                 features_points['_type'] = features_points.apply(_categorize_bike_features, axis=1)
         
         m = create_map(features_points, city_geom, key, columns_to_show, use_custom_type=use_custom_type, custom_type=custom_type)
-        save_files(m, features_points, save_path, key, None)
+        save_files(m, features_points, save_path, key, None, cd_mun=cd_mun, theme_name=resolved_theme_name)
         
         print(f"✓ Completed {key}\n")
         return features_points

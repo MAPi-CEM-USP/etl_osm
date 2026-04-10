@@ -1,0 +1,21 @@
+{
+  "3304557": {
+    "amenity": "mapas/3304557/amenity/features_map.html",
+    "highway": "mapas/3304557/highway/features_map.html",
+    "landuse": "mapas/3304557/landuse/features_map.html",
+    "leisure": "mapas/3304557/leisure/features_map.html",
+    "public_transport": "mapas/3304557/public_transport/features_map.html",
+    "railway": "mapas/3304557/railway/features_map.html",
+    "shop": "mapas/3304557/shop/features_map.html"
+  },
+  "3550308": {
+    "amenity": "mapas/3550308/amenity/features_map.html",
+    "highway": "mapas/3550308/highway/features_map.html",
+    "landuse": "mapas/3550308/landuse/features_map.html",
+    "leisure": "mapas/3550308/leisure/features_map.html",
+    "public_transport": "mapas/3550308/public_transport/features_map.html",
+    "railway": "mapas/3550308/railway/features_map.html",
+    "shop": "mapas/3550308/shop/features_map.html",
+    "water": "mapas/3550308/water/features_map.html"
+  }
+}

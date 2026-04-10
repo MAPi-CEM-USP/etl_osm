@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Meus Mapas</title>
+    <title>Mapas por Municipio</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -21,6 +21,25 @@
             color: #666;
             text-align: center;
             margin-bottom: 40px;
+        }
+        .controls {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 24px;
+        }
+        .controls select {
+            width: min(420px, 100%);
+            padding: 10px 12px;
+            border-radius: 6px;
+            border: 1px solid #cfd6df;
+            font-size: 14px;
+            background: #fff;
+        }
+        .status {
+            text-align: center;
+            color: #586778;
+            margin-bottom: 18px;
+            font-size: 14px;
         }
         .mapa-container {
             display: grid;
@@ -76,100 +95,95 @@
 </head>
 <body>
 
-    <h1>Coleção de Mapas - São Paulo</h1>
-    <p>Preview interativo dos mapas de features OSM. Clique em "Tela Inteira" para visualizar em maior tamanho.</p>
+    <h1>Colecao de Mapas por Municipio</h1>
+    <p>Selecione um municipio para visualizar os mapas por tema. Clique em "Tela Inteira" para abrir o mapa completo.</p>
 
-    <div class="mapa-container">
-        
-        <div class="mapa-item">
-            <div class="mapa-titulo">Amenity</div>
-            <iframe class="mapa-preview" src="mapas/features_map_amenity.html"></iframe>
-            <div class="mapa-botoes">
-                <a href="mapas/features_map_amenity.html" target="_blank">Tela Inteira</a>
-            </div>
-        </div>
-
-        <div class="mapa-item">
-            <div class="mapa-titulo">Leisure</div>
-            <iframe class="mapa-preview" src="mapas/features_map_leisure.html"></iframe>
-            <div class="mapa-botoes">
-                <a href="mapas/features_map_leisure.html" target="_blank">Tela Inteira</a>
-            </div>
-        </div>
-
-        <div class="mapa-item">
-            <div class="mapa-titulo">Shop</div>
-            <iframe class="mapa-preview" src="mapas/features_map_shop.html"></iframe>
-            <div class="mapa-botoes">
-                <a href="mapas/features_map_shop.html" target="_blank">Tela Inteira</a>
-            </div>
-        </div>
-
-        <div class="mapa-item">
-            <div class="mapa-titulo">Landuse</div>
-            <iframe class="mapa-preview" src="mapas/features_map_landuse.html"></iframe>
-            <div class="mapa-botoes">
-                <a href="mapas/features_map_landuse.html" target="_blank">Tela Inteira</a>
-            </div>
-        </div>
-
-        <div class="mapa-item">
-            <div class="mapa-titulo">Railway</div>
-            <iframe class="mapa-preview" src="mapas/features_map_railway.html"></iframe>
-            <div class="mapa-botoes">
-                <a href="mapas/features_map_railway.html" target="_blank">Tela Inteira</a>
-            </div>
-        </div>
-
-        <div class="mapa-item">
-            <div class="mapa-titulo">Public Transport</div>
-            <iframe class="mapa-preview" src="mapas/features_map_public_transport.html"></iframe>
-            <div class="mapa-botoes">
-                <a href="mapas/features_map_public_transport.html" target="_blank">Tela Inteira</a>
-            </div>
-        </div>
-
-        <div class="mapa-item">
-            <div class="mapa-titulo">Highway</div>
-            <iframe class="mapa-preview" src="mapas/features_map_highway.html"></iframe>
-            <div class="mapa-botoes">
-                <a href="mapas/features_map_highway.html" target="_blank">Tela Inteira</a>
-            </div>
-        </div>
-
-        <div class="mapa-item">
-            <div class="mapa-titulo">Footway</div>
-            <iframe class="mapa-preview" src="mapas/features_map_footway_tags.html"></iframe>
-            <div class="mapa-botoes">
-                <a href="mapas/features_map_footway_tags.html" target="_blank">Tela Inteira</a>
-            </div>
-        </div>
-
-        <div class="mapa-item">
-            <div class="mapa-titulo">Cycleway SP</div>
-            <iframe class="mapa-preview" src="mapas/features_map_bike_tags.html"></iframe>
-            <div class="mapa-botoes">
-                <a href="mapas/features_map_bike_tags.html" target="_blank">Tela Inteira</a>
-            </div>
-        </div>
-
-        <div class="mapa-item">
-            <div class="mapa-titulo">Cycleway RJ</div>
-            <iframe class="mapa-preview" src="mapas/features_map_bike_tags_rj.html"></iframe>
-            <div class="mapa-botoes">
-                <a href="mapas/features_map_bike_tags_rj.html" target="_blank">Tela Inteira</a>
-            </div>
-        </div>
-
-        <div class="mapa-item">
-            <div class="mapa-titulo">Water</div>
-            <iframe class="mapa-preview" src="mapas/features_map_water.html"></iframe>
-            <div class="mapa-botoes">
-                <a href="mapas/features_map_water.html" target="_blank">Tela Inteira</a>
-            </div>
-        </div>
-
+    <div class="controls">
+        <select id="municipio-select">
+            <option value="">Selecione um cd_mun</option>
+        </select>
     </div>
+
+    <div class="status" id="status">Carregando manifest de mapas...</div>
+
+    <div class="mapa-container" id="mapa-container"></div>
+
+    <script>
+        const manifestPath = "mapas/manifest.json";
+        const selectEl = document.getElementById("municipio-select");
+        const statusEl = document.getElementById("status");
+        const containerEl = document.getElementById("mapa-container");
+
+        function titleFromTheme(theme) {
+            return String(theme || "").replace(/_/g, " ").replace(/\b\w/g, c => c.toUpperCase());
+        }
+
+        function renderThemesForMunicipio(manifest, cdMun) {
+            containerEl.innerHTML = "";
+            const themeMap = manifest[cdMun] || {};
+            const themes = Object.keys(themeMap).sort();
+
+            if (!themes.length) {
+                statusEl.textContent = "Nenhum mapa encontrado para o municipio selecionado.";
+                return;
+            }
+
+            statusEl.textContent = `Mostrando ${themes.length} tema(s) para cd_mun=${cdMun}.`;
+
+            themes.forEach((theme) => {
+                const mapPath = themeMap[theme];
+                const card = document.createElement("div");
+                card.className = "mapa-item";
+                card.innerHTML = `
+                    <div class="mapa-titulo">${titleFromTheme(theme)}</div>
+                    <iframe class="mapa-preview" src="${mapPath}"></iframe>
+                    <div class="mapa-botoes">
+                        <a href="${mapPath}" target="_blank" rel="noopener">Tela Inteira</a>
+                    </div>
+                `;
+                containerEl.appendChild(card);
+            });
+        }
+
+        async function loadManifest() {
+            try {
+                const response = await fetch(manifestPath, { cache: "no-store" });
+                if (!response.ok) {
+                    throw new Error(`HTTP ${response.status}`);
+                }
+                const manifest = await response.json();
+                const municipalities = Object.keys(manifest).sort();
+
+                if (!municipalities.length) {
+                    statusEl.textContent = "Manifest carregado, mas nao ha municipios listados.";
+                    return;
+                }
+
+                municipalities.forEach((cdMun) => {
+                    const option = document.createElement("option");
+                    option.value = cdMun;
+                    option.textContent = cdMun;
+                    selectEl.appendChild(option);
+                });
+
+                statusEl.textContent = "Selecione um municipio para carregar os mapas.";
+
+                selectEl.addEventListener("change", () => {
+                    if (!selectEl.value) {
+                        containerEl.innerHTML = "";
+                        statusEl.textContent = "Selecione um municipio para carregar os mapas.";
+                        return;
+                    }
+                    renderThemesForMunicipio(manifest, selectEl.value);
+                });
+            } catch (err) {
+                statusEl.textContent = "Nao foi possivel carregar mapas/manifest.json. Gere o manifest apos rodar o ETL.";
+                console.error(err);
+            }
+        }
+
+        loadManifest();
+    </script>
 
 </body>
 </html>

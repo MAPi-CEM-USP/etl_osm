@@ -1,0 +1,964 @@
+<!DOCTYPE html>
+<html>
+<head>
+    
+    <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
+    <script src="https://cdn.jsdelivr.net/npm/leaflet@1.9.3/dist/leaflet.js"></script>
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Leaflet.awesome-markers/2.0.2/leaflet.awesome-markers.js"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/leaflet@1.9.3/dist/leaflet.css"/>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/css/bootstrap.min.css"/>
+    <link rel="stylesheet" href="https://netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap-glyphicons.css"/>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.2.0/css/all.min.css"/>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/Leaflet.awesome-markers/2.0.2/leaflet.awesome-markers.css"/>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/python-visualization/folium/folium/templates/leaflet.awesome.rotate.min.css"/>
+    
+            <meta name="viewport" content="width=device-width,
+                initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+            <style>
+                #map_f4450bf3fdc3b9e5121940fa474aa734 {
+                    position: relative;
+                    width: 100.0%;
+                    height: 100.0%;
+                    left: 0.0%;
+                    top: 0.0%;
+                }
+                .leaflet-container { font-size: 1rem; }
+            </style>
+
+            <style>html, body {
+                width: 100%;
+                height: 100%;
+                margin: 0;
+                padding: 0;
+            }
+            </style>
+
+            <style>#map {
+                position:absolute;
+                top:0;
+                bottom:0;
+                right:0;
+                left:0;
+                }
+            </style>
+
+            <script>
+                L_NO_TOUCH = false;
+                L_DISABLE_3D = false;
+            </script>
+
+        
+</head>
+<body>
+    
+    
+    <div id="legend-container" style="
+        position: fixed;
+        bottom: 50px;
+        left: 50px;
+        width: 220px;
+        background-color: white;
+        border: 2px solid #ccc;
+        border-radius: 5px;
+        padding: 12px;
+        z-index: 9999;
+        font-size: 13px;
+        box-shadow: 0 2px 6px rgba(0,0,0,0.2);
+        font-family: Arial, sans-serif;
+    ">
+        <div style="font-weight: bold; font-size: 14px; margin-bottom: 10px; color: #333;">Legenda</div>
+        <div id="legend-items"></div>
+    </div>
+    
+    <script>
+        var colorMap = {"river": "#1f77b4"};
+        var container = document.getElementById('legend-items');
+        
+        for (var tag in colorMap) {
+            var color = colorMap[tag];
+            
+            var item = document.createElement('div');
+            item.style.display = 'flex';
+            item.style.alignItems = 'center';
+            item.style.marginBottom = '8px';
+            item.style.gap = '8px';
+            
+            var box = document.createElement('div');
+            box.style.width = '16px';
+            box.style.height = '16px';
+            box.style.borderRadius = '50%';
+            box.style.border = '1px solid #999';
+            box.style.backgroundColor = color;
+            box.style.flexShrink = '0';
+            
+            var label = document.createElement('div');
+            label.style.color = '#333';
+            label.style.fontSize = '13px';
+            label.textContent = tag;
+            label.title = tag;
+            
+            item.appendChild(box);
+            item.appendChild(label);
+            container.appendChild(item);
+        }
+    </script>
+    
+    
+            <div class="folium-map" id="map_f4450bf3fdc3b9e5121940fa474aa734" ></div>
+        
+</body>
+<script>
+    
+    
+            var map_f4450bf3fdc3b9e5121940fa474aa734 = L.map(
+                "map_f4450bf3fdc3b9e5121940fa474aa734",
+                {
+                    center: [-23.650080199720747, -46.648096605284884],
+                    crs: L.CRS.EPSG3857,
+                    ...{
+  "zoom": 11,
+  "zoomControl": true,
+  "preferCanvas": false,
+}
+
+                }
+            );
+
+            
+
+        
+    
+            var tile_layer_d72e3948fc175ecbae843641c72bbfeb = L.tileLayer(
+                "https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png",
+                {
+  "minZoom": 0,
+  "maxZoom": 20,
+  "maxNativeZoom": 20,
+  "noWrap": false,
+  "attribution": "\u0026copy; \u003ca href=\"https://www.openstreetmap.org/copyright\"\u003eOpenStreetMap\u003c/a\u003e contributors \u0026copy; \u003ca href=\"https://carto.com/attributions\"\u003eCARTO\u003c/a\u003e",
+  "subdomains": "abcd",
+  "detectRetina": false,
+  "tms": false,
+  "opacity": 1,
+}
+
+            );
+        
+    
+            tile_layer_d72e3948fc175ecbae843641c72bbfeb.addTo(map_f4450bf3fdc3b9e5121940fa474aa734);
+        
+    
+            var feature_group_a4cd0622307c2efd89c881659d241073 = L.featureGroup(
+                {
+}
+            );
+        
+    
+            var circle_marker_628f030d89c25b87b1c46255c3a7bec0 = L.circleMarker(
+                [-23.524909674487077, -46.74925580244707],
+                {"bubblingMouseEvents": true, "color": "#1f77b4", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#1f77b4", "fillOpacity": 0.7, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 4, "stroke": true, "weight": 3}
+            ).addTo(feature_group_a4cd0622307c2efd89c881659d241073);
+        
+    
+        var popup_40663ad611a0a31e918991777f71cb40 = L.popup({
+  "maxWidth": 300,
+});
+
+        
+            
+                var html_1c2c58dd83f997a3f07c4126381d8d6f = $(`<div id="html_1c2c58dd83f997a3f07c4126381d8d6f" style="width: 100.0%; height: 100.0%;"><div style='font-family: Arial; font-size: 12px; width: 250px;'><b>Detalhes da Feature OSM</b><br><hr><b>Tipo:</b> Point<br><b>water:</b> river<br><b>name:</b> nan<br></div></div>`)[0];
+                popup_40663ad611a0a31e918991777f71cb40.setContent(html_1c2c58dd83f997a3f07c4126381d8d6f);
+            
+        
+
+        circle_marker_628f030d89c25b87b1c46255c3a7bec0.bindPopup(popup_40663ad611a0a31e918991777f71cb40)
+        ;
+
+        
+    
+    
+            var circle_marker_97d57962eb721efef31435d5d8d7abc6 = L.circleMarker(
+                [-23.663032782669223, -46.72333595903661],
+                {"bubblingMouseEvents": true, "color": "#1f77b4", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#1f77b4", "fillOpacity": 0.7, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 4, "stroke": true, "weight": 3}
+            ).addTo(feature_group_a4cd0622307c2efd89c881659d241073);
+        
+    
+        var popup_46a05e2ba84cc2d5e10267efbeb15f5b = L.popup({
+  "maxWidth": 300,
+});
+
+        
+            
+                var html_7c013141b8291fc6b5a248e2bebb7264 = $(`<div id="html_7c013141b8291fc6b5a248e2bebb7264" style="width: 100.0%; height: 100.0%;"><div style='font-family: Arial; font-size: 12px; width: 250px;'><b>Detalhes da Feature OSM</b><br><hr><b>Tipo:</b> Point<br><b>water:</b> river<br><b>name:</b> nan<br></div></div>`)[0];
+                popup_46a05e2ba84cc2d5e10267efbeb15f5b.setContent(html_7c013141b8291fc6b5a248e2bebb7264);
+            
+        
+
+        circle_marker_97d57962eb721efef31435d5d8d7abc6.bindPopup(popup_46a05e2ba84cc2d5e10267efbeb15f5b)
+        ;
+
+        
+    
+    
+            var circle_marker_0e0bd5da5642550e02caf20ec208e747 = L.circleMarker(
+                [-23.596502902613313, -46.462486872179355],
+                {"bubblingMouseEvents": true, "color": "#1f77b4", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#1f77b4", "fillOpacity": 0.7, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 4, "stroke": true, "weight": 3}
+            ).addTo(feature_group_a4cd0622307c2efd89c881659d241073);
+        
+    
+        var popup_b83b77b91bc8185f948f8bd73923ca95 = L.popup({
+  "maxWidth": 300,
+});
+
+        
+            
+                var html_f5a34d1ab30f4ad9ff53fd6cc8d7c26d = $(`<div id="html_f5a34d1ab30f4ad9ff53fd6cc8d7c26d" style="width: 100.0%; height: 100.0%;"><div style='font-family: Arial; font-size: 12px; width: 250px;'><b>Detalhes da Feature OSM</b><br><hr><b>Tipo:</b> Point<br><b>water:</b> river<br><b>name:</b> nan<br></div></div>`)[0];
+                popup_b83b77b91bc8185f948f8bd73923ca95.setContent(html_f5a34d1ab30f4ad9ff53fd6cc8d7c26d);
+            
+        
+
+        circle_marker_0e0bd5da5642550e02caf20ec208e747.bindPopup(popup_b83b77b91bc8185f948f8bd73923ca95)
+        ;
+
+        
+    
+    
+            var circle_marker_fcbb8c2fde72db0ff4a5cbdb45638fa9 = L.circleMarker(
+                [-23.47777228816398, -46.41735478338991],
+                {"bubblingMouseEvents": true, "color": "#1f77b4", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#1f77b4", "fillOpacity": 0.7, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 4, "stroke": true, "weight": 3}
+            ).addTo(feature_group_a4cd0622307c2efd89c881659d241073);
+        
+    
+        var popup_093e74d03ceff530d1457e17dc1bb36f = L.popup({
+  "maxWidth": 300,
+});
+
+        
+            
+                var html_1558c12167b04b9524d8a343d9012133 = $(`<div id="html_1558c12167b04b9524d8a343d9012133" style="width: 100.0%; height: 100.0%;"><div style='font-family: Arial; font-size: 12px; width: 250px;'><b>Detalhes da Feature OSM</b><br><hr><b>Tipo:</b> Point<br><b>water:</b> river<br><b>name:</b> Rio Tietê<br></div></div>`)[0];
+                popup_093e74d03ceff530d1457e17dc1bb36f.setContent(html_1558c12167b04b9524d8a343d9012133);
+            
+        
+
+        circle_marker_fcbb8c2fde72db0ff4a5cbdb45638fa9.bindPopup(popup_093e74d03ceff530d1457e17dc1bb36f)
+        ;
+
+        
+    
+    
+            var circle_marker_0a118f520d2428c3a3f0b54a4b756b2b = L.circleMarker(
+                [-23.644887538433043, -46.75792041314776],
+                {"bubblingMouseEvents": true, "color": "#1f77b4", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#1f77b4", "fillOpacity": 0.7, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 4, "stroke": true, "weight": 3}
+            ).addTo(feature_group_a4cd0622307c2efd89c881659d241073);
+        
+    
+        var popup_75ec6ca107df7bc442cd353e7ff8036c = L.popup({
+  "maxWidth": 300,
+});
+
+        
+            
+                var html_3407cf97df5f0008cfeee14edd44667d = $(`<div id="html_3407cf97df5f0008cfeee14edd44667d" style="width: 100.0%; height: 100.0%;"><div style='font-family: Arial; font-size: 12px; width: 250px;'><b>Detalhes da Feature OSM</b><br><hr><b>Tipo:</b> Point<br><b>water:</b> river<br><b>name:</b> Lago Morumbi Sul<br></div></div>`)[0];
+                popup_75ec6ca107df7bc442cd353e7ff8036c.setContent(html_3407cf97df5f0008cfeee14edd44667d);
+            
+        
+
+        circle_marker_0a118f520d2428c3a3f0b54a4b756b2b.bindPopup(popup_75ec6ca107df7bc442cd353e7ff8036c)
+        ;
+
+        
+    
+    
+            var circle_marker_6357cac2e1c201d398b5a192b1d52b59 = L.circleMarker(
+                [-23.625772750236745, -46.71041437150399],
+                {"bubblingMouseEvents": true, "color": "#1f77b4", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#1f77b4", "fillOpacity": 0.7, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 4, "stroke": true, "weight": 3}
+            ).addTo(feature_group_a4cd0622307c2efd89c881659d241073);
+        
+    
+        var popup_6be4d53ac60fc7571cd1f32d8b2b12d9 = L.popup({
+  "maxWidth": 300,
+});
+
+        
+            
+                var html_df1a6a2689e0d02216b0cea0eb0ad113 = $(`<div id="html_df1a6a2689e0d02216b0cea0eb0ad113" style="width: 100.0%; height: 100.0%;"><div style='font-family: Arial; font-size: 12px; width: 250px;'><b>Detalhes da Feature OSM</b><br><hr><b>Tipo:</b> Point<br><b>water:</b> river<br><b>name:</b> nan<br></div></div>`)[0];
+                popup_6be4d53ac60fc7571cd1f32d8b2b12d9.setContent(html_df1a6a2689e0d02216b0cea0eb0ad113);
+            
+        
+
+        circle_marker_6357cac2e1c201d398b5a192b1d52b59.bindPopup(popup_6be4d53ac60fc7571cd1f32d8b2b12d9)
+        ;
+
+        
+    
+    
+            var circle_marker_c6d6c6043720e8eac57c092d580c3c46 = L.circleMarker(
+                [-23.671828451337873, -46.70665221382064],
+                {"bubblingMouseEvents": true, "color": "#1f77b4", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#1f77b4", "fillOpacity": 0.7, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 4, "stroke": true, "weight": 3}
+            ).addTo(feature_group_a4cd0622307c2efd89c881659d241073);
+        
+    
+        var popup_9219c068530ac0eec39c1d59d142384f = L.popup({
+  "maxWidth": 300,
+});
+
+        
+            
+                var html_f9fbf8d2667281c985a8715262ce2148 = $(`<div id="html_f9fbf8d2667281c985a8715262ce2148" style="width: 100.0%; height: 100.0%;"><div style='font-family: Arial; font-size: 12px; width: 250px;'><b>Detalhes da Feature OSM</b><br><hr><b>Tipo:</b> Point<br><b>water:</b> river<br><b>name:</b> nan<br></div></div>`)[0];
+                popup_9219c068530ac0eec39c1d59d142384f.setContent(html_f9fbf8d2667281c985a8715262ce2148);
+            
+        
+
+        circle_marker_c6d6c6043720e8eac57c092d580c3c46.bindPopup(popup_9219c068530ac0eec39c1d59d142384f)
+        ;
+
+        
+    
+    
+            var circle_marker_88fde5bcbf01da615fe78100e19b0958 = L.circleMarker(
+                [-23.671828451337873, -46.70665221382064],
+                {"bubblingMouseEvents": true, "color": "#1f77b4", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#1f77b4", "fillOpacity": 0.7, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 4, "stroke": true, "weight": 3}
+            ).addTo(feature_group_a4cd0622307c2efd89c881659d241073);
+        
+    
+        var popup_b35003cf5fbb699bdaa09f75f6a62ffe = L.popup({
+  "maxWidth": 300,
+});
+
+        
+            
+                var html_71c601ba374b12eaf813143df7f8d4b1 = $(`<div id="html_71c601ba374b12eaf813143df7f8d4b1" style="width: 100.0%; height: 100.0%;"><div style='font-family: Arial; font-size: 12px; width: 250px;'><b>Detalhes da Feature OSM</b><br><hr><b>Tipo:</b> Point<br><b>water:</b> river<br><b>name:</b> nan<br></div></div>`)[0];
+                popup_b35003cf5fbb699bdaa09f75f6a62ffe.setContent(html_71c601ba374b12eaf813143df7f8d4b1);
+            
+        
+
+        circle_marker_88fde5bcbf01da615fe78100e19b0958.bindPopup(popup_b35003cf5fbb699bdaa09f75f6a62ffe)
+        ;
+
+        
+    
+    
+            var circle_marker_ae257c415ac3c22a5dc07aa891a6a222 = L.circleMarker(
+                [-23.542779857818886, -46.736546970032194],
+                {"bubblingMouseEvents": true, "color": "#1f77b4", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#1f77b4", "fillOpacity": 0.7, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 4, "stroke": true, "weight": 3}
+            ).addTo(feature_group_a4cd0622307c2efd89c881659d241073);
+        
+    
+        var popup_643c27cd0a1019ddaad1d17196b465a7 = L.popup({
+  "maxWidth": 300,
+});
+
+        
+            
+                var html_2d34a312c2da5984f62091469a84663b = $(`<div id="html_2d34a312c2da5984f62091469a84663b" style="width: 100.0%; height: 100.0%;"><div style='font-family: Arial; font-size: 12px; width: 250px;'><b>Detalhes da Feature OSM</b><br><hr><b>Tipo:</b> Point<br><b>water:</b> river<br><b>name:</b> nan<br></div></div>`)[0];
+                popup_643c27cd0a1019ddaad1d17196b465a7.setContent(html_2d34a312c2da5984f62091469a84663b);
+            
+        
+
+        circle_marker_ae257c415ac3c22a5dc07aa891a6a222.bindPopup(popup_643c27cd0a1019ddaad1d17196b465a7)
+        ;
+
+        
+    
+    
+            var circle_marker_0859aefb18321d8d3e5dc9690231204f = L.circleMarker(
+                [-23.51666724676519, -46.650830616079304],
+                {"bubblingMouseEvents": true, "color": "#1f77b4", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#1f77b4", "fillOpacity": 0.7, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 4, "stroke": true, "weight": 3}
+            ).addTo(feature_group_a4cd0622307c2efd89c881659d241073);
+        
+    
+        var popup_dde180882e1e38c8f1290cb21ae39ed5 = L.popup({
+  "maxWidth": 300,
+});
+
+        
+            
+                var html_d990729572c42326309d0226ad315eda = $(`<div id="html_d990729572c42326309d0226ad315eda" style="width: 100.0%; height: 100.0%;"><div style='font-family: Arial; font-size: 12px; width: 250px;'><b>Detalhes da Feature OSM</b><br><hr><b>Tipo:</b> Point<br><b>water:</b> river<br><b>name:</b> nan<br></div></div>`)[0];
+                popup_dde180882e1e38c8f1290cb21ae39ed5.setContent(html_d990729572c42326309d0226ad315eda);
+            
+        
+
+        circle_marker_0859aefb18321d8d3e5dc9690231204f.bindPopup(popup_dde180882e1e38c8f1290cb21ae39ed5)
+        ;
+
+        
+    
+    
+            var circle_marker_49f571e1705ec8d1bb3e19a0a8b41312 = L.circleMarker(
+                [-23.526258612405325, -46.5960451892154],
+                {"bubblingMouseEvents": true, "color": "#1f77b4", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#1f77b4", "fillOpacity": 0.7, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 4, "stroke": true, "weight": 3}
+            ).addTo(feature_group_a4cd0622307c2efd89c881659d241073);
+        
+    
+        var popup_7ecfa5e8f425b7710e95241c90e59a09 = L.popup({
+  "maxWidth": 300,
+});
+
+        
+            
+                var html_295a27980b6ce3069ab6c94396e4b5a2 = $(`<div id="html_295a27980b6ce3069ab6c94396e4b5a2" style="width: 100.0%; height: 100.0%;"><div style='font-family: Arial; font-size: 12px; width: 250px;'><b>Detalhes da Feature OSM</b><br><hr><b>Tipo:</b> Point<br><b>water:</b> river<br><b>name:</b> Rio Tietê<br></div></div>`)[0];
+                popup_7ecfa5e8f425b7710e95241c90e59a09.setContent(html_295a27980b6ce3069ab6c94396e4b5a2);
+            
+        
+
+        circle_marker_49f571e1705ec8d1bb3e19a0a8b41312.bindPopup(popup_7ecfa5e8f425b7710e95241c90e59a09)
+        ;
+
+        
+    
+    
+            var circle_marker_b55ba1f5f8b3bc6dca0f768540291059 = L.circleMarker(
+                [-23.526258612405325, -46.5960451892154],
+                {"bubblingMouseEvents": true, "color": "#1f77b4", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#1f77b4", "fillOpacity": 0.7, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 4, "stroke": true, "weight": 3}
+            ).addTo(feature_group_a4cd0622307c2efd89c881659d241073);
+        
+    
+        var popup_7ea81cb3ab3f7168f07f2f6647163d8d = L.popup({
+  "maxWidth": 300,
+});
+
+        
+            
+                var html_ff30ae71153e30184a5cca37a6e2430f = $(`<div id="html_ff30ae71153e30184a5cca37a6e2430f" style="width: 100.0%; height: 100.0%;"><div style='font-family: Arial; font-size: 12px; width: 250px;'><b>Detalhes da Feature OSM</b><br><hr><b>Tipo:</b> Point<br><b>water:</b> river<br><b>name:</b> Rio Tietê<br></div></div>`)[0];
+                popup_7ea81cb3ab3f7168f07f2f6647163d8d.setContent(html_ff30ae71153e30184a5cca37a6e2430f);
+            
+        
+
+        circle_marker_b55ba1f5f8b3bc6dca0f768540291059.bindPopup(popup_7ea81cb3ab3f7168f07f2f6647163d8d)
+        ;
+
+        
+    
+    
+            var circle_marker_fef4ae8dc860dca03dc535d6cba187fc = L.circleMarker(
+                [-23.69872394549819, -46.684411155661984],
+                {"bubblingMouseEvents": true, "color": "#1f77b4", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#1f77b4", "fillOpacity": 0.7, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 4, "stroke": true, "weight": 3}
+            ).addTo(feature_group_a4cd0622307c2efd89c881659d241073);
+        
+    
+        var popup_47a6d3f1201dc2200e7910b13861ca61 = L.popup({
+  "maxWidth": 300,
+});
+
+        
+            
+                var html_bb357c8659b8a21662ccfb8b10780f1a = $(`<div id="html_bb357c8659b8a21662ccfb8b10780f1a" style="width: 100.0%; height: 100.0%;"><div style='font-family: Arial; font-size: 12px; width: 250px;'><b>Detalhes da Feature OSM</b><br><hr><b>Tipo:</b> Point<br><b>water:</b> river<br><b>name:</b> nan<br></div></div>`)[0];
+                popup_47a6d3f1201dc2200e7910b13861ca61.setContent(html_bb357c8659b8a21662ccfb8b10780f1a);
+            
+        
+
+        circle_marker_fef4ae8dc860dca03dc535d6cba187fc.bindPopup(popup_47a6d3f1201dc2200e7910b13861ca61)
+        ;
+
+        
+    
+    
+            var circle_marker_29e75610e70977b819433285c1db7fc0 = L.circleMarker(
+                [-23.512323619921393, -46.71714482886216],
+                {"bubblingMouseEvents": true, "color": "#1f77b4", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#1f77b4", "fillOpacity": 0.7, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 4, "stroke": true, "weight": 3}
+            ).addTo(feature_group_a4cd0622307c2efd89c881659d241073);
+        
+    
+        var popup_41680dca30821f80cd960d9dd4cf7785 = L.popup({
+  "maxWidth": 300,
+});
+
+        
+            
+                var html_8dc706b9220c29eaf6418eb47206f17b = $(`<div id="html_8dc706b9220c29eaf6418eb47206f17b" style="width: 100.0%; height: 100.0%;"><div style='font-family: Arial; font-size: 12px; width: 250px;'><b>Detalhes da Feature OSM</b><br><hr><b>Tipo:</b> Point<br><b>water:</b> river<br><b>name:</b> nan<br></div></div>`)[0];
+                popup_41680dca30821f80cd960d9dd4cf7785.setContent(html_8dc706b9220c29eaf6418eb47206f17b);
+            
+        
+
+        circle_marker_29e75610e70977b819433285c1db7fc0.bindPopup(popup_41680dca30821f80cd960d9dd4cf7785)
+        ;
+
+        
+    
+    
+            var circle_marker_c37091e37a0cda23ef14f96d8f22f5aa = L.circleMarker(
+                [-23.562753531212998, -46.71394917036376],
+                {"bubblingMouseEvents": true, "color": "#1f77b4", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#1f77b4", "fillOpacity": 0.7, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 4, "stroke": true, "weight": 3}
+            ).addTo(feature_group_a4cd0622307c2efd89c881659d241073);
+        
+    
+        var popup_1b01debe4118ad752ab061f37979d058 = L.popup({
+  "maxWidth": 300,
+});
+
+        
+            
+                var html_38f31202c4e422b58b948e6ddd754a82 = $(`<div id="html_38f31202c4e422b58b948e6ddd754a82" style="width: 100.0%; height: 100.0%;"><div style='font-family: Arial; font-size: 12px; width: 250px;'><b>Detalhes da Feature OSM</b><br><hr><b>Tipo:</b> Point<br><b>water:</b> river<br><b>name:</b> nan<br></div></div>`)[0];
+                popup_1b01debe4118ad752ab061f37979d058.setContent(html_38f31202c4e422b58b948e6ddd754a82);
+            
+        
+
+        circle_marker_c37091e37a0cda23ef14f96d8f22f5aa.bindPopup(popup_1b01debe4118ad752ab061f37979d058)
+        ;
+
+        
+    
+    
+            var circle_marker_7a75799b12d45b58ee346b905b739897 = L.circleMarker(
+                [-23.572380382118595, -46.70153600819031],
+                {"bubblingMouseEvents": true, "color": "#1f77b4", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#1f77b4", "fillOpacity": 0.7, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 4, "stroke": true, "weight": 3}
+            ).addTo(feature_group_a4cd0622307c2efd89c881659d241073);
+        
+    
+        var popup_59877da696e9330174a0498c06fbeca9 = L.popup({
+  "maxWidth": 300,
+});
+
+        
+            
+                var html_8443d2bdeeb592be3d6e6d04a843f036 = $(`<div id="html_8443d2bdeeb592be3d6e6d04a843f036" style="width: 100.0%; height: 100.0%;"><div style='font-family: Arial; font-size: 12px; width: 250px;'><b>Detalhes da Feature OSM</b><br><hr><b>Tipo:</b> Point<br><b>water:</b> river<br><b>name:</b> nan<br></div></div>`)[0];
+                popup_59877da696e9330174a0498c06fbeca9.setContent(html_8443d2bdeeb592be3d6e6d04a843f036);
+            
+        
+
+        circle_marker_7a75799b12d45b58ee346b905b739897.bindPopup(popup_59877da696e9330174a0498c06fbeca9)
+        ;
+
+        
+    
+    
+            var circle_marker_3ec3a46866e5bf3296e5652919c50956 = L.circleMarker(
+                [-23.509658417008897, -46.55086315578892],
+                {"bubblingMouseEvents": true, "color": "#1f77b4", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#1f77b4", "fillOpacity": 0.7, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 4, "stroke": true, "weight": 3}
+            ).addTo(feature_group_a4cd0622307c2efd89c881659d241073);
+        
+    
+        var popup_5a5d08b31a73e0ddc2320faf22791dcb = L.popup({
+  "maxWidth": 300,
+});
+
+        
+            
+                var html_b07373be995692c21672ed7b08414fbb = $(`<div id="html_b07373be995692c21672ed7b08414fbb" style="width: 100.0%; height: 100.0%;"><div style='font-family: Arial; font-size: 12px; width: 250px;'><b>Detalhes da Feature OSM</b><br><hr><b>Tipo:</b> Point<br><b>water:</b> river<br><b>name:</b> Rio Tietê<br></div></div>`)[0];
+                popup_5a5d08b31a73e0ddc2320faf22791dcb.setContent(html_b07373be995692c21672ed7b08414fbb);
+            
+        
+
+        circle_marker_3ec3a46866e5bf3296e5652919c50956.bindPopup(popup_5a5d08b31a73e0ddc2320faf22791dcb)
+        ;
+
+        
+    
+    
+            var circle_marker_306568ee44056b85315c5072c31e3885 = L.circleMarker(
+                [-23.484774205405152, -46.503086311517116],
+                {"bubblingMouseEvents": true, "color": "#1f77b4", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#1f77b4", "fillOpacity": 0.7, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 4, "stroke": true, "weight": 3}
+            ).addTo(feature_group_a4cd0622307c2efd89c881659d241073);
+        
+    
+        var popup_0f503bbac683dfe0e1f4462f35a07b31 = L.popup({
+  "maxWidth": 300,
+});
+
+        
+            
+                var html_010ec0b50ed53be48a0fe8269582ca8e = $(`<div id="html_010ec0b50ed53be48a0fe8269582ca8e" style="width: 100.0%; height: 100.0%;"><div style='font-family: Arial; font-size: 12px; width: 250px;'><b>Detalhes da Feature OSM</b><br><hr><b>Tipo:</b> Point<br><b>water:</b> river<br><b>name:</b> Rio Tietê<br></div></div>`)[0];
+                popup_0f503bbac683dfe0e1f4462f35a07b31.setContent(html_010ec0b50ed53be48a0fe8269582ca8e);
+            
+        
+
+        circle_marker_306568ee44056b85315c5072c31e3885.bindPopup(popup_0f503bbac683dfe0e1f4462f35a07b31)
+        ;
+
+        
+    
+    
+            var circle_marker_fb423fa0e85ea69ce67cf8713216dfda = L.circleMarker(
+                [-23.479262548748096, -46.49452483810077],
+                {"bubblingMouseEvents": true, "color": "#1f77b4", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#1f77b4", "fillOpacity": 0.7, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 4, "stroke": true, "weight": 3}
+            ).addTo(feature_group_a4cd0622307c2efd89c881659d241073);
+        
+    
+        var popup_0b99edc78aa32ebc1eacc21065882bb3 = L.popup({
+  "maxWidth": 300,
+});
+
+        
+            
+                var html_ec450f4a8cb29f6086b30a4fe89e2252 = $(`<div id="html_ec450f4a8cb29f6086b30a4fe89e2252" style="width: 100.0%; height: 100.0%;"><div style='font-family: Arial; font-size: 12px; width: 250px;'><b>Detalhes da Feature OSM</b><br><hr><b>Tipo:</b> Point<br><b>water:</b> river<br><b>name:</b> Canal de Circunvalação do Rio Tietê<br></div></div>`)[0];
+                popup_0b99edc78aa32ebc1eacc21065882bb3.setContent(html_ec450f4a8cb29f6086b30a4fe89e2252);
+            
+        
+
+        circle_marker_fb423fa0e85ea69ce67cf8713216dfda.bindPopup(popup_0b99edc78aa32ebc1eacc21065882bb3)
+        ;
+
+        
+    
+    
+            var circle_marker_2a773935166e0e30976125efba2d0d4b = L.circleMarker(
+                [-23.504176316377134, -46.72633858255432],
+                {"bubblingMouseEvents": true, "color": "#1f77b4", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#1f77b4", "fillOpacity": 0.7, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 4, "stroke": true, "weight": 3}
+            ).addTo(feature_group_a4cd0622307c2efd89c881659d241073);
+        
+    
+        var popup_6e0ae547749347fc047b6570c3d3041c = L.popup({
+  "maxWidth": 300,
+});
+
+        
+            
+                var html_c854b0cd95e6fb26038c3b5919bb55d2 = $(`<div id="html_c854b0cd95e6fb26038c3b5919bb55d2" style="width: 100.0%; height: 100.0%;"><div style='font-family: Arial; font-size: 12px; width: 250px;'><b>Detalhes da Feature OSM</b><br><hr><b>Tipo:</b> Point<br><b>water:</b> river<br><b>name:</b> nan<br></div></div>`)[0];
+                popup_6e0ae547749347fc047b6570c3d3041c.setContent(html_c854b0cd95e6fb26038c3b5919bb55d2);
+            
+        
+
+        circle_marker_2a773935166e0e30976125efba2d0d4b.bindPopup(popup_6e0ae547749347fc047b6570c3d3041c)
+        ;
+
+        
+    
+    
+            var circle_marker_b7115e44bf166d9087a89b534a0aac6c = L.circleMarker(
+                [-23.524794471332264, -46.56715762521477],
+                {"bubblingMouseEvents": true, "color": "#1f77b4", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#1f77b4", "fillOpacity": 0.7, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 4, "stroke": true, "weight": 3}
+            ).addTo(feature_group_a4cd0622307c2efd89c881659d241073);
+        
+    
+        var popup_509c3ef94161cb45c3485efff6043dfe = L.popup({
+  "maxWidth": 300,
+});
+
+        
+            
+                var html_0ce7444d4cae6a2d7f7be85e00b4ce85 = $(`<div id="html_0ce7444d4cae6a2d7f7be85e00b4ce85" style="width: 100.0%; height: 100.0%;"><div style='font-family: Arial; font-size: 12px; width: 250px;'><b>Detalhes da Feature OSM</b><br><hr><b>Tipo:</b> Point<br><b>water:</b> river<br><b>name:</b> Rio Tietê<br></div></div>`)[0];
+                popup_509c3ef94161cb45c3485efff6043dfe.setContent(html_0ce7444d4cae6a2d7f7be85e00b4ce85);
+            
+        
+
+        circle_marker_b7115e44bf166d9087a89b534a0aac6c.bindPopup(popup_509c3ef94161cb45c3485efff6043dfe)
+        ;
+
+        
+    
+    
+            var circle_marker_3447c8ecb9ae5ab30df2300bd2c4a4c5 = L.circleMarker(
+                [-23.53073512729026, -46.63144732011533],
+                {"bubblingMouseEvents": true, "color": "#1f77b4", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#1f77b4", "fillOpacity": 0.7, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 4, "stroke": true, "weight": 3}
+            ).addTo(feature_group_a4cd0622307c2efd89c881659d241073);
+        
+    
+        var popup_0d3a08203b49bc408e482a50b8fee287 = L.popup({
+  "maxWidth": 300,
+});
+
+        
+            
+                var html_7d7d13663b6e4454e744cb5603937ae4 = $(`<div id="html_7d7d13663b6e4454e744cb5603937ae4" style="width: 100.0%; height: 100.0%;"><div style='font-family: Arial; font-size: 12px; width: 250px;'><b>Detalhes da Feature OSM</b><br><hr><b>Tipo:</b> Point<br><b>water:</b> river<br><b>name:</b> Rio Tamanduateí<br></div></div>`)[0];
+                popup_0d3a08203b49bc408e482a50b8fee287.setContent(html_7d7d13663b6e4454e744cb5603937ae4);
+            
+        
+
+        circle_marker_3447c8ecb9ae5ab30df2300bd2c4a4c5.bindPopup(popup_0d3a08203b49bc408e482a50b8fee287)
+        ;
+
+        
+    
+    
+            var poly_line_e46598b3ea5efc484a78ba85e3d73049 = L.polyline(
+                [[-23.500879800000007, -46.751526], [-23.5008418, -46.7508578]],
+                {"bubblingMouseEvents": true, "color": "#1f77b4", "dashArray": null, "dashOffset": null, "fill": false, "fillColor": "#1f77b4", "fillOpacity": 0.2, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "noClip": false, "opacity": 0.8, "smoothFactor": 1.0, "stroke": true, "weight": 2}
+            ).addTo(feature_group_a4cd0622307c2efd89c881659d241073);
+        
+    
+        var popup_13b5d0d567c589d8b1087cc84559c0cd = L.popup({
+  "maxWidth": 300,
+});
+
+        
+            
+                var html_b65d9a73cb272e3ef68fd8b1ae16eed2 = $(`<div id="html_b65d9a73cb272e3ef68fd8b1ae16eed2" style="width: 100.0%; height: 100.0%;"><div style='font-family: Arial; font-size: 12px; width: 250px;'><b>Detalhes da Feature OSM</b><br><hr><b>Tipo:</b> LineString<br><b>water:</b> river<br><b>name:</b> nan<br></div></div>`)[0];
+                popup_13b5d0d567c589d8b1087cc84559c0cd.setContent(html_b65d9a73cb272e3ef68fd8b1ae16eed2);
+            
+        
+
+        poly_line_e46598b3ea5efc484a78ba85e3d73049.bindPopup(popup_13b5d0d567c589d8b1087cc84559c0cd)
+        ;
+
+        
+    
+    
+            var circle_marker_2bbc2366011b935d77e4864cbee19ae2 = L.circleMarker(
+                [-23.463337082477725, -46.65937528381963],
+                {"bubblingMouseEvents": true, "color": "#1f77b4", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#1f77b4", "fillOpacity": 0.7, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 4, "stroke": true, "weight": 3}
+            ).addTo(feature_group_a4cd0622307c2efd89c881659d241073);
+        
+    
+        var popup_656abf80435d872730d36f233f31b363 = L.popup({
+  "maxWidth": 300,
+});
+
+        
+            
+                var html_78c0136ab437c30b140d1519e5f44a1b = $(`<div id="html_78c0136ab437c30b140d1519e5f44a1b" style="width: 100.0%; height: 100.0%;"><div style='font-family: Arial; font-size: 12px; width: 250px;'><b>Detalhes da Feature OSM</b><br><hr><b>Tipo:</b> Point<br><b>water:</b> river<br><b>name:</b> nan<br></div></div>`)[0];
+                popup_656abf80435d872730d36f233f31b363.setContent(html_78c0136ab437c30b140d1519e5f44a1b);
+            
+        
+
+        circle_marker_2bbc2366011b935d77e4864cbee19ae2.bindPopup(popup_656abf80435d872730d36f233f31b363)
+        ;
+
+        
+    
+    
+            var circle_marker_5d4f3f5f86e614817afbf9e2c8889b93 = L.circleMarker(
+                [-23.593695208930754, -46.58023088806396],
+                {"bubblingMouseEvents": true, "color": "#1f77b4", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#1f77b4", "fillOpacity": 0.7, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 4, "stroke": true, "weight": 3}
+            ).addTo(feature_group_a4cd0622307c2efd89c881659d241073);
+        
+    
+        var popup_7e57e8b0efa5cfe91ab958640a21e09f = L.popup({
+  "maxWidth": 300,
+});
+
+        
+            
+                var html_02b489440c171b739ebf6862df2456a0 = $(`<div id="html_02b489440c171b739ebf6862df2456a0" style="width: 100.0%; height: 100.0%;"><div style='font-family: Arial; font-size: 12px; width: 250px;'><b>Detalhes da Feature OSM</b><br><hr><b>Tipo:</b> Point<br><b>water:</b> river<br><b>name:</b> Rio Tamanduateí<br></div></div>`)[0];
+                popup_7e57e8b0efa5cfe91ab958640a21e09f.setContent(html_02b489440c171b739ebf6862df2456a0);
+            
+        
+
+        circle_marker_5d4f3f5f86e614817afbf9e2c8889b93.bindPopup(popup_7e57e8b0efa5cfe91ab958640a21e09f)
+        ;
+
+        
+    
+    
+            var circle_marker_d25c60e877d767da5cf62bd9d4356bed = L.circleMarker(
+                [-23.593695208930754, -46.58023088806396],
+                {"bubblingMouseEvents": true, "color": "#1f77b4", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#1f77b4", "fillOpacity": 0.7, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 4, "stroke": true, "weight": 3}
+            ).addTo(feature_group_a4cd0622307c2efd89c881659d241073);
+        
+    
+        var popup_75d988402798ede89dab30d13675bb53 = L.popup({
+  "maxWidth": 300,
+});
+
+        
+            
+                var html_f0c23155e5b9bc639625c1c5029b2d50 = $(`<div id="html_f0c23155e5b9bc639625c1c5029b2d50" style="width: 100.0%; height: 100.0%;"><div style='font-family: Arial; font-size: 12px; width: 250px;'><b>Detalhes da Feature OSM</b><br><hr><b>Tipo:</b> Point<br><b>water:</b> river<br><b>name:</b> Rio Tamanduateí<br></div></div>`)[0];
+                popup_75d988402798ede89dab30d13675bb53.setContent(html_f0c23155e5b9bc639625c1c5029b2d50);
+            
+        
+
+        circle_marker_d25c60e877d767da5cf62bd9d4356bed.bindPopup(popup_75d988402798ede89dab30d13675bb53)
+        ;
+
+        
+    
+    
+            var circle_marker_0991a1a88262b05a403680d6dd11ae56 = L.circleMarker(
+                [-23.74905004359856, -46.68264336988762],
+                {"bubblingMouseEvents": true, "color": "#1f77b4", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#1f77b4", "fillOpacity": 0.7, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 4, "stroke": true, "weight": 3}
+            ).addTo(feature_group_a4cd0622307c2efd89c881659d241073);
+        
+    
+        var popup_3be9632616a8f43b4262fa1fc6d92239 = L.popup({
+  "maxWidth": 300,
+});
+
+        
+            
+                var html_028750935a85c20a9f5ee49ee7d402c2 = $(`<div id="html_028750935a85c20a9f5ee49ee7d402c2" style="width: 100.0%; height: 100.0%;"><div style='font-family: Arial; font-size: 12px; width: 250px;'><b>Detalhes da Feature OSM</b><br><hr><b>Tipo:</b> Point<br><b>water:</b> river<br><b>name:</b> nan<br></div></div>`)[0];
+                popup_3be9632616a8f43b4262fa1fc6d92239.setContent(html_028750935a85c20a9f5ee49ee7d402c2);
+            
+        
+
+        circle_marker_0991a1a88262b05a403680d6dd11ae56.bindPopup(popup_3be9632616a8f43b4262fa1fc6d92239)
+        ;
+
+        
+    
+    
+            var circle_marker_41ca0abb83d3be9a3577c799929f9480 = L.circleMarker(
+                [-23.502085891145114, -46.760417152048525],
+                {"bubblingMouseEvents": true, "color": "#1f77b4", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#1f77b4", "fillOpacity": 0.7, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 4, "stroke": true, "weight": 3}
+            ).addTo(feature_group_a4cd0622307c2efd89c881659d241073);
+        
+    
+        var popup_4158eb44528e4e2cac0f392bf2db7b83 = L.popup({
+  "maxWidth": 300,
+});
+
+        
+            
+                var html_0569fdc775cd00907683e4d0d6c5d589 = $(`<div id="html_0569fdc775cd00907683e4d0d6c5d589" style="width: 100.0%; height: 100.0%;"><div style='font-family: Arial; font-size: 12px; width: 250px;'><b>Detalhes da Feature OSM</b><br><hr><b>Tipo:</b> Point<br><b>water:</b> river<br><b>name:</b> Ribeirão Vermelho<br></div></div>`)[0];
+                popup_4158eb44528e4e2cac0f392bf2db7b83.setContent(html_0569fdc775cd00907683e4d0d6c5d589);
+            
+        
+
+        circle_marker_41ca0abb83d3be9a3577c799929f9480.bindPopup(popup_4158eb44528e4e2cac0f392bf2db7b83)
+        ;
+
+        
+    
+    
+            var circle_marker_f2a6f4c3c13502719a8ff80de2097db3 = L.circleMarker(
+                [-23.5667602951435, -46.71418400798024],
+                {"bubblingMouseEvents": true, "color": "#1f77b4", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#1f77b4", "fillOpacity": 0.7, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 4, "stroke": true, "weight": 3}
+            ).addTo(feature_group_a4cd0622307c2efd89c881659d241073);
+        
+    
+        var popup_c64095940c7d1cd0083ff1a7c551a78a = L.popup({
+  "maxWidth": 300,
+});
+
+        
+            
+                var html_919868c17ca98d9f9c5c6f1556d1442d = $(`<div id="html_919868c17ca98d9f9c5c6f1556d1442d" style="width: 100.0%; height: 100.0%;"><div style='font-family: Arial; font-size: 12px; width: 250px;'><b>Detalhes da Feature OSM</b><br><hr><b>Tipo:</b> Point<br><b>water:</b> river<br><b>name:</b> nan<br></div></div>`)[0];
+                popup_c64095940c7d1cd0083ff1a7c551a78a.setContent(html_919868c17ca98d9f9c5c6f1556d1442d);
+            
+        
+
+        circle_marker_f2a6f4c3c13502719a8ff80de2097db3.bindPopup(popup_c64095940c7d1cd0083ff1a7c551a78a)
+        ;
+
+        
+    
+    
+            var circle_marker_fff708c834293c619532c67ace8d04bb = L.circleMarker(
+                [-23.515212036511805, -46.68619113947549],
+                {"bubblingMouseEvents": true, "color": "#1f77b4", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#1f77b4", "fillOpacity": 0.7, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 4, "stroke": true, "weight": 3}
+            ).addTo(feature_group_a4cd0622307c2efd89c881659d241073);
+        
+    
+        var popup_41d34ba81da5d1007c1c149d9d826991 = L.popup({
+  "maxWidth": 300,
+});
+
+        
+            
+                var html_72a8e2c335a843e1a6a5d45a5260fcce = $(`<div id="html_72a8e2c335a843e1a6a5d45a5260fcce" style="width: 100.0%; height: 100.0%;"><div style='font-family: Arial; font-size: 12px; width: 250px;'><b>Detalhes da Feature OSM</b><br><hr><b>Tipo:</b> Point<br><b>water:</b> river<br><b>name:</b> nan<br></div></div>`)[0];
+                popup_41d34ba81da5d1007c1c149d9d826991.setContent(html_72a8e2c335a843e1a6a5d45a5260fcce);
+            
+        
+
+        circle_marker_fff708c834293c619532c67ace8d04bb.bindPopup(popup_41d34ba81da5d1007c1c149d9d826991)
+        ;
+
+        
+    
+    
+            var circle_marker_0fe8fd02ba823c23f6d14491f14a025b = L.circleMarker(
+                [-23.72892737727803, -46.7199232239724],
+                {"bubblingMouseEvents": true, "color": "#1f77b4", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#1f77b4", "fillOpacity": 0.7, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 4, "stroke": true, "weight": 3}
+            ).addTo(feature_group_a4cd0622307c2efd89c881659d241073);
+        
+    
+        var popup_12276993551bdf10fd8143cfdb7f6463 = L.popup({
+  "maxWidth": 300,
+});
+
+        
+            
+                var html_759500530eae34aeb458509d1531c64c = $(`<div id="html_759500530eae34aeb458509d1531c64c" style="width: 100.0%; height: 100.0%;"><div style='font-family: Arial; font-size: 12px; width: 250px;'><b>Detalhes da Feature OSM</b><br><hr><b>Tipo:</b> Point<br><b>water:</b> river<br><b>name:</b> Area do Rio São José<br></div></div>`)[0];
+                popup_12276993551bdf10fd8143cfdb7f6463.setContent(html_759500530eae34aeb458509d1531c64c);
+            
+        
+
+        circle_marker_0fe8fd02ba823c23f6d14491f14a025b.bindPopup(popup_12276993551bdf10fd8143cfdb7f6463)
+        ;
+
+        
+    
+    
+            var circle_marker_636d3b1985be2e76bf85939f80240b3f = L.circleMarker(
+                [-23.49495568012923, -46.37004072583869],
+                {"bubblingMouseEvents": true, "color": "#1f77b4", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#1f77b4", "fillOpacity": 0.7, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 4, "stroke": true, "weight": 3}
+            ).addTo(feature_group_a4cd0622307c2efd89c881659d241073);
+        
+    
+        var popup_3c4dd662aca5308513f2008ed2626b1b = L.popup({
+  "maxWidth": 300,
+});
+
+        
+            
+                var html_27bdfe33e98f1cacea6af1898a34def0 = $(`<div id="html_27bdfe33e98f1cacea6af1898a34def0" style="width: 100.0%; height: 100.0%;"><div style='font-family: Arial; font-size: 12px; width: 250px;'><b>Detalhes da Feature OSM</b><br><hr><b>Tipo:</b> Point<br><b>water:</b> river<br><b>name:</b> nan<br></div></div>`)[0];
+                popup_3c4dd662aca5308513f2008ed2626b1b.setContent(html_27bdfe33e98f1cacea6af1898a34def0);
+            
+        
+
+        circle_marker_636d3b1985be2e76bf85939f80240b3f.bindPopup(popup_3c4dd662aca5308513f2008ed2626b1b)
+        ;
+
+        
+    
+    
+            var circle_marker_f0a306ce06f3c6ad62572a76ad15f936 = L.circleMarker(
+                [-23.64249793081737, -46.58394212490864],
+                {"bubblingMouseEvents": true, "color": "#1f77b4", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#1f77b4", "fillOpacity": 0.7, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 4, "stroke": true, "weight": 3}
+            ).addTo(feature_group_a4cd0622307c2efd89c881659d241073);
+        
+    
+        var popup_9106b01c2f16ee6d4c6e32b689b30631 = L.popup({
+  "maxWidth": 300,
+});
+
+        
+            
+                var html_eec1a8ce8901abdb8175764605c9a645 = $(`<div id="html_eec1a8ce8901abdb8175764605c9a645" style="width: 100.0%; height: 100.0%;"><div style='font-family: Arial; font-size: 12px; width: 250px;'><b>Detalhes da Feature OSM</b><br><hr><b>Tipo:</b> Point<br><b>water:</b> river<br><b>name:</b> nan<br></div></div>`)[0];
+                popup_9106b01c2f16ee6d4c6e32b689b30631.setContent(html_eec1a8ce8901abdb8175764605c9a645);
+            
+        
+
+        circle_marker_f0a306ce06f3c6ad62572a76ad15f936.bindPopup(popup_9106b01c2f16ee6d4c6e32b689b30631)
+        ;
+
+        
+    
+    
+            var circle_marker_1df8f74fd40af5205cb9993b4ad888f3 = L.circleMarker(
+                [-23.498065898770736, -46.368891189062786],
+                {"bubblingMouseEvents": true, "color": "#1f77b4", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#1f77b4", "fillOpacity": 0.7, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 4, "stroke": true, "weight": 3}
+            ).addTo(feature_group_a4cd0622307c2efd89c881659d241073);
+        
+    
+        var popup_a18a2b51f5a93f4d56602612865ab3be = L.popup({
+  "maxWidth": 300,
+});
+
+        
+            
+                var html_a027d15ab3abf78501a7c454aa0bb125 = $(`<div id="html_a027d15ab3abf78501a7c454aa0bb125" style="width: 100.0%; height: 100.0%;"><div style='font-family: Arial; font-size: 12px; width: 250px;'><b>Detalhes da Feature OSM</b><br><hr><b>Tipo:</b> Point<br><b>water:</b> river<br><b>name:</b> Córrego 3 Pontes<br></div></div>`)[0];
+                popup_a18a2b51f5a93f4d56602612865ab3be.setContent(html_a027d15ab3abf78501a7c454aa0bb125);
+            
+        
+
+        circle_marker_1df8f74fd40af5205cb9993b4ad888f3.bindPopup(popup_a18a2b51f5a93f4d56602612865ab3be)
+        ;
+
+        
+    
+    
+            feature_group_a4cd0622307c2efd89c881659d241073.addTo(map_f4450bf3fdc3b9e5121940fa474aa734);
+        
+    
+            var layer_control_1c5be447072608ddb0e66ae033f8a2f4_layers = {
+                base_layers : {
+                    "cartodbpositron" : tile_layer_d72e3948fc175ecbae843641c72bbfeb,
+                },
+                overlays :  {
+                    "river" : feature_group_a4cd0622307c2efd89c881659d241073,
+                },
+            };
+            let layer_control_1c5be447072608ddb0e66ae033f8a2f4 = L.control.layers(
+                layer_control_1c5be447072608ddb0e66ae033f8a2f4_layers.base_layers,
+                layer_control_1c5be447072608ddb0e66ae033f8a2f4_layers.overlays,
+                {
+  "position": "topright",
+  "collapsed": true,
+  "autoZIndex": true,
+}
+            ).addTo(map_f4450bf3fdc3b9e5121940fa474aa734);
+
+        
+</script>
+</html>

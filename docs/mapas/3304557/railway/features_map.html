@@ -1,0 +1,3172 @@
+<!DOCTYPE html>
+<html>
+<head>
+    
+    <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
+    <script src="https://cdn.jsdelivr.net/npm/leaflet@1.9.3/dist/leaflet.js"></script>
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Leaflet.awesome-markers/2.0.2/leaflet.awesome-markers.js"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/leaflet@1.9.3/dist/leaflet.css"/>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/css/bootstrap.min.css"/>
+    <link rel="stylesheet" href="https://netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap-glyphicons.css"/>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.2.0/css/all.min.css"/>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/Leaflet.awesome-markers/2.0.2/leaflet.awesome-markers.css"/>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/python-visualization/folium/folium/templates/leaflet.awesome.rotate.min.css"/>
+    
+            <meta name="viewport" content="width=device-width,
+                initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+            <style>
+                #map_841bd6828f91e84a8bdeb9875815f09d {
+                    position: relative;
+                    width: 100.0%;
+                    height: 100.0%;
+                    left: 0.0%;
+                    top: 0.0%;
+                }
+                .leaflet-container { font-size: 1rem; }
+            </style>
+
+            <style>html, body {
+                width: 100%;
+                height: 100%;
+                margin: 0;
+                padding: 0;
+            }
+            </style>
+
+            <style>#map {
+                position:absolute;
+                top:0;
+                bottom:0;
+                right:0;
+                left:0;
+                }
+            </style>
+
+            <script>
+                L_NO_TOUCH = false;
+                L_DISABLE_3D = false;
+            </script>
+
+        
+</head>
+<body>
+    
+    
+    <div id="legend-container" style="
+        position: fixed;
+        bottom: 50px;
+        left: 50px;
+        width: 220px;
+        background-color: white;
+        border: 2px solid #ccc;
+        border-radius: 5px;
+        padding: 12px;
+        z-index: 9999;
+        font-size: 13px;
+        box-shadow: 0 2px 6px rgba(0,0,0,0.2);
+        font-family: Arial, sans-serif;
+    ">
+        <div style="font-weight: bold; font-size: 14px; margin-bottom: 10px; color: #333;">Legenda</div>
+        <div id="legend-items"></div>
+    </div>
+    
+    <script>
+        var colorMap = {"station": "#1f77b4"};
+        var container = document.getElementById('legend-items');
+        
+        for (var tag in colorMap) {
+            var color = colorMap[tag];
+            
+            var item = document.createElement('div');
+            item.style.display = 'flex';
+            item.style.alignItems = 'center';
+            item.style.marginBottom = '8px';
+            item.style.gap = '8px';
+            
+            var box = document.createElement('div');
+            box.style.width = '16px';
+            box.style.height = '16px';
+            box.style.borderRadius = '50%';
+            box.style.border = '1px solid #999';
+            box.style.backgroundColor = color;
+            box.style.flexShrink = '0';
+            
+            var label = document.createElement('div');
+            label.style.color = '#333';
+            label.style.fontSize = '13px';
+            label.textContent = tag;
+            label.title = tag;
+            
+            item.appendChild(box);
+            item.appendChild(label);
+            container.appendChild(item);
+        }
+    </script>
+    
+    
+            <div class="folium-map" id="map_841bd6828f91e84a8bdeb9875815f09d" ></div>
+        
+</body>
+<script>
+    
+    
+            var map_841bd6828f91e84a8bdeb9875815f09d = L.map(
+                "map_841bd6828f91e84a8bdeb9875815f09d",
+                {
+                    center: [-22.923192621605295, -43.45099032138828],
+                    crs: L.CRS.EPSG3857,
+                    ...{
+  "zoom": 11,
+  "zoomControl": true,
+  "preferCanvas": false,
+}
+
+                }
+            );
+
+            
+
+        
+    
+            var tile_layer_115b460aae13748b49fff7aeddb7811a = L.tileLayer(
+                "https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png",
+                {
+  "minZoom": 0,
+  "maxZoom": 20,
+  "maxNativeZoom": 20,
+  "noWrap": false,
+  "attribution": "\u0026copy; \u003ca href=\"https://www.openstreetmap.org/copyright\"\u003eOpenStreetMap\u003c/a\u003e contributors \u0026copy; \u003ca href=\"https://carto.com/attributions\"\u003eCARTO\u003c/a\u003e",
+  "subdomains": "abcd",
+  "detectRetina": false,
+  "tms": false,
+  "opacity": 1,
+}
+
+            );
+        
+    
+            tile_layer_115b460aae13748b49fff7aeddb7811a.addTo(map_841bd6828f91e84a8bdeb9875815f09d);
+        
+    
+            var feature_group_26d49a4d19f06bb44255a771bc828c6b = L.featureGroup(
+                {
+}
+            );
+        
+    
+            var circle_marker_6eaaf12f7a73cc177f632be57b3a4b84 = L.circleMarker(
+                [-22.963824799999998, -43.1813721],
+                {"bubblingMouseEvents": true, "color": "#1f77b4", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#1f77b4", "fillOpacity": 0.7, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 4, "stroke": true, "weight": 3}
+            ).addTo(feature_group_26d49a4d19f06bb44255a771bc828c6b);
+        
+    
+        var popup_53a3334e4a90e2558288bb115ed023bc = L.popup({
+  "maxWidth": 300,
+});
+
+        
+            
+                var html_181943c400a21a91f587270327c172f4 = $(`<div id="html_181943c400a21a91f587270327c172f4" style="width: 100.0%; height: 100.0%;"><div style='font-family: Arial; font-size: 12px; width: 250px;'><b>Detalhes da Feature OSM</b><br><hr><b>Tipo:</b> Point<br><b>railway:</b> station<br><b>name:</b> Cardeal Arcoverde / Copacabana<br></div></div>`)[0];
+                popup_53a3334e4a90e2558288bb115ed023bc.setContent(html_181943c400a21a91f587270327c172f4);
+            
+        
+
+        circle_marker_6eaaf12f7a73cc177f632be57b3a4b84.bindPopup(popup_53a3334e4a90e2558288bb115ed023bc)
+        ;
+
+        
+    
+    
+            var circle_marker_7a67de2561d0b3290cacc7d62167ab01 = L.circleMarker(
+                [-22.920645600000007, -43.1767129],
+                {"bubblingMouseEvents": true, "color": "#1f77b4", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#1f77b4", "fillOpacity": 0.7, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 4, "stroke": true, "weight": 3}
+            ).addTo(feature_group_26d49a4d19f06bb44255a771bc828c6b);
+        
+    
+        var popup_e0df57a18d0a3868b0f129bd5bd877a4 = L.popup({
+  "maxWidth": 300,
+});
+
+        
+            
+                var html_00b0ebab7712e2dad2b197401c6a5018 = $(`<div id="html_00b0ebab7712e2dad2b197401c6a5018" style="width: 100.0%; height: 100.0%;"><div style='font-family: Arial; font-size: 12px; width: 250px;'><b>Detalhes da Feature OSM</b><br><hr><b>Tipo:</b> Point<br><b>railway:</b> station<br><b>name:</b> Glória<br></div></div>`)[0];
+                popup_e0df57a18d0a3868b0f129bd5bd877a4.setContent(html_00b0ebab7712e2dad2b197401c6a5018);
+            
+        
+
+        circle_marker_7a67de2561d0b3290cacc7d62167ab01.bindPopup(popup_e0df57a18d0a3868b0f129bd5bd877a4)
+        ;
+
+        
+    
+    
+            var circle_marker_2d9019077919c249beb13e62cfb4bb2c = L.circleMarker(
+                [-22.913543799999996, -43.2065639],
+                {"bubblingMouseEvents": true, "color": "#1f77b4", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#1f77b4", "fillOpacity": 0.7, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 4, "stroke": true, "weight": 3}
+            ).addTo(feature_group_26d49a4d19f06bb44255a771bc828c6b);
+        
+    
+        var popup_eb0264c82365a970bc512bd6b5cce66f = L.popup({
+  "maxWidth": 300,
+});
+
+        
+            
+                var html_9f88af6a46404a9f6d03629af0bc8651 = $(`<div id="html_9f88af6a46404a9f6d03629af0bc8651" style="width: 100.0%; height: 100.0%;"><div style='font-family: Arial; font-size: 12px; width: 250px;'><b>Detalhes da Feature OSM</b><br><hr><b>Tipo:</b> Point<br><b>railway:</b> station<br><b>name:</b> Estácio<br></div></div>`)[0];
+                popup_eb0264c82365a970bc512bd6b5cce66f.setContent(html_9f88af6a46404a9f6d03629af0bc8651);
+            
+        
+
+        circle_marker_2d9019077919c249beb13e62cfb4bb2c.bindPopup(popup_eb0264c82365a970bc512bd6b5cce66f)
+        ;
+
+        
+    
+    
+            var circle_marker_d13bbbd711f5de7ae4150b3457c71439 = L.circleMarker(
+                [-22.925954900000004, -43.1765501],
+                {"bubblingMouseEvents": true, "color": "#1f77b4", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#1f77b4", "fillOpacity": 0.7, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 4, "stroke": true, "weight": 3}
+            ).addTo(feature_group_26d49a4d19f06bb44255a771bc828c6b);
+        
+    
+        var popup_8b8cc18a2981e956a4307c0794d6d9bd = L.popup({
+  "maxWidth": 300,
+});
+
+        
+            
+                var html_d31b6f431ff9e5b896d5ba790dacd2b2 = $(`<div id="html_d31b6f431ff9e5b896d5ba790dacd2b2" style="width: 100.0%; height: 100.0%;"><div style='font-family: Arial; font-size: 12px; width: 250px;'><b>Detalhes da Feature OSM</b><br><hr><b>Tipo:</b> Point<br><b>railway:</b> station<br><b>name:</b> Catete<br></div></div>`)[0];
+                popup_8b8cc18a2981e956a4307c0794d6d9bd.setContent(html_d31b6f431ff9e5b896d5ba790dacd2b2);
+            
+        
+
+        circle_marker_d13bbbd711f5de7ae4150b3457c71439.bindPopup(popup_8b8cc18a2981e956a4307c0794d6d9bd)
+        ;
+
+        
+    
+    
+            var circle_marker_0695800c6c31b21f9876de3b545502c1 = L.circleMarker(
+                [-22.844864199999996, -43.2767138],
+                {"bubblingMouseEvents": true, "color": "#1f77b4", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#1f77b4", "fillOpacity": 0.7, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 4, "stroke": true, "weight": 3}
+            ).addTo(feature_group_26d49a4d19f06bb44255a771bc828c6b);
+        
+    
+        var popup_4fb1b8ad0fc9ba4beeef11d44cd29bb9 = L.popup({
+  "maxWidth": 300,
+});
+
+        
+            
+                var html_40b89ed2537084bd2e2a0aa7da89fafb = $(`<div id="html_40b89ed2537084bd2e2a0aa7da89fafb" style="width: 100.0%; height: 100.0%;"><div style='font-family: Arial; font-size: 12px; width: 250px;'><b>Detalhes da Feature OSM</b><br><hr><b>Tipo:</b> Point<br><b>railway:</b> station<br><b>name:</b> nan<br></div></div>`)[0];
+                popup_4fb1b8ad0fc9ba4beeef11d44cd29bb9.setContent(html_40b89ed2537084bd2e2a0aa7da89fafb);
+            
+        
+
+        circle_marker_0695800c6c31b21f9876de3b545502c1.bindPopup(popup_4fb1b8ad0fc9ba4beeef11d44cd29bb9)
+        ;
+
+        
+    
+    
+            var circle_marker_483f15addb27144a65e9fc36dc03e6a4 = L.circleMarker(
+                [-22.844445500000006, -43.2753299],
+                {"bubblingMouseEvents": true, "color": "#1f77b4", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#1f77b4", "fillOpacity": 0.7, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 4, "stroke": true, "weight": 3}
+            ).addTo(feature_group_26d49a4d19f06bb44255a771bc828c6b);
+        
+    
+        var popup_c7b883703c907825059458801c488b53 = L.popup({
+  "maxWidth": 300,
+});
+
+        
+            
+                var html_085ff4007517109aff15d011ba6af3f5 = $(`<div id="html_085ff4007517109aff15d011ba6af3f5" style="width: 100.0%; height: 100.0%;"><div style='font-family: Arial; font-size: 12px; width: 250px;'><b>Detalhes da Feature OSM</b><br><hr><b>Tipo:</b> Point<br><b>railway:</b> station<br><b>name:</b> nan<br></div></div>`)[0];
+                popup_c7b883703c907825059458801c488b53.setContent(html_085ff4007517109aff15d011ba6af3f5);
+            
+        
+
+        circle_marker_483f15addb27144a65e9fc36dc03e6a4.bindPopup(popup_c7b883703c907825059458801c488b53)
+        ;
+
+        
+    
+    
+            var circle_marker_fce379213b448a6743b32af59f354947 = L.circleMarker(
+                [-22.9503653, -43.1842007],
+                {"bubblingMouseEvents": true, "color": "#1f77b4", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#1f77b4", "fillOpacity": 0.7, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 4, "stroke": true, "weight": 3}
+            ).addTo(feature_group_26d49a4d19f06bb44255a771bc828c6b);
+        
+    
+        var popup_31afc582520799812fecdbf0a2e39c2b = L.popup({
+  "maxWidth": 300,
+});
+
+        
+            
+                var html_84b35ee47a1f681b5f2030b3cb30bfe8 = $(`<div id="html_84b35ee47a1f681b5f2030b3cb30bfe8" style="width: 100.0%; height: 100.0%;"><div style='font-family: Arial; font-size: 12px; width: 250px;'><b>Detalhes da Feature OSM</b><br><hr><b>Tipo:</b> Point<br><b>railway:</b> station<br><b>name:</b> Botafogo<br></div></div>`)[0];
+                popup_31afc582520799812fecdbf0a2e39c2b.setContent(html_84b35ee47a1f681b5f2030b3cb30bfe8);
+            
+        
+
+        circle_marker_fce379213b448a6743b32af59f354947.bindPopup(popup_31afc582520799812fecdbf0a2e39c2b)
+        ;
+
+        
+    
+    
+            var circle_marker_7eb2f84e087c6995c5568eec78a950a0 = L.circleMarker(
+                [-22.902338699999998, -43.2447413],
+                {"bubblingMouseEvents": true, "color": "#1f77b4", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#1f77b4", "fillOpacity": 0.7, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 4, "stroke": true, "weight": 3}
+            ).addTo(feature_group_26d49a4d19f06bb44255a771bc828c6b);
+        
+    
+        var popup_24b7f302bd8806fb494fcbdc5c1ed50b = L.popup({
+  "maxWidth": 300,
+});
+
+        
+            
+                var html_6fc3fa20fccb00ecf835bfde5dcb6e54 = $(`<div id="html_6fc3fa20fccb00ecf835bfde5dcb6e54" style="width: 100.0%; height: 100.0%;"><div style='font-family: Arial; font-size: 12px; width: 250px;'><b>Detalhes da Feature OSM</b><br><hr><b>Tipo:</b> Point<br><b>railway:</b> station<br><b>name:</b> São Francisco Xavier<br></div></div>`)[0];
+                popup_24b7f302bd8806fb494fcbdc5c1ed50b.setContent(html_6fc3fa20fccb00ecf835bfde5dcb6e54);
+            
+        
+
+        circle_marker_7eb2f84e087c6995c5568eec78a950a0.bindPopup(popup_24b7f302bd8806fb494fcbdc5c1ed50b)
+        ;
+
+        
+    
+    
+            var circle_marker_a67f763423d03bdc60b26edce9853611 = L.circleMarker(
+                [-22.920772, -43.2235819],
+                {"bubblingMouseEvents": true, "color": "#1f77b4", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#1f77b4", "fillOpacity": 0.7, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 4, "stroke": true, "weight": 3}
+            ).addTo(feature_group_26d49a4d19f06bb44255a771bc828c6b);
+        
+    
+        var popup_caa8278a413bab9cca493596eb7491a9 = L.popup({
+  "maxWidth": 300,
+});
+
+        
+            
+                var html_b69580c720927d19e06ebd2f8f502d70 = $(`<div id="html_b69580c720927d19e06ebd2f8f502d70" style="width: 100.0%; height: 100.0%;"><div style='font-family: Arial; font-size: 12px; width: 250px;'><b>Detalhes da Feature OSM</b><br><hr><b>Tipo:</b> Point<br><b>railway:</b> station<br><b>name:</b> São Francisco Xavier / Tijuca<br></div></div>`)[0];
+                popup_caa8278a413bab9cca493596eb7491a9.setContent(html_b69580c720927d19e06ebd2f8f502d70);
+            
+        
+
+        circle_marker_a67f763423d03bdc60b26edce9853611.bindPopup(popup_caa8278a413bab9cca493596eb7491a9)
+        ;
+
+        
+    
+    
+            var circle_marker_bf2308a47bfae5a501743253fb199b4c = L.circleMarker(
+                [-22.9184484, -43.2177451],
+                {"bubblingMouseEvents": true, "color": "#1f77b4", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#1f77b4", "fillOpacity": 0.7, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 4, "stroke": true, "weight": 3}
+            ).addTo(feature_group_26d49a4d19f06bb44255a771bc828c6b);
+        
+    
+        var popup_59504990933f830a27ee5b33ab445a25 = L.popup({
+  "maxWidth": 300,
+});
+
+        
+            
+                var html_3ef0967519a6f250f5d239bcbe780a56 = $(`<div id="html_3ef0967519a6f250f5d239bcbe780a56" style="width: 100.0%; height: 100.0%;"><div style='font-family: Arial; font-size: 12px; width: 250px;'><b>Detalhes da Feature OSM</b><br><hr><b>Tipo:</b> Point<br><b>railway:</b> station<br><b>name:</b> Afonso Pena / Tijuca<br></div></div>`)[0];
+                popup_59504990933f830a27ee5b33ab445a25.setContent(html_3ef0967519a6f250f5d239bcbe780a56);
+            
+        
+
+        circle_marker_bf2308a47bfae5a501743253fb199b4c.bindPopup(popup_59504990933f830a27ee5b33ab445a25)
+        ;
+
+        
+    
+    
+            var circle_marker_75755da3579bd2af2a994d0c7f9eb1f4 = L.circleMarker(
+                [-22.831873500000004, -43.3429193],
+                {"bubblingMouseEvents": true, "color": "#1f77b4", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#1f77b4", "fillOpacity": 0.7, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 4, "stroke": true, "weight": 3}
+            ).addTo(feature_group_26d49a4d19f06bb44255a771bc828c6b);
+        
+    
+        var popup_7d48b80c6668452eae803c472ce2a31f = L.popup({
+  "maxWidth": 300,
+});
+
+        
+            
+                var html_2f185fc56836d6f7d1e15aa86bc9388e = $(`<div id="html_2f185fc56836d6f7d1e15aa86bc9388e" style="width: 100.0%; height: 100.0%;"><div style='font-family: Arial; font-size: 12px; width: 250px;'><b>Detalhes da Feature OSM</b><br><hr><b>Tipo:</b> Point<br><b>railway:</b> station<br><b>name:</b> Coelho Neto<br></div></div>`)[0];
+                popup_7d48b80c6668452eae803c472ce2a31f.setContent(html_2f185fc56836d6f7d1e15aa86bc9388e);
+            
+        
+
+        circle_marker_75755da3579bd2af2a994d0c7f9eb1f4.bindPopup(popup_7d48b80c6668452eae803c472ce2a31f)
+        ;
+
+        
+    
+    
+            var circle_marker_af43e4ce1add23dd79d983688ad6369f = L.circleMarker(
+                [-22.824997499999995, -43.3493019],
+                {"bubblingMouseEvents": true, "color": "#1f77b4", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#1f77b4", "fillOpacity": 0.7, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 4, "stroke": true, "weight": 3}
+            ).addTo(feature_group_26d49a4d19f06bb44255a771bc828c6b);
+        
+    
+        var popup_39f168b6a54f2785a76cddbe403214d2 = L.popup({
+  "maxWidth": 300,
+});
+
+        
+            
+                var html_998ae357f3cd16f9d9d729eb48fa7ee4 = $(`<div id="html_998ae357f3cd16f9d9d729eb48fa7ee4" style="width: 100.0%; height: 100.0%;"><div style='font-family: Arial; font-size: 12px; width: 250px;'><b>Detalhes da Feature OSM</b><br><hr><b>Tipo:</b> Point<br><b>railway:</b> station<br><b>name:</b> Acari / Fazenda Botafogo<br></div></div>`)[0];
+                popup_39f168b6a54f2785a76cddbe403214d2.setContent(html_998ae357f3cd16f9d9d729eb48fa7ee4);
+            
+        
+
+        circle_marker_af43e4ce1add23dd79d983688ad6369f.bindPopup(popup_39f168b6a54f2785a76cddbe403214d2)
+        ;
+
+        
+    
+    
+            var circle_marker_57bca6205470b93c6bc73aa8c14f64bb = L.circleMarker(
+                [-22.8162957, -43.3584824],
+                {"bubblingMouseEvents": true, "color": "#1f77b4", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#1f77b4", "fillOpacity": 0.7, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 4, "stroke": true, "weight": 3}
+            ).addTo(feature_group_26d49a4d19f06bb44255a771bc828c6b);
+        
+    
+        var popup_14dbfe02f7ca60fa732fbff7c1efbe66 = L.popup({
+  "maxWidth": 300,
+});
+
+        
+            
+                var html_7bc4a45bf5b415dabcecbd6651972a1a = $(`<div id="html_7bc4a45bf5b415dabcecbd6651972a1a" style="width: 100.0%; height: 100.0%;"><div style='font-family: Arial; font-size: 12px; width: 250px;'><b>Detalhes da Feature OSM</b><br><hr><b>Tipo:</b> Point<br><b>railway:</b> station<br><b>name:</b> Engenheiro Rubens Paiva<br></div></div>`)[0];
+                popup_14dbfe02f7ca60fa732fbff7c1efbe66.setContent(html_7bc4a45bf5b415dabcecbd6651972a1a);
+            
+        
+
+        circle_marker_57bca6205470b93c6bc73aa8c14f64bb.bindPopup(popup_14dbfe02f7ca60fa732fbff7c1efbe66)
+        ;
+
+        
+    
+    
+            var circle_marker_991aaa463b38283718491d20631d8f6e = L.circleMarker(
+                [-22.862600499999992, -43.3067943],
+                {"bubblingMouseEvents": true, "color": "#1f77b4", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#1f77b4", "fillOpacity": 0.7, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 4, "stroke": true, "weight": 3}
+            ).addTo(feature_group_26d49a4d19f06bb44255a771bc828c6b);
+        
+    
+        var popup_93cc1b32f1dfb2694c4d73de2621595f = L.popup({
+  "maxWidth": 300,
+});
+
+        
+            
+                var html_0f7b8e7441697b20342a8fcf698eeb23 = $(`<div id="html_0f7b8e7441697b20342a8fcf698eeb23" style="width: 100.0%; height: 100.0%;"><div style='font-family: Arial; font-size: 12px; width: 250px;'><b>Detalhes da Feature OSM</b><br><hr><b>Tipo:</b> Point<br><b>railway:</b> station<br><b>name:</b> Thomáz Coelho<br></div></div>`)[0];
+                popup_93cc1b32f1dfb2694c4d73de2621595f.setContent(html_0f7b8e7441697b20342a8fcf698eeb23);
+            
+        
+
+        circle_marker_991aaa463b38283718491d20631d8f6e.bindPopup(popup_93cc1b32f1dfb2694c4d73de2621595f)
+        ;
+
+        
+    
+    
+            var circle_marker_fb2f32bb9852856541826bb4f063fb36 = L.circleMarker(
+                [-22.854040599999994, -43.3131537],
+                {"bubblingMouseEvents": true, "color": "#1f77b4", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#1f77b4", "fillOpacity": 0.7, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 4, "stroke": true, "weight": 3}
+            ).addTo(feature_group_26d49a4d19f06bb44255a771bc828c6b);
+        
+    
+        var popup_0529bf11f79ee20d010ad9ba0c46446b = L.popup({
+  "maxWidth": 300,
+});
+
+        
+            
+                var html_2532e6aab3d1f8f6750b83556737eb3b = $(`<div id="html_2532e6aab3d1f8f6750b83556737eb3b" style="width: 100.0%; height: 100.0%;"><div style='font-family: Arial; font-size: 12px; width: 250px;'><b>Detalhes da Feature OSM</b><br><hr><b>Tipo:</b> Point<br><b>railway:</b> station<br><b>name:</b> Vicente de Carvalho<br></div></div>`)[0];
+                popup_0529bf11f79ee20d010ad9ba0c46446b.setContent(html_2532e6aab3d1f8f6750b83556737eb3b);
+            
+        
+
+        circle_marker_fb2f32bb9852856541826bb4f063fb36.bindPopup(popup_0529bf11f79ee20d010ad9ba0c46446b)
+        ;
+
+        
+    
+    
+            var circle_marker_46c8f4e7f61138ae9890cf1652cd1997 = L.circleMarker(
+                [-22.848022700000005, -43.3232651],
+                {"bubblingMouseEvents": true, "color": "#1f77b4", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#1f77b4", "fillOpacity": 0.7, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 4, "stroke": true, "weight": 3}
+            ).addTo(feature_group_26d49a4d19f06bb44255a771bc828c6b);
+        
+    
+        var popup_bf526ab11bda9d747b9e9a0b0e4e5749 = L.popup({
+  "maxWidth": 300,
+});
+
+        
+            
+                var html_3dd04567a606548705bcf8ee042d7ee0 = $(`<div id="html_3dd04567a606548705bcf8ee042d7ee0" style="width: 100.0%; height: 100.0%;"><div style='font-family: Arial; font-size: 12px; width: 250px;'><b>Detalhes da Feature OSM</b><br><hr><b>Tipo:</b> Point<br><b>railway:</b> station<br><b>name:</b> Irajá<br></div></div>`)[0];
+                popup_bf526ab11bda9d747b9e9a0b0e4e5749.setContent(html_3dd04567a606548705bcf8ee042d7ee0);
+            
+        
+
+        circle_marker_46c8f4e7f61138ae9890cf1652cd1997.bindPopup(popup_bf526ab11bda9d747b9e9a0b0e4e5749)
+        ;
+
+        
+    
+    
+            var circle_marker_1dc349c46a2ac9f606420ad5e62c95f2 = L.circleMarker(
+                [-22.842660099999996, -43.3345459],
+                {"bubblingMouseEvents": true, "color": "#1f77b4", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#1f77b4", "fillOpacity": 0.7, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 4, "stroke": true, "weight": 3}
+            ).addTo(feature_group_26d49a4d19f06bb44255a771bc828c6b);
+        
+    
+        var popup_64bf5b10f0a0be4a3c4d6305850db3fe = L.popup({
+  "maxWidth": 300,
+});
+
+        
+            
+                var html_4c51e8ab460b77299e9f5cb1a034577b = $(`<div id="html_4c51e8ab460b77299e9f5cb1a034577b" style="width: 100.0%; height: 100.0%;"><div style='font-family: Arial; font-size: 12px; width: 250px;'><b>Detalhes da Feature OSM</b><br><hr><b>Tipo:</b> Point<br><b>railway:</b> station<br><b>name:</b> Colégio<br></div></div>`)[0];
+                popup_64bf5b10f0a0be4a3c4d6305850db3fe.setContent(html_4c51e8ab460b77299e9f5cb1a034577b);
+            
+        
+
+        circle_marker_1dc349c46a2ac9f606420ad5e62c95f2.bindPopup(popup_64bf5b10f0a0be4a3c4d6305850db3fe)
+        ;
+
+        
+    
+    
+            var circle_marker_341b7463a35c5ec293df1990b721154d = L.circleMarker(
+                [-22.881494099999998, -43.2601882],
+                {"bubblingMouseEvents": true, "color": "#1f77b4", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#1f77b4", "fillOpacity": 0.7, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 4, "stroke": true, "weight": 3}
+            ).addTo(feature_group_26d49a4d19f06bb44255a771bc828c6b);
+        
+    
+        var popup_bf7ec211ecd85131477406b8019ae3bb = L.popup({
+  "maxWidth": 300,
+});
+
+        
+            
+                var html_ffc98c5fcb96a9d4594da75ab2c98699 = $(`<div id="html_ffc98c5fcb96a9d4594da75ab2c98699" style="width: 100.0%; height: 100.0%;"><div style='font-family: Arial; font-size: 12px; width: 250px;'><b>Detalhes da Feature OSM</b><br><hr><b>Tipo:</b> Point<br><b>railway:</b> station<br><b>name:</b> Maria da Graça<br></div></div>`)[0];
+                popup_bf7ec211ecd85131477406b8019ae3bb.setContent(html_ffc98c5fcb96a9d4594da75ab2c98699);
+            
+        
+
+        circle_marker_341b7463a35c5ec293df1990b721154d.bindPopup(popup_bf7ec211ecd85131477406b8019ae3bb)
+        ;
+
+        
+    
+    
+            var circle_marker_baa3bd1e14060a742dcac0b6037cc05e = L.circleMarker(
+                [-22.879276199999996, -43.2719274],
+                {"bubblingMouseEvents": true, "color": "#1f77b4", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#1f77b4", "fillOpacity": 0.7, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 4, "stroke": true, "weight": 3}
+            ).addTo(feature_group_26d49a4d19f06bb44255a771bc828c6b);
+        
+    
+        var popup_8aaa9ed83f585eb140c11cb7d698ea2b = L.popup({
+  "maxWidth": 300,
+});
+
+        
+            
+                var html_302a0499ee0cd84efc710ccff58a46de = $(`<div id="html_302a0499ee0cd84efc710ccff58a46de" style="width: 100.0%; height: 100.0%;"><div style='font-family: Arial; font-size: 12px; width: 250px;'><b>Detalhes da Feature OSM</b><br><hr><b>Tipo:</b> Point<br><b>railway:</b> station<br><b>name:</b> Del Castilho<br></div></div>`)[0];
+                popup_8aaa9ed83f585eb140c11cb7d698ea2b.setContent(html_302a0499ee0cd84efc710ccff58a46de);
+            
+        
+
+        circle_marker_baa3bd1e14060a742dcac0b6037cc05e.bindPopup(popup_8aaa9ed83f585eb140c11cb7d698ea2b)
+        ;
+
+        
+    
+    
+            var circle_marker_961f457015d012ed3621920420c3796e = L.circleMarker(
+                [-22.874568500000002, -43.2834559],
+                {"bubblingMouseEvents": true, "color": "#1f77b4", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#1f77b4", "fillOpacity": 0.7, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 4, "stroke": true, "weight": 3}
+            ).addTo(feature_group_26d49a4d19f06bb44255a771bc828c6b);
+        
+    
+        var popup_26d812e65a732d895ad80cb6b4ae0b06 = L.popup({
+  "maxWidth": 300,
+});
+
+        
+            
+                var html_a75f37782c6b30d5d06a1d8afaa44e9d = $(`<div id="html_a75f37782c6b30d5d06a1d8afaa44e9d" style="width: 100.0%; height: 100.0%;"><div style='font-family: Arial; font-size: 12px; width: 250px;'><b>Detalhes da Feature OSM</b><br><hr><b>Tipo:</b> Point<br><b>railway:</b> station<br><b>name:</b> Inhaúma<br></div></div>`)[0];
+                popup_26d812e65a732d895ad80cb6b4ae0b06.setContent(html_a75f37782c6b30d5d06a1d8afaa44e9d);
+            
+        
+
+        circle_marker_961f457015d012ed3621920420c3796e.bindPopup(popup_26d812e65a732d895ad80cb6b4ae0b06)
+        ;
+
+        
+    
+    
+            var circle_marker_c7269ceb7ead5eec13e94a03fc611905 = L.circleMarker(
+                [-22.867923799999996, -43.2973765],
+                {"bubblingMouseEvents": true, "color": "#1f77b4", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#1f77b4", "fillOpacity": 0.7, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 4, "stroke": true, "weight": 3}
+            ).addTo(feature_group_26d49a4d19f06bb44255a771bc828c6b);
+        
+    
+        var popup_f2a145f8eabbc59cf1e2648375df1b1e = L.popup({
+  "maxWidth": 300,
+});
+
+        
+            
+                var html_76d22566bcb7579e6d2d0a75cbac121a = $(`<div id="html_76d22566bcb7579e6d2d0a75cbac121a" style="width: 100.0%; height: 100.0%;"><div style='font-family: Arial; font-size: 12px; width: 250px;'><b>Detalhes da Feature OSM</b><br><hr><b>Tipo:</b> Point<br><b>railway:</b> station<br><b>name:</b> Engenho da Rainha<br></div></div>`)[0];
+                popup_f2a145f8eabbc59cf1e2648375df1b1e.setContent(html_76d22566bcb7579e6d2d0a75cbac121a);
+            
+        
+
+        circle_marker_c7269ceb7ead5eec13e94a03fc611905.bindPopup(popup_f2a145f8eabbc59cf1e2648375df1b1e)
+        ;
+
+        
+    
+    
+            var circle_marker_c0a909f1d81926040f5d7364b1e64895 = L.circleMarker(
+                [-22.909716, -43.23389],
+                {"bubblingMouseEvents": true, "color": "#1f77b4", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#1f77b4", "fillOpacity": 0.7, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 4, "stroke": true, "weight": 3}
+            ).addTo(feature_group_26d49a4d19f06bb44255a771bc828c6b);
+        
+    
+        var popup_900c5d6f479cdebf1de89c5638f26c23 = L.popup({
+  "maxWidth": 300,
+});
+
+        
+            
+                var html_347c7f7fabe261d27e48c1bb05a1cc68 = $(`<div id="html_347c7f7fabe261d27e48c1bb05a1cc68" style="width: 100.0%; height: 100.0%;"><div style='font-family: Arial; font-size: 12px; width: 250px;'><b>Detalhes da Feature OSM</b><br><hr><b>Tipo:</b> Point<br><b>railway:</b> station<br><b>name:</b> Maracanã<br></div></div>`)[0];
+                popup_900c5d6f479cdebf1de89c5638f26c23.setContent(html_347c7f7fabe261d27e48c1bb05a1cc68);
+            
+        
+
+        circle_marker_c0a909f1d81926040f5d7364b1e64895.bindPopup(popup_900c5d6f479cdebf1de89c5638f26c23)
+        ;
+
+        
+    
+    
+            var circle_marker_5f1a81e47528929e2ae3fd91ede6e5fe = L.circleMarker(
+                [-22.896717399999996, -43.2440972],
+                {"bubblingMouseEvents": true, "color": "#1f77b4", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#1f77b4", "fillOpacity": 0.7, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 4, "stroke": true, "weight": 3}
+            ).addTo(feature_group_26d49a4d19f06bb44255a771bc828c6b);
+        
+    
+        var popup_65bfc68cca7e063bfcdbf161080e8218 = L.popup({
+  "maxWidth": 300,
+});
+
+        
+            
+                var html_780fd0f57ffa987e6e98aeb02bc6241e = $(`<div id="html_780fd0f57ffa987e6e98aeb02bc6241e" style="width: 100.0%; height: 100.0%;"><div style='font-family: Arial; font-size: 12px; width: 250px;'><b>Detalhes da Feature OSM</b><br><hr><b>Tipo:</b> Point<br><b>railway:</b> station<br><b>name:</b> Triagem<br></div></div>`)[0];
+                popup_65bfc68cca7e063bfcdbf161080e8218.setContent(html_780fd0f57ffa987e6e98aeb02bc6241e);
+            
+        
+
+        circle_marker_5f1a81e47528929e2ae3fd91ede6e5fe.bindPopup(popup_65bfc68cca7e063bfcdbf161080e8218)
+        ;
+
+        
+    
+    
+            var circle_marker_c3575277702a667b15e1a8f938af89e3 = L.circleMarker(
+                [-22.896854600000005, -43.2444785],
+                {"bubblingMouseEvents": true, "color": "#1f77b4", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#1f77b4", "fillOpacity": 0.7, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 4, "stroke": true, "weight": 3}
+            ).addTo(feature_group_26d49a4d19f06bb44255a771bc828c6b);
+        
+    
+        var popup_2a150747b8fca4dabe0e19bc250e88b5 = L.popup({
+  "maxWidth": 300,
+});
+
+        
+            
+                var html_8723ed03709d6ce54646eb35c35fea95 = $(`<div id="html_8723ed03709d6ce54646eb35c35fea95" style="width: 100.0%; height: 100.0%;"><div style='font-family: Arial; font-size: 12px; width: 250px;'><b>Detalhes da Feature OSM</b><br><hr><b>Tipo:</b> Point<br><b>railway:</b> station<br><b>name:</b> Triagem<br></div></div>`)[0];
+                popup_2a150747b8fca4dabe0e19bc250e88b5.setContent(html_8723ed03709d6ce54646eb35c35fea95);
+            
+        
+
+        circle_marker_c3575277702a667b15e1a8f938af89e3.bindPopup(popup_2a150747b8fca4dabe0e19bc250e88b5)
+        ;
+
+        
+    
+    
+            var circle_marker_f1de160b2ae831aa5f105bf6d0af12d5 = L.circleMarker(
+                [-22.909544099999994, -43.2228235],
+                {"bubblingMouseEvents": true, "color": "#1f77b4", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#1f77b4", "fillOpacity": 0.7, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 4, "stroke": true, "weight": 3}
+            ).addTo(feature_group_26d49a4d19f06bb44255a771bc828c6b);
+        
+    
+        var popup_8fcd9bfec39477964721a2b37d45c28d = L.popup({
+  "maxWidth": 300,
+});
+
+        
+            
+                var html_459ec7f39ef3cfaaa48ed88d0f63d2dd = $(`<div id="html_459ec7f39ef3cfaaa48ed88d0f63d2dd" style="width: 100.0%; height: 100.0%;"><div style='font-family: Arial; font-size: 12px; width: 250px;'><b>Detalhes da Feature OSM</b><br><hr><b>Tipo:</b> Point<br><b>railway:</b> station<br><b>name:</b> São Cristóvão<br></div></div>`)[0];
+                popup_8fcd9bfec39477964721a2b37d45c28d.setContent(html_459ec7f39ef3cfaaa48ed88d0f63d2dd);
+            
+        
+
+        circle_marker_f1de160b2ae831aa5f105bf6d0af12d5.bindPopup(popup_8fcd9bfec39477964721a2b37d45c28d)
+        ;
+
+        
+    
+    
+            var circle_marker_4632bf93973a47c85cedc8602e155224 = L.circleMarker(
+                [-22.909693399999995, -43.2209945],
+                {"bubblingMouseEvents": true, "color": "#1f77b4", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#1f77b4", "fillOpacity": 0.7, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 4, "stroke": true, "weight": 3}
+            ).addTo(feature_group_26d49a4d19f06bb44255a771bc828c6b);
+        
+    
+        var popup_6e8138943d09e59f7a75509e15e3d3c3 = L.popup({
+  "maxWidth": 300,
+});
+
+        
+            
+                var html_f8f09f6a6c65cc7b6a0d37a6c149ef3b = $(`<div id="html_f8f09f6a6c65cc7b6a0d37a6c149ef3b" style="width: 100.0%; height: 100.0%;"><div style='font-family: Arial; font-size: 12px; width: 250px;'><b>Detalhes da Feature OSM</b><br><hr><b>Tipo:</b> Point<br><b>railway:</b> station<br><b>name:</b> São Cristóvão<br></div></div>`)[0];
+                popup_6e8138943d09e59f7a75509e15e3d3c3.setContent(html_f8f09f6a6c65cc7b6a0d37a6c149ef3b);
+            
+        
+
+        circle_marker_4632bf93973a47c85cedc8602e155224.bindPopup(popup_6e8138943d09e59f7a75509e15e3d3c3)
+        ;
+
+        
+    
+    
+            var circle_marker_4d85ad741f796dde0378812da0c6a4fe = L.circleMarker(
+                [-22.909296300000005, -43.2332875],
+                {"bubblingMouseEvents": true, "color": "#1f77b4", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#1f77b4", "fillOpacity": 0.7, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 4, "stroke": true, "weight": 3}
+            ).addTo(feature_group_26d49a4d19f06bb44255a771bc828c6b);
+        
+    
+        var popup_609fa4fb809d7e03ff84af82ca5f50cc = L.popup({
+  "maxWidth": 300,
+});
+
+        
+            
+                var html_4c0e7c3f818159e64241d4d3a4bae425 = $(`<div id="html_4c0e7c3f818159e64241d4d3a4bae425" style="width: 100.0%; height: 100.0%;"><div style='font-family: Arial; font-size: 12px; width: 250px;'><b>Detalhes da Feature OSM</b><br><hr><b>Tipo:</b> Point<br><b>railway:</b> station<br><b>name:</b> Maracanã<br></div></div>`)[0];
+                popup_609fa4fb809d7e03ff84af82ca5f50cc.setContent(html_4c0e7c3f818159e64241d4d3a4bae425);
+            
+        
+
+        circle_marker_4d85ad741f796dde0378812da0c6a4fe.bindPopup(popup_609fa4fb809d7e03ff84af82ca5f50cc)
+        ;
+
+        
+    
+    
+            var circle_marker_25afb7d15f8296728631445991d46804 = L.circleMarker(
+                [-22.909892800000005, -43.2129559],
+                {"bubblingMouseEvents": true, "color": "#1f77b4", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#1f77b4", "fillOpacity": 0.7, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 4, "stroke": true, "weight": 3}
+            ).addTo(feature_group_26d49a4d19f06bb44255a771bc828c6b);
+        
+    
+        var popup_89e217544e202a3970117596d21ee41c = L.popup({
+  "maxWidth": 300,
+});
+
+        
+            
+                var html_cdcbf66f121410a21a21ef9bd50c4183 = $(`<div id="html_cdcbf66f121410a21a21ef9bd50c4183" style="width: 100.0%; height: 100.0%;"><div style='font-family: Arial; font-size: 12px; width: 250px;'><b>Detalhes da Feature OSM</b><br><hr><b>Tipo:</b> Point<br><b>railway:</b> station<br><b>name:</b> Praça da Bandeira<br></div></div>`)[0];
+                popup_89e217544e202a3970117596d21ee41c.setContent(html_cdcbf66f121410a21a21ef9bd50c4183);
+            
+        
+
+        circle_marker_25afb7d15f8296728631445991d46804.bindPopup(popup_89e217544e202a3970117596d21ee41c)
+        ;
+
+        
+    
+    
+            var circle_marker_f9db1a11b36e32d7e64d75b8e0a1346b = L.circleMarker(
+                [-22.9035467, -43.1914186],
+                {"bubblingMouseEvents": true, "color": "#1f77b4", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#1f77b4", "fillOpacity": 0.7, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 4, "stroke": true, "weight": 3}
+            ).addTo(feature_group_26d49a4d19f06bb44255a771bc828c6b);
+        
+    
+        var popup_7714d4ac74a432756657a637e5370ba1 = L.popup({
+  "maxWidth": 300,
+});
+
+        
+            
+                var html_4782b48738ca206cac1f6a5a450a2c22 = $(`<div id="html_4782b48738ca206cac1f6a5a450a2c22" style="width: 100.0%; height: 100.0%;"><div style='font-family: Arial; font-size: 12px; width: 250px;'><b>Detalhes da Feature OSM</b><br><hr><b>Tipo:</b> Point<br><b>railway:</b> station<br><b>name:</b> Central do Brasil<br></div></div>`)[0];
+                popup_7714d4ac74a432756657a637e5370ba1.setContent(html_4782b48738ca206cac1f6a5a450a2c22);
+            
+        
+
+        circle_marker_f9db1a11b36e32d7e64d75b8e0a1346b.bindPopup(popup_7714d4ac74a432756657a637e5370ba1)
+        ;
+
+        
+    
+    
+            var circle_marker_3244ed484485884ddd9b6588ce434824 = L.circleMarker(
+                [-22.909916999999997, -43.200283],
+                {"bubblingMouseEvents": true, "color": "#1f77b4", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#1f77b4", "fillOpacity": 0.7, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 4, "stroke": true, "weight": 3}
+            ).addTo(feature_group_26d49a4d19f06bb44255a771bc828c6b);
+        
+    
+        var popup_727e69ffdebdcf795b482061b98299c1 = L.popup({
+  "maxWidth": 300,
+});
+
+        
+            
+                var html_8eee1d3146d5fcfe41990ac4cc62d81f = $(`<div id="html_8eee1d3146d5fcfe41990ac4cc62d81f" style="width: 100.0%; height: 100.0%;"><div style='font-family: Arial; font-size: 12px; width: 250px;'><b>Detalhes da Feature OSM</b><br><hr><b>Tipo:</b> Point<br><b>railway:</b> station<br><b>name:</b> Praça Onze<br></div></div>`)[0];
+                popup_727e69ffdebdcf795b482061b98299c1.setContent(html_8eee1d3146d5fcfe41990ac4cc62d81f);
+            
+        
+
+        circle_marker_3244ed484485884ddd9b6588ce434824.bindPopup(popup_727e69ffdebdcf795b482061b98299c1)
+        ;
+
+        
+    
+    
+            var circle_marker_ed283b2e154bb79d0a4c58a9b723aa97 = L.circleMarker(
+                [-22.9075668, -43.1780446],
+                {"bubblingMouseEvents": true, "color": "#1f77b4", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#1f77b4", "fillOpacity": 0.7, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 4, "stroke": true, "weight": 3}
+            ).addTo(feature_group_26d49a4d19f06bb44255a771bc828c6b);
+        
+    
+        var popup_622857de71a87af47b2e59e2e1ab86dd = L.popup({
+  "maxWidth": 300,
+});
+
+        
+            
+                var html_d3a78e996e91cf2889e5f897f30073fd = $(`<div id="html_d3a78e996e91cf2889e5f897f30073fd" style="width: 100.0%; height: 100.0%;"><div style='font-family: Arial; font-size: 12px; width: 250px;'><b>Detalhes da Feature OSM</b><br><hr><b>Tipo:</b> Point<br><b>railway:</b> station<br><b>name:</b> Carioca / Centro<br></div></div>`)[0];
+                popup_622857de71a87af47b2e59e2e1ab86dd.setContent(html_d3a78e996e91cf2889e5f897f30073fd);
+            
+        
+
+        circle_marker_ed283b2e154bb79d0a4c58a9b723aa97.bindPopup(popup_622857de71a87af47b2e59e2e1ab86dd)
+        ;
+
+        
+    
+    
+            var circle_marker_d06a82a9297bd6c38205135e3398f9cb = L.circleMarker(
+                [-22.9311289, -43.177691300000006],
+                {"bubblingMouseEvents": true, "color": "#1f77b4", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#1f77b4", "fillOpacity": 0.7, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 4, "stroke": true, "weight": 3}
+            ).addTo(feature_group_26d49a4d19f06bb44255a771bc828c6b);
+        
+    
+        var popup_9774bb074939761d2d84851996c496c1 = L.popup({
+  "maxWidth": 300,
+});
+
+        
+            
+                var html_20f6e496db9f90c3f2dcca5abfdbbc17 = $(`<div id="html_20f6e496db9f90c3f2dcca5abfdbbc17" style="width: 100.0%; height: 100.0%;"><div style='font-family: Arial; font-size: 12px; width: 250px;'><b>Detalhes da Feature OSM</b><br><hr><b>Tipo:</b> Point<br><b>railway:</b> station<br><b>name:</b> Largo do Machado<br></div></div>`)[0];
+                popup_9774bb074939761d2d84851996c496c1.setContent(html_20f6e496db9f90c3f2dcca5abfdbbc17);
+            
+        
+
+        circle_marker_d06a82a9297bd6c38205135e3398f9cb.bindPopup(popup_9774bb074939761d2d84851996c496c1)
+        ;
+
+        
+    
+    
+            var circle_marker_7eef8f326ea8251f6d805625e4e40043 = L.circleMarker(
+                [-22.910906300000004, -43.1756533],
+                {"bubblingMouseEvents": true, "color": "#1f77b4", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#1f77b4", "fillOpacity": 0.7, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 4, "stroke": true, "weight": 3}
+            ).addTo(feature_group_26d49a4d19f06bb44255a771bc828c6b);
+        
+    
+        var popup_7f59f6c908e58e2313f2ccdffb91c86c = L.popup({
+  "maxWidth": 300,
+});
+
+        
+            
+                var html_047fa0914c85f307230e7546b42860de = $(`<div id="html_047fa0914c85f307230e7546b42860de" style="width: 100.0%; height: 100.0%;"><div style='font-family: Arial; font-size: 12px; width: 250px;'><b>Detalhes da Feature OSM</b><br><hr><b>Tipo:</b> Point<br><b>railway:</b> station<br><b>name:</b> Cinelândia / Centro<br></div></div>`)[0];
+                popup_7f59f6c908e58e2313f2ccdffb91c86c.setContent(html_047fa0914c85f307230e7546b42860de);
+            
+        
+
+        circle_marker_7eef8f326ea8251f6d805625e4e40043.bindPopup(popup_7f59f6c908e58e2313f2ccdffb91c86c)
+        ;
+
+        
+    
+    
+            var circle_marker_1e299c178523c011f7c0b65378344de4 = L.circleMarker(
+                [-22.975488200000004, -43.19445710000001],
+                {"bubblingMouseEvents": true, "color": "#1f77b4", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#1f77b4", "fillOpacity": 0.7, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 4, "stroke": true, "weight": 3}
+            ).addTo(feature_group_26d49a4d19f06bb44255a771bc828c6b);
+        
+    
+        var popup_a82d49827a1c4cca894df9b92a407be6 = L.popup({
+  "maxWidth": 300,
+});
+
+        
+            
+                var html_f5ba0d3c388c142fc8517ebc2a0d3046 = $(`<div id="html_f5ba0d3c388c142fc8517ebc2a0d3046" style="width: 100.0%; height: 100.0%;"><div style='font-family: Arial; font-size: 12px; width: 250px;'><b>Detalhes da Feature OSM</b><br><hr><b>Tipo:</b> Point<br><b>railway:</b> station<br><b>name:</b> Cantagalo / Copacabana<br></div></div>`)[0];
+                popup_a82d49827a1c4cca894df9b92a407be6.setContent(html_f5ba0d3c388c142fc8517ebc2a0d3046);
+            
+        
+
+        circle_marker_1e299c178523c011f7c0b65378344de4.bindPopup(popup_a82d49827a1c4cca894df9b92a407be6)
+        ;
+
+        
+    
+    
+            var circle_marker_7962d443d06d741851ede80ebdc06f14 = L.circleMarker(
+                [-22.9673066, -43.1873375],
+                {"bubblingMouseEvents": true, "color": "#1f77b4", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#1f77b4", "fillOpacity": 0.7, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 4, "stroke": true, "weight": 3}
+            ).addTo(feature_group_26d49a4d19f06bb44255a771bc828c6b);
+        
+    
+        var popup_e558bc6e5eca43b149fbbd4868ce1f2f = L.popup({
+  "maxWidth": 300,
+});
+
+        
+            
+                var html_b501b36f9be3ed8153681c66eb319003 = $(`<div id="html_b501b36f9be3ed8153681c66eb319003" style="width: 100.0%; height: 100.0%;"><div style='font-family: Arial; font-size: 12px; width: 250px;'><b>Detalhes da Feature OSM</b><br><hr><b>Tipo:</b> Point<br><b>railway:</b> station<br><b>name:</b> Siqueira Campos / Copacabana<br></div></div>`)[0];
+                popup_e558bc6e5eca43b149fbbd4868ce1f2f.setContent(html_b501b36f9be3ed8153681c66eb319003);
+            
+        
+
+        circle_marker_7962d443d06d741851ede80ebdc06f14.bindPopup(popup_e558bc6e5eca43b149fbbd4868ce1f2f)
+        ;
+
+        
+    
+    
+            var circle_marker_a2f715c59704cf1cedbf094863269307 = L.circleMarker(
+                [-22.951753699999998, -43.2106944],
+                {"bubblingMouseEvents": true, "color": "#1f77b4", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#1f77b4", "fillOpacity": 0.7, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 4, "stroke": true, "weight": 3}
+            ).addTo(feature_group_26d49a4d19f06bb44255a771bc828c6b);
+        
+    
+        var popup_0dbf2b3ad5cdc41ce09081607a0e0ea3 = L.popup({
+  "maxWidth": 300,
+});
+
+        
+            
+                var html_54cb1a6fae3312bf03632f629f25e030 = $(`<div id="html_54cb1a6fae3312bf03632f629f25e030" style="width: 100.0%; height: 100.0%;"><div style='font-family: Arial; font-size: 12px; width: 250px;'><b>Detalhes da Feature OSM</b><br><hr><b>Tipo:</b> Point<br><b>railway:</b> station<br><b>name:</b> Cristo Redentor<br></div></div>`)[0];
+                popup_0dbf2b3ad5cdc41ce09081607a0e0ea3.setContent(html_54cb1a6fae3312bf03632f629f25e030);
+            
+        
+
+        circle_marker_a2f715c59704cf1cedbf094863269307.bindPopup(popup_0dbf2b3ad5cdc41ce09081607a0e0ea3)
+        ;
+
+        
+    
+    
+            var circle_marker_4e32a3bbcd385f1be124e5c82719e945 = L.circleMarker(
+                [-22.9471286, -43.2174679],
+                {"bubblingMouseEvents": true, "color": "#1f77b4", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#1f77b4", "fillOpacity": 0.7, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 4, "stroke": true, "weight": 3}
+            ).addTo(feature_group_26d49a4d19f06bb44255a771bc828c6b);
+        
+    
+        var popup_62395f93e8cc018657f59a8cd9b5760b = L.popup({
+  "maxWidth": 300,
+});
+
+        
+            
+                var html_a734bbb8ab35a14a34942b37ed1f2901 = $(`<div id="html_a734bbb8ab35a14a34942b37ed1f2901" style="width: 100.0%; height: 100.0%;"><div style='font-family: Arial; font-size: 12px; width: 250px;'><b>Detalhes da Feature OSM</b><br><hr><b>Tipo:</b> Point<br><b>railway:</b> station<br><b>name:</b> Paineiras<br></div></div>`)[0];
+                popup_62395f93e8cc018657f59a8cd9b5760b.setContent(html_a734bbb8ab35a14a34942b37ed1f2901);
+            
+        
+
+        circle_marker_4e32a3bbcd385f1be124e5c82719e945.bindPopup(popup_62395f93e8cc018657f59a8cd9b5760b)
+        ;
+
+        
+    
+    
+            var circle_marker_66a12753f10e3195e3c04d8cff0d4fba = L.circleMarker(
+                [-22.9465718, -43.2028132],
+                {"bubblingMouseEvents": true, "color": "#1f77b4", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#1f77b4", "fillOpacity": 0.7, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 4, "stroke": true, "weight": 3}
+            ).addTo(feature_group_26d49a4d19f06bb44255a771bc828c6b);
+        
+    
+        var popup_5f816e7a07159fb24d4449e913a6fee9 = L.popup({
+  "maxWidth": 300,
+});
+
+        
+            
+                var html_1b601a987812a088e75bdf462a79fbd8 = $(`<div id="html_1b601a987812a088e75bdf462a79fbd8" style="width: 100.0%; height: 100.0%;"><div style='font-family: Arial; font-size: 12px; width: 250px;'><b>Detalhes da Feature OSM</b><br><hr><b>Tipo:</b> Point<br><b>railway:</b> station<br><b>name:</b> Morro do Inglês<br></div></div>`)[0];
+                popup_5f816e7a07159fb24d4449e913a6fee9.setContent(html_1b601a987812a088e75bdf462a79fbd8);
+            
+        
+
+        circle_marker_66a12753f10e3195e3c04d8cff0d4fba.bindPopup(popup_5f816e7a07159fb24d4449e913a6fee9)
+        ;
+
+        
+    
+    
+            var circle_marker_c8f1ce988b27e7c9fcb3918ecb2dabdd = L.circleMarker(
+                [-22.875363599999996, -43.4656958],
+                {"bubblingMouseEvents": true, "color": "#1f77b4", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#1f77b4", "fillOpacity": 0.7, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 4, "stroke": true, "weight": 3}
+            ).addTo(feature_group_26d49a4d19f06bb44255a771bc828c6b);
+        
+    
+        var popup_2a74b962fea77529767aa6de4db59425 = L.popup({
+  "maxWidth": 300,
+});
+
+        
+            
+                var html_82c5d24071e7c2556b31937bbf2cffb4 = $(`<div id="html_82c5d24071e7c2556b31937bbf2cffb4" style="width: 100.0%; height: 100.0%;"><div style='font-family: Arial; font-size: 12px; width: 250px;'><b>Detalhes da Feature OSM</b><br><hr><b>Tipo:</b> Point<br><b>railway:</b> station<br><b>name:</b> Bangu<br></div></div>`)[0];
+                popup_2a74b962fea77529767aa6de4db59425.setContent(html_82c5d24071e7c2556b31937bbf2cffb4);
+            
+        
+
+        circle_marker_c8f1ce988b27e7c9fcb3918ecb2dabdd.bindPopup(popup_2a74b962fea77529767aa6de4db59425)
+        ;
+
+        
+    
+    
+            var circle_marker_12c6ce1c7790e35922b33589b59f924d = L.circleMarker(
+                [-22.918872399999994, -43.6493079],
+                {"bubblingMouseEvents": true, "color": "#1f77b4", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#1f77b4", "fillOpacity": 0.7, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 4, "stroke": true, "weight": 3}
+            ).addTo(feature_group_26d49a4d19f06bb44255a771bc828c6b);
+        
+    
+        var popup_cc463b36b1b1641c2cfb5a7fe1d4f7f5 = L.popup({
+  "maxWidth": 300,
+});
+
+        
+            
+                var html_45733e14513e16a0f83d3a8b92ab2bda = $(`<div id="html_45733e14513e16a0f83d3a8b92ab2bda" style="width: 100.0%; height: 100.0%;"><div style='font-family: Arial; font-size: 12px; width: 250px;'><b>Detalhes da Feature OSM</b><br><hr><b>Tipo:</b> Point<br><b>railway:</b> station<br><b>name:</b> Tancredo Neves<br></div></div>`)[0];
+                popup_cc463b36b1b1641c2cfb5a7fe1d4f7f5.setContent(html_45733e14513e16a0f83d3a8b92ab2bda);
+            
+        
+
+        circle_marker_12c6ce1c7790e35922b33589b59f924d.bindPopup(popup_cc463b36b1b1641c2cfb5a7fe1d4f7f5)
+        ;
+
+        
+    
+    
+            var circle_marker_1b3cf3b887941e916792aabb23f34417 = L.circleMarker(
+                [-22.906285899999997, -43.5810156],
+                {"bubblingMouseEvents": true, "color": "#1f77b4", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#1f77b4", "fillOpacity": 0.7, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 4, "stroke": true, "weight": 3}
+            ).addTo(feature_group_26d49a4d19f06bb44255a771bc828c6b);
+        
+    
+        var popup_20e3dbbd2544509bc76f0d102e61a72d = L.popup({
+  "maxWidth": 300,
+});
+
+        
+            
+                var html_1652e5f3247dc21c766591c09fa9e758 = $(`<div id="html_1652e5f3247dc21c766591c09fa9e758" style="width: 100.0%; height: 100.0%;"><div style='font-family: Arial; font-size: 12px; width: 250px;'><b>Detalhes da Feature OSM</b><br><hr><b>Tipo:</b> Point<br><b>railway:</b> station<br><b>name:</b> Benjamim do Monte<br></div></div>`)[0];
+                popup_20e3dbbd2544509bc76f0d102e61a72d.setContent(html_1652e5f3247dc21c766591c09fa9e758);
+            
+        
+
+        circle_marker_1b3cf3b887941e916792aabb23f34417.bindPopup(popup_20e3dbbd2544509bc76f0d102e61a72d)
+        ;
+
+        
+    
+    
+            var circle_marker_7695be667987ebada28e06751a2efaa8 = L.circleMarker(
+                [-22.8885203, -43.3212246],
+                {"bubblingMouseEvents": true, "color": "#1f77b4", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#1f77b4", "fillOpacity": 0.7, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 4, "stroke": true, "weight": 3}
+            ).addTo(feature_group_26d49a4d19f06bb44255a771bc828c6b);
+        
+    
+        var popup_3c93450c2bc4439607bb7e6b664542f2 = L.popup({
+  "maxWidth": 300,
+});
+
+        
+            
+                var html_c4963771ec1e37e73b1537b744714485 = $(`<div id="html_c4963771ec1e37e73b1537b744714485" style="width: 100.0%; height: 100.0%;"><div style='font-family: Arial; font-size: 12px; width: 250px;'><b>Detalhes da Feature OSM</b><br><hr><b>Tipo:</b> Point<br><b>railway:</b> station<br><b>name:</b> Quintino<br></div></div>`)[0];
+                popup_3c93450c2bc4439607bb7e6b664542f2.setContent(html_c4963771ec1e37e73b1537b744714485);
+            
+        
+
+        circle_marker_7695be667987ebada28e06751a2efaa8.bindPopup(popup_3c93450c2bc4439607bb7e6b664542f2)
+        ;
+
+        
+    
+    
+            var circle_marker_fb1271ad0e3373312334c89488a6787b = L.circleMarker(
+                [-22.821797600000004, -43.370258],
+                {"bubblingMouseEvents": true, "color": "#1f77b4", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#1f77b4", "fillOpacity": 0.7, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 4, "stroke": true, "weight": 3}
+            ).addTo(feature_group_26d49a4d19f06bb44255a771bc828c6b);
+        
+    
+        var popup_6b33c7c771de76a616e34e87cf8ea36d = L.popup({
+  "maxWidth": 300,
+});
+
+        
+            
+                var html_43c93dad4de382ee674aa251f143cc8d = $(`<div id="html_43c93dad4de382ee674aa251f143cc8d" style="width: 100.0%; height: 100.0%;"><div style='font-family: Arial; font-size: 12px; width: 250px;'><b>Detalhes da Feature OSM</b><br><hr><b>Tipo:</b> Point<br><b>railway:</b> station<br><b>name:</b> Costa Barros<br></div></div>`)[0];
+                popup_6b33c7c771de76a616e34e87cf8ea36d.setContent(html_43c93dad4de382ee674aa251f143cc8d);
+            
+        
+
+        circle_marker_fb1271ad0e3373312334c89488a6787b.bindPopup(popup_6b33c7c771de76a616e34e87cf8ea36d)
+        ;
+
+        
+    
+    
+            var circle_marker_287e6ffcf8492ca9f9f3f1c7abead07e = L.circleMarker(
+                [-22.8766775, -43.3376192],
+                {"bubblingMouseEvents": true, "color": "#1f77b4", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#1f77b4", "fillOpacity": 0.7, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 4, "stroke": true, "weight": 3}
+            ).addTo(feature_group_26d49a4d19f06bb44255a771bc828c6b);
+        
+    
+        var popup_184acb000e9874b5e2182389ae473a27 = L.popup({
+  "maxWidth": 300,
+});
+
+        
+            
+                var html_e21cae0d6b887315b0649e2119d24c01 = $(`<div id="html_e21cae0d6b887315b0649e2119d24c01" style="width: 100.0%; height: 100.0%;"><div style='font-family: Arial; font-size: 12px; width: 250px;'><b>Detalhes da Feature OSM</b><br><hr><b>Tipo:</b> Point<br><b>railway:</b> station<br><b>name:</b> Madureira<br></div></div>`)[0];
+                popup_184acb000e9874b5e2182389ae473a27.setContent(html_e21cae0d6b887315b0649e2119d24c01);
+            
+        
+
+        circle_marker_287e6ffcf8492ca9f9f3f1c7abead07e.bindPopup(popup_184acb000e9874b5e2182389ae473a27)
+        ;
+
+        
+    
+    
+            var circle_marker_e9b33747174778f140c9cbbd1a1ace85 = L.circleMarker(
+                [-22.8747603, -43.4294083],
+                {"bubblingMouseEvents": true, "color": "#1f77b4", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#1f77b4", "fillOpacity": 0.7, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 4, "stroke": true, "weight": 3}
+            ).addTo(feature_group_26d49a4d19f06bb44255a771bc828c6b);
+        
+    
+        var popup_dcc578e951c75744316d5a5cb422f9f7 = L.popup({
+  "maxWidth": 300,
+});
+
+        
+            
+                var html_0b6bb6afb274d3d57f2bc2240b97597b = $(`<div id="html_0b6bb6afb274d3d57f2bc2240b97597b" style="width: 100.0%; height: 100.0%;"><div style='font-family: Arial; font-size: 12px; width: 250px;'><b>Detalhes da Feature OSM</b><br><hr><b>Tipo:</b> Point<br><b>railway:</b> station<br><b>name:</b> Realengo<br></div></div>`)[0];
+                popup_dcc578e951c75744316d5a5cb422f9f7.setContent(html_0b6bb6afb274d3d57f2bc2240b97597b);
+            
+        
+
+        circle_marker_e9b33747174778f140c9cbbd1a1ace85.bindPopup(popup_dcc578e951c75744316d5a5cb422f9f7)
+        ;
+
+        
+    
+    
+            var circle_marker_242bc363f1afb3b93f9484cf1f535952 = L.circleMarker(
+                [-22.915550100000004, -43.6840898],
+                {"bubblingMouseEvents": true, "color": "#1f77b4", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#1f77b4", "fillOpacity": 0.7, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 4, "stroke": true, "weight": 3}
+            ).addTo(feature_group_26d49a4d19f06bb44255a771bc828c6b);
+        
+    
+        var popup_3303b8a0ab2f622e502bdf4a85ef5321 = L.popup({
+  "maxWidth": 300,
+});
+
+        
+            
+                var html_816ff600f0ccbde78022cfd47d9958a6 = $(`<div id="html_816ff600f0ccbde78022cfd47d9958a6" style="width: 100.0%; height: 100.0%;"><div style='font-family: Arial; font-size: 12px; width: 250px;'><b>Detalhes da Feature OSM</b><br><hr><b>Tipo:</b> Point<br><b>railway:</b> station<br><b>name:</b> Santa Cruz<br></div></div>`)[0];
+                popup_3303b8a0ab2f622e502bdf4a85ef5321.setContent(html_816ff600f0ccbde78022cfd47d9958a6);
+            
+        
+
+        circle_marker_242bc363f1afb3b93f9484cf1f535952.bindPopup(popup_3303b8a0ab2f622e502bdf4a85ef5321)
+        ;
+
+        
+    
+    
+            var circle_marker_5beec03ef61749959aa0a4740a2319af = L.circleMarker(
+                [-22.869048100000004, -43.305283700000004],
+                {"bubblingMouseEvents": true, "color": "#1f77b4", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#1f77b4", "fillOpacity": 0.7, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 4, "stroke": true, "weight": 3}
+            ).addTo(feature_group_26d49a4d19f06bb44255a771bc828c6b);
+        
+    
+        var popup_1c4e4e1b721e498c27746a6f48f5e39e = L.popup({
+  "maxWidth": 300,
+});
+
+        
+            
+                var html_d53f95f85223dbc5ba06e65aa9132d66 = $(`<div id="html_d53f95f85223dbc5ba06e65aa9132d66" style="width: 100.0%; height: 100.0%;"><div style='font-family: Arial; font-size: 12px; width: 250px;'><b>Detalhes da Feature OSM</b><br><hr><b>Tipo:</b> Point<br><b>railway:</b> station<br><b>name:</b> Tomás Coelho<br></div></div>`)[0];
+                popup_1c4e4e1b721e498c27746a6f48f5e39e.setContent(html_d53f95f85223dbc5ba06e65aa9132d66);
+            
+        
+
+        circle_marker_5beec03ef61749959aa0a4740a2319af.bindPopup(popup_1c4e4e1b721e498c27746a6f48f5e39e)
+        ;
+
+        
+    
+    
+            var circle_marker_daa2bea67ee0bca8d999f30b7fd4082b = L.circleMarker(
+                [-22.884163600000004, -43.2550613],
+                {"bubblingMouseEvents": true, "color": "#1f77b4", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#1f77b4", "fillOpacity": 0.7, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 4, "stroke": true, "weight": 3}
+            ).addTo(feature_group_26d49a4d19f06bb44255a771bc828c6b);
+        
+    
+        var popup_c144fe97679f7b016dd8f21c89de3fae = L.popup({
+  "maxWidth": 300,
+});
+
+        
+            
+                var html_a6ba9c1aeb5891bf4e55f2f50b045cb4 = $(`<div id="html_a6ba9c1aeb5891bf4e55f2f50b045cb4" style="width: 100.0%; height: 100.0%;"><div style='font-family: Arial; font-size: 12px; width: 250px;'><b>Detalhes da Feature OSM</b><br><hr><b>Tipo:</b> Point<br><b>railway:</b> station<br><b>name:</b> Jacarezinho<br></div></div>`)[0];
+                popup_c144fe97679f7b016dd8f21c89de3fae.setContent(html_a6ba9c1aeb5891bf4e55f2f50b045cb4);
+            
+        
+
+        circle_marker_daa2bea67ee0bca8d999f30b7fd4082b.bindPopup(popup_c144fe97679f7b016dd8f21c89de3fae)
+        ;
+
+        
+    
+    
+            var circle_marker_854b271dbb1fb196cbc0fed623c18d0d = L.circleMarker(
+                [-22.895594999999997, -43.2936902],
+                {"bubblingMouseEvents": true, "color": "#1f77b4", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#1f77b4", "fillOpacity": 0.7, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 4, "stroke": true, "weight": 3}
+            ).addTo(feature_group_26d49a4d19f06bb44255a771bc828c6b);
+        
+    
+        var popup_3a08c0ced9e4fff1a8b05e31bd5800fc = L.popup({
+  "maxWidth": 300,
+});
+
+        
+            
+                var html_e42d017c8a8a9304e99445e55c3af796 = $(`<div id="html_e42d017c8a8a9304e99445e55c3af796" style="width: 100.0%; height: 100.0%;"><div style='font-family: Arial; font-size: 12px; width: 250px;'><b>Detalhes da Feature OSM</b><br><hr><b>Tipo:</b> Point<br><b>railway:</b> station<br><b>name:</b> Olímpica de Engenho de Dentro<br></div></div>`)[0];
+                popup_3a08c0ced9e4fff1a8b05e31bd5800fc.setContent(html_e42d017c8a8a9304e99445e55c3af796);
+            
+        
+
+        circle_marker_854b271dbb1fb196cbc0fed623c18d0d.bindPopup(popup_3a08c0ced9e4fff1a8b05e31bd5800fc)
+        ;
+
+        
+    
+    
+            var circle_marker_89feb59f066998418defab57ae224dfc = L.circleMarker(
+                [-22.880200900000002, -43.2703898],
+                {"bubblingMouseEvents": true, "color": "#1f77b4", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#1f77b4", "fillOpacity": 0.7, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 4, "stroke": true, "weight": 3}
+            ).addTo(feature_group_26d49a4d19f06bb44255a771bc828c6b);
+        
+    
+        var popup_c4fbea1e19740125007a00a19d91ab80 = L.popup({
+  "maxWidth": 300,
+});
+
+        
+            
+                var html_4c34124bcfa2075e8295fb556bde0f3d = $(`<div id="html_4c34124bcfa2075e8295fb556bde0f3d" style="width: 100.0%; height: 100.0%;"><div style='font-family: Arial; font-size: 12px; width: 250px;'><b>Detalhes da Feature OSM</b><br><hr><b>Tipo:</b> Point<br><b>railway:</b> station<br><b>name:</b> Del Castilho<br></div></div>`)[0];
+                popup_c4fbea1e19740125007a00a19d91ab80.setContent(html_4c34124bcfa2075e8295fb556bde0f3d);
+            
+        
+
+        circle_marker_89feb59f066998418defab57ae224dfc.bindPopup(popup_c4fbea1e19740125007a00a19d91ab80)
+        ;
+
+        
+    
+    
+            var circle_marker_565415eead3c9762d17d93e2398f5328 = L.circleMarker(
+                [-22.860774499999994, -43.3712874],
+                {"bubblingMouseEvents": true, "color": "#1f77b4", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#1f77b4", "fillOpacity": 0.7, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 4, "stroke": true, "weight": 3}
+            ).addTo(feature_group_26d49a4d19f06bb44255a771bc828c6b);
+        
+    
+        var popup_87db4797c91d61b4c56d6d70f592852b = L.popup({
+  "maxWidth": 300,
+});
+
+        
+            
+                var html_388cbb95c929debad46314dfea90ae41 = $(`<div id="html_388cbb95c929debad46314dfea90ae41" style="width: 100.0%; height: 100.0%;"><div style='font-family: Arial; font-size: 12px; width: 250px;'><b>Detalhes da Feature OSM</b><br><hr><b>Tipo:</b> Point<br><b>railway:</b> station<br><b>name:</b> Marechal Hermes<br></div></div>`)[0];
+                popup_87db4797c91d61b4c56d6d70f592852b.setContent(html_388cbb95c929debad46314dfea90ae41);
+            
+        
+
+        circle_marker_565415eead3c9762d17d93e2398f5328.bindPopup(popup_87db4797c91d61b4c56d6d70f592852b)
+        ;
+
+        
+    
+    
+            var circle_marker_64f39acc2f744c2b9143fb737a710c54 = L.circleMarker(
+                [-22.840384, -43.278626],
+                {"bubblingMouseEvents": true, "color": "#1f77b4", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#1f77b4", "fillOpacity": 0.7, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 4, "stroke": true, "weight": 3}
+            ).addTo(feature_group_26d49a4d19f06bb44255a771bc828c6b);
+        
+    
+        var popup_4462ef55143b19d49ecb5901253cb079 = L.popup({
+  "maxWidth": 300,
+});
+
+        
+            
+                var html_4828b32c2107bd0539dbc8c941169e2a = $(`<div id="html_4828b32c2107bd0539dbc8c941169e2a" style="width: 100.0%; height: 100.0%;"><div style='font-family: Arial; font-size: 12px; width: 250px;'><b>Detalhes da Feature OSM</b><br><hr><b>Tipo:</b> Point<br><b>railway:</b> station<br><b>name:</b> Penha<br></div></div>`)[0];
+                popup_4462ef55143b19d49ecb5901253cb079.setContent(html_4828b32c2107bd0539dbc8c941169e2a);
+            
+        
+
+        circle_marker_64f39acc2f744c2b9143fb737a710c54.bindPopup(popup_4462ef55143b19d49ecb5901253cb079)
+        ;
+
+        
+    
+    
+            var circle_marker_79ed2f9c2eae84a982370255b0720262 = L.circleMarker(
+                [-22.8752578, -43.456678800000006],
+                {"bubblingMouseEvents": true, "color": "#1f77b4", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#1f77b4", "fillOpacity": 0.7, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 4, "stroke": true, "weight": 3}
+            ).addTo(feature_group_26d49a4d19f06bb44255a771bc828c6b);
+        
+    
+        var popup_c10c39e245168245810e1982cb13501c = L.popup({
+  "maxWidth": 300,
+});
+
+        
+            
+                var html_9272633b7c971124184338ab341ffaa0 = $(`<div id="html_9272633b7c971124184338ab341ffaa0" style="width: 100.0%; height: 100.0%;"><div style='font-family: Arial; font-size: 12px; width: 250px;'><b>Detalhes da Feature OSM</b><br><hr><b>Tipo:</b> Point<br><b>railway:</b> station<br><b>name:</b> Guilherme da Silveira<br></div></div>`)[0];
+                popup_c10c39e245168245810e1982cb13501c.setContent(html_9272633b7c971124184338ab341ffaa0);
+            
+        
+
+        circle_marker_79ed2f9c2eae84a982370255b0720262.bindPopup(popup_c10c39e245168245810e1982cb13501c)
+        ;
+
+        
+    
+    
+            var circle_marker_0878a6d1dc9a5832781c59d7989e1101 = L.circleMarker(
+                [-22.862533599999995, -43.4020334],
+                {"bubblingMouseEvents": true, "color": "#1f77b4", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#1f77b4", "fillOpacity": 0.7, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 4, "stroke": true, "weight": 3}
+            ).addTo(feature_group_26d49a4d19f06bb44255a771bc828c6b);
+        
+    
+        var popup_dcf5fe3621ec49a682334b61a9453ca3 = L.popup({
+  "maxWidth": 300,
+});
+
+        
+            
+                var html_311034d4f15fc36256f36536d395fed7 = $(`<div id="html_311034d4f15fc36256f36536d395fed7" style="width: 100.0%; height: 100.0%;"><div style='font-family: Arial; font-size: 12px; width: 250px;'><b>Detalhes da Feature OSM</b><br><hr><b>Tipo:</b> Point<br><b>railway:</b> station<br><b>name:</b> Vila Militar<br></div></div>`)[0];
+                popup_dcf5fe3621ec49a682334b61a9453ca3.setContent(html_311034d4f15fc36256f36536d395fed7);
+            
+        
+
+        circle_marker_0878a6d1dc9a5832781c59d7989e1101.bindPopup(popup_dcf5fe3621ec49a682334b61a9453ca3)
+        ;
+
+        
+    
+    
+            var circle_marker_5c1ec6d3f3d68342477044ff5ff21b03 = L.circleMarker(
+                [-22.873216900000003, -43.336866],
+                {"bubblingMouseEvents": true, "color": "#1f77b4", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#1f77b4", "fillOpacity": 0.7, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 4, "stroke": true, "weight": 3}
+            ).addTo(feature_group_26d49a4d19f06bb44255a771bc828c6b);
+        
+    
+        var popup_e8b1f0620014266df8fb1cf48f2d9e4c = L.popup({
+  "maxWidth": 300,
+});
+
+        
+            
+                var html_cd4aeeb430f47318fd3aca02d703fa6d = $(`<div id="html_cd4aeeb430f47318fd3aca02d703fa6d" style="width: 100.0%; height: 100.0%;"><div style='font-family: Arial; font-size: 12px; width: 250px;'><b>Detalhes da Feature OSM</b><br><hr><b>Tipo:</b> Point<br><b>railway:</b> station<br><b>name:</b> Mercadão de Madureira<br></div></div>`)[0];
+                popup_e8b1f0620014266df8fb1cf48f2d9e4c.setContent(html_cd4aeeb430f47318fd3aca02d703fa6d);
+            
+        
+
+        circle_marker_5c1ec6d3f3d68342477044ff5ff21b03.bindPopup(popup_e8b1f0620014266df8fb1cf48f2d9e4c)
+        ;
+
+        
+    
+    
+            var circle_marker_af40eb59d7d7c95057996f185f8506af = L.circleMarker(
+                [-22.87579229999999, -43.4861142],
+                {"bubblingMouseEvents": true, "color": "#1f77b4", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#1f77b4", "fillOpacity": 0.7, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 4, "stroke": true, "weight": 3}
+            ).addTo(feature_group_26d49a4d19f06bb44255a771bc828c6b);
+        
+    
+        var popup_0f91de94ba5b3d0099c69d1843be9ae1 = L.popup({
+  "maxWidth": 300,
+});
+
+        
+            
+                var html_8e270f721febe2c97b73fa88506faf79 = $(`<div id="html_8e270f721febe2c97b73fa88506faf79" style="width: 100.0%; height: 100.0%;"><div style='font-family: Arial; font-size: 12px; width: 250px;'><b>Detalhes da Feature OSM</b><br><hr><b>Tipo:</b> Point<br><b>railway:</b> station<br><b>name:</b> Senador Camará<br></div></div>`)[0];
+                popup_0f91de94ba5b3d0099c69d1843be9ae1.setContent(html_8e270f721febe2c97b73fa88506faf79);
+            
+        
+
+        circle_marker_af40eb59d7d7c95057996f185f8506af.bindPopup(popup_0f91de94ba5b3d0099c69d1843be9ae1)
+        ;
+
+        
+    
+    
+            var circle_marker_6913057d8100d30dc1cc3ff1dfac313a = L.circleMarker(
+                [-22.8056064, -43.3670241],
+                {"bubblingMouseEvents": true, "color": "#1f77b4", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#1f77b4", "fillOpacity": 0.7, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 4, "stroke": true, "weight": 3}
+            ).addTo(feature_group_26d49a4d19f06bb44255a771bc828c6b);
+        
+    
+        var popup_7719495cf8f708165e0706e804f64016 = L.popup({
+  "maxWidth": 300,
+});
+
+        
+            
+                var html_49ea074af3e57c8c80d2a2a421f5ecc4 = $(`<div id="html_49ea074af3e57c8c80d2a2a421f5ecc4" style="width: 100.0%; height: 100.0%;"><div style='font-family: Arial; font-size: 12px; width: 250px;'><b>Detalhes da Feature OSM</b><br><hr><b>Tipo:</b> Point<br><b>railway:</b> station<br><b>name:</b> Pavuna/São João de Meriti<br></div></div>`)[0];
+                popup_7719495cf8f708165e0706e804f64016.setContent(html_49ea074af3e57c8c80d2a2a421f5ecc4);
+            
+        
+
+        circle_marker_6913057d8100d30dc1cc3ff1dfac313a.bindPopup(popup_7719495cf8f708165e0706e804f64016)
+        ;
+
+        
+    
+    
+            var circle_marker_fb6e982ac4f260328469ca920fd63bb1 = L.circleMarker(
+                [-22.8052642, -43.3054785],
+                {"bubblingMouseEvents": true, "color": "#1f77b4", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#1f77b4", "fillOpacity": 0.7, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 4, "stroke": true, "weight": 3}
+            ).addTo(feature_group_26d49a4d19f06bb44255a771bc828c6b);
+        
+    
+        var popup_ba9847493f5dc9930cbcb8c193ff0b7d = L.popup({
+  "maxWidth": 300,
+});
+
+        
+            
+                var html_eaac1923b09328b230c547f043b885dd = $(`<div id="html_eaac1923b09328b230c547f043b885dd" style="width: 100.0%; height: 100.0%;"><div style='font-family: Arial; font-size: 12px; width: 250px;'><b>Detalhes da Feature OSM</b><br><hr><b>Tipo:</b> Point<br><b>railway:</b> station<br><b>name:</b> Vigário Geral<br></div></div>`)[0];
+                popup_ba9847493f5dc9930cbcb8c193ff0b7d.setContent(html_eaac1923b09328b230c547f043b885dd);
+            
+        
+
+        circle_marker_fb6e982ac4f260328469ca920fd63bb1.bindPopup(popup_ba9847493f5dc9930cbcb8c193ff0b7d)
+        ;
+
+        
+    
+    
+            var circle_marker_f16a4f6a852043fcafea6a83bf045c1f = L.circleMarker(
+                [-22.869192799999997, -43.3501396],
+                {"bubblingMouseEvents": true, "color": "#1f77b4", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#1f77b4", "fillOpacity": 0.7, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 4, "stroke": true, "weight": 3}
+            ).addTo(feature_group_26d49a4d19f06bb44255a771bc828c6b);
+        
+    
+        var popup_c68331da78a4de6a00059574479c1192 = L.popup({
+  "maxWidth": 300,
+});
+
+        
+            
+                var html_8c7dcee539892d98e6b96281dc16edb4 = $(`<div id="html_8c7dcee539892d98e6b96281dc16edb4" style="width: 100.0%; height: 100.0%;"><div style='font-family: Arial; font-size: 12px; width: 250px;'><b>Detalhes da Feature OSM</b><br><hr><b>Tipo:</b> Point<br><b>railway:</b> station<br><b>name:</b> Oswaldo Cruz<br></div></div>`)[0];
+                popup_c68331da78a4de6a00059574479c1192.setContent(html_8c7dcee539892d98e6b96281dc16edb4);
+            
+        
+
+        circle_marker_f16a4f6a852043fcafea6a83bf045c1f.bindPopup(popup_c68331da78a4de6a00059574479c1192)
+        ;
+
+        
+    
+    
+            var circle_marker_889a554ce395bdc639a22161804106ad = L.circleMarker(
+                [-22.855091299999994, -43.2600925],
+                {"bubblingMouseEvents": true, "color": "#1f77b4", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#1f77b4", "fillOpacity": 0.7, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 4, "stroke": true, "weight": 3}
+            ).addTo(feature_group_26d49a4d19f06bb44255a771bc828c6b);
+        
+    
+        var popup_5ef6a41f0b2e44aeb352522ba5982eb0 = L.popup({
+  "maxWidth": 300,
+});
+
+        
+            
+                var html_955f83b4aa7cbfcbe40129eb38132ffd = $(`<div id="html_955f83b4aa7cbfcbe40129eb38132ffd" style="width: 100.0%; height: 100.0%;"><div style='font-family: Arial; font-size: 12px; width: 250px;'><b>Detalhes da Feature OSM</b><br><hr><b>Tipo:</b> Point<br><b>railway:</b> station<br><b>name:</b> Ramos<br></div></div>`)[0];
+                popup_5ef6a41f0b2e44aeb352522ba5982eb0.setContent(html_955f83b4aa7cbfcbe40129eb38132ffd);
+            
+        
+
+        circle_marker_889a554ce395bdc639a22161804106ad.bindPopup(popup_5ef6a41f0b2e44aeb352522ba5982eb0)
+        ;
+
+        
+    
+    
+            var circle_marker_ad17648ba7ad00f6188636c9551cacc2 = L.circleMarker(
+                [-22.8750904, -43.44766340000001],
+                {"bubblingMouseEvents": true, "color": "#1f77b4", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#1f77b4", "fillOpacity": 0.7, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 4, "stroke": true, "weight": 3}
+            ).addTo(feature_group_26d49a4d19f06bb44255a771bc828c6b);
+        
+    
+        var popup_5a877953c83b99f510aab512d6bbbd87 = L.popup({
+  "maxWidth": 300,
+});
+
+        
+            
+                var html_4508001ea891ff473f97ef196492d447 = $(`<div id="html_4508001ea891ff473f97ef196492d447" style="width: 100.0%; height: 100.0%;"><div style='font-family: Arial; font-size: 12px; width: 250px;'><b>Detalhes da Feature OSM</b><br><hr><b>Tipo:</b> Point<br><b>railway:</b> station<br><b>name:</b> Mocidade/Padre Miguel<br></div></div>`)[0];
+                popup_5a877953c83b99f510aab512d6bbbd87.setContent(html_4508001ea891ff473f97ef196492d447);
+            
+        
+
+        circle_marker_ad17648ba7ad00f6188636c9551cacc2.bindPopup(popup_5a877953c83b99f510aab512d6bbbd87)
+        ;
+
+        
+    
+    
+            var circle_marker_ccf77be475e9819a5d870a4a822a06d4 = L.circleMarker(
+                [-22.9022661, -43.56000360000001],
+                {"bubblingMouseEvents": true, "color": "#1f77b4", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#1f77b4", "fillOpacity": 0.7, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 4, "stroke": true, "weight": 3}
+            ).addTo(feature_group_26d49a4d19f06bb44255a771bc828c6b);
+        
+    
+        var popup_60ef54f253ad4bc5772d685b835b29d1 = L.popup({
+  "maxWidth": 300,
+});
+
+        
+            
+                var html_7a78f1436177e41ba1ce9d43d4b4e73a = $(`<div id="html_7a78f1436177e41ba1ce9d43d4b4e73a" style="width: 100.0%; height: 100.0%;"><div style='font-family: Arial; font-size: 12px; width: 250px;'><b>Detalhes da Feature OSM</b><br><hr><b>Tipo:</b> Point<br><b>railway:</b> station<br><b>name:</b> Campo Grande<br></div></div>`)[0];
+                popup_60ef54f253ad4bc5772d685b835b29d1.setContent(html_7a78f1436177e41ba1ce9d43d4b4e73a);
+            
+        
+
+        circle_marker_ccf77be475e9819a5d870a4a822a06d4.bindPopup(popup_60ef54f253ad4bc5772d685b835b29d1)
+        ;
+
+        
+    
+    
+            var circle_marker_cc3a0fe746e2b8470faf9f12cf4af66b = L.circleMarker(
+                [-22.849619699999995, -43.3572618],
+                {"bubblingMouseEvents": true, "color": "#1f77b4", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#1f77b4", "fillOpacity": 0.7, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 4, "stroke": true, "weight": 3}
+            ).addTo(feature_group_26d49a4d19f06bb44255a771bc828c6b);
+        
+    
+        var popup_c6bc38fa7c4433258ebcb4a6e0e10c7f = L.popup({
+  "maxWidth": 300,
+});
+
+        
+            
+                var html_78260067d125f11a84b7b784bf7d644d = $(`<div id="html_78260067d125f11a84b7b784bf7d644d" style="width: 100.0%; height: 100.0%;"><div style='font-family: Arial; font-size: 12px; width: 250px;'><b>Detalhes da Feature OSM</b><br><hr><b>Tipo:</b> Point<br><b>railway:</b> station<br><b>name:</b> Honório Gurgel<br></div></div>`)[0];
+                popup_c6bc38fa7c4433258ebcb4a6e0e10c7f.setContent(html_78260067d125f11a84b7b784bf7d644d);
+            
+        
+
+        circle_marker_cc3a0fe746e2b8470faf9f12cf4af66b.bindPopup(popup_c6bc38fa7c4433258ebcb4a6e0e10c7f)
+        ;
+
+        
+    
+    
+            var circle_marker_55c61b9ea44f61bc15922a80a47969f5 = L.circleMarker(
+                [-22.890399199999994, -43.3096599],
+                {"bubblingMouseEvents": true, "color": "#1f77b4", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#1f77b4", "fillOpacity": 0.7, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 4, "stroke": true, "weight": 3}
+            ).addTo(feature_group_26d49a4d19f06bb44255a771bc828c6b);
+        
+    
+        var popup_b4e46d9155b8e6f5dd69733eb65bec64 = L.popup({
+  "maxWidth": 300,
+});
+
+        
+            
+                var html_ffc41446f4b8de8de2a7c4ebc795d8e6 = $(`<div id="html_ffc41446f4b8de8de2a7c4ebc795d8e6" style="width: 100.0%; height: 100.0%;"><div style='font-family: Arial; font-size: 12px; width: 250px;'><b>Detalhes da Feature OSM</b><br><hr><b>Tipo:</b> Point<br><b>railway:</b> station<br><b>name:</b> Piedade<br></div></div>`)[0];
+                popup_b4e46d9155b8e6f5dd69733eb65bec64.setContent(html_ffc41446f4b8de8de2a7c4ebc795d8e6);
+            
+        
+
+        circle_marker_55c61b9ea44f61bc15922a80a47969f5.bindPopup(popup_b4e46d9155b8e6f5dd69733eb65bec64)
+        ;
+
+        
+    
+    
+            var circle_marker_30408b9cb4c1044a37181108c09a4906 = L.circleMarker(
+                [-22.8332113, -43.3665604],
+                {"bubblingMouseEvents": true, "color": "#1f77b4", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#1f77b4", "fillOpacity": 0.7, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 4, "stroke": true, "weight": 3}
+            ).addTo(feature_group_26d49a4d19f06bb44255a771bc828c6b);
+        
+    
+        var popup_016391490a7d8b6ae81982a295557ad3 = L.popup({
+  "maxWidth": 300,
+});
+
+        
+            
+                var html_dc1fb9d5d5bdac3064a974455b26df62 = $(`<div id="html_dc1fb9d5d5bdac3064a974455b26df62" style="width: 100.0%; height: 100.0%;"><div style='font-family: Arial; font-size: 12px; width: 250px;'><b>Detalhes da Feature OSM</b><br><hr><b>Tipo:</b> Point<br><b>railway:</b> station<br><b>name:</b> Barros Filho<br></div></div>`)[0];
+                popup_016391490a7d8b6ae81982a295557ad3.setContent(html_dc1fb9d5d5bdac3064a974455b26df62);
+            
+        
+
+        circle_marker_30408b9cb4c1044a37181108c09a4906.bindPopup(popup_016391490a7d8b6ae81982a295557ad3)
+        ;
+
+        
+    
+    
+            var circle_marker_b2dabec546ece9516fe1d044b75ce081 = L.circleMarker(
+                [-22.882734599999996, -43.328066],
+                {"bubblingMouseEvents": true, "color": "#1f77b4", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#1f77b4", "fillOpacity": 0.7, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 4, "stroke": true, "weight": 3}
+            ).addTo(feature_group_26d49a4d19f06bb44255a771bc828c6b);
+        
+    
+        var popup_432835a6828961f9950d7b7836c0a5aa = L.popup({
+  "maxWidth": 300,
+});
+
+        
+            
+                var html_0e277854b18c9baf572e783b0b8c4b33 = $(`<div id="html_0e277854b18c9baf572e783b0b8c4b33" style="width: 100.0%; height: 100.0%;"><div style='font-family: Arial; font-size: 12px; width: 250px;'><b>Detalhes da Feature OSM</b><br><hr><b>Tipo:</b> Point<br><b>railway:</b> station<br><b>name:</b> Cascadura<br></div></div>`)[0];
+                popup_432835a6828961f9950d7b7836c0a5aa.setContent(html_0e277854b18c9baf572e783b0b8c4b33);
+            
+        
+
+        circle_marker_b2dabec546ece9516fe1d044b75ce081.bindPopup(popup_432835a6828961f9950d7b7836c0a5aa)
+        ;
+
+        
+    
+    
+            var circle_marker_dc17e95d79e15e04241a71e5ad3a3cb6 = L.circleMarker(
+                [-22.868084100000004, -43.413575],
+                {"bubblingMouseEvents": true, "color": "#1f77b4", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#1f77b4", "fillOpacity": 0.7, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 4, "stroke": true, "weight": 3}
+            ).addTo(feature_group_26d49a4d19f06bb44255a771bc828c6b);
+        
+    
+        var popup_d6f13e34fbb13d60869cce47efdc38f4 = L.popup({
+  "maxWidth": 300,
+});
+
+        
+            
+                var html_056a5e9ecb391ff9500489b78e85cf56 = $(`<div id="html_056a5e9ecb391ff9500489b78e85cf56" style="width: 100.0%; height: 100.0%;"><div style='font-family: Arial; font-size: 12px; width: 250px;'><b>Detalhes da Feature OSM</b><br><hr><b>Tipo:</b> Point<br><b>railway:</b> station<br><b>name:</b> Magalhães Bastos<br></div></div>`)[0];
+                popup_d6f13e34fbb13d60869cce47efdc38f4.setContent(html_056a5e9ecb391ff9500489b78e85cf56);
+            
+        
+
+        circle_marker_dc17e95d79e15e04241a71e5ad3a3cb6.bindPopup(popup_d6f13e34fbb13d60869cce47efdc38f4)
+        ;
+
+        
+    
+    
+            var circle_marker_0ba690c6076baecf382fe60c6517aa45 = L.circleMarker(
+                [-22.874541399999995, -43.3157493],
+                {"bubblingMouseEvents": true, "color": "#1f77b4", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#1f77b4", "fillOpacity": 0.7, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 4, "stroke": true, "weight": 3}
+            ).addTo(feature_group_26d49a4d19f06bb44255a771bc828c6b);
+        
+    
+        var popup_ec2f50c083ce278d4ec0e22e2e525da6 = L.popup({
+  "maxWidth": 300,
+});
+
+        
+            
+                var html_ecd5a5dbd3779542e7fd29e8667918d7 = $(`<div id="html_ecd5a5dbd3779542e7fd29e8667918d7" style="width: 100.0%; height: 100.0%;"><div style='font-family: Arial; font-size: 12px; width: 250px;'><b>Detalhes da Feature OSM</b><br><hr><b>Tipo:</b> Point<br><b>railway:</b> station<br><b>name:</b> Cavalcanti<br></div></div>`)[0];
+                popup_ec2f50c083ce278d4ec0e22e2e525da6.setContent(html_ecd5a5dbd3779542e7fd29e8667918d7);
+            
+        
+
+        circle_marker_0ba690c6076baecf382fe60c6517aa45.bindPopup(popup_ec2f50c083ce278d4ec0e22e2e525da6)
+        ;
+
+        
+    
+    
+            var circle_marker_5baa92a8518e5c65969a9d23e92052ef = L.circleMarker(
+                [-22.912765799999995, -43.6144485],
+                {"bubblingMouseEvents": true, "color": "#1f77b4", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#1f77b4", "fillOpacity": 0.7, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 4, "stroke": true, "weight": 3}
+            ).addTo(feature_group_26d49a4d19f06bb44255a771bc828c6b);
+        
+    
+        var popup_27ea50e7f41e2686177d7198269a2561 = L.popup({
+  "maxWidth": 300,
+});
+
+        
+            
+                var html_6da9dd109254732cc77016d3d77879d2 = $(`<div id="html_6da9dd109254732cc77016d3d77879d2" style="width: 100.0%; height: 100.0%;"><div style='font-family: Arial; font-size: 12px; width: 250px;'><b>Detalhes da Feature OSM</b><br><hr><b>Tipo:</b> Point<br><b>railway:</b> station<br><b>name:</b> Cosmos<br></div></div>`)[0];
+                popup_27ea50e7f41e2686177d7198269a2561.setContent(html_6da9dd109254732cc77016d3d77879d2);
+            
+        
+
+        circle_marker_5baa92a8518e5c65969a9d23e92052ef.bindPopup(popup_27ea50e7f41e2686177d7198269a2561)
+        ;
+
+        
+    
+    
+            var circle_marker_0ae52a31e5df3b5d3dbfe4d1d78727cc = L.circleMarker(
+                [-22.9017297, -43.278034],
+                {"bubblingMouseEvents": true, "color": "#1f77b4", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#1f77b4", "fillOpacity": 0.7, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 4, "stroke": true, "weight": 3}
+            ).addTo(feature_group_26d49a4d19f06bb44255a771bc828c6b);
+        
+    
+        var popup_a1fde0943de652fa00ff311e3a0937d9 = L.popup({
+  "maxWidth": 300,
+});
+
+        
+            
+                var html_16d6a3f8beed91b3b3fa207ce4bee56a = $(`<div id="html_16d6a3f8beed91b3b3fa207ce4bee56a" style="width: 100.0%; height: 100.0%;"><div style='font-family: Arial; font-size: 12px; width: 250px;'><b>Detalhes da Feature OSM</b><br><hr><b>Tipo:</b> Point<br><b>railway:</b> station<br><b>name:</b> Méier<br></div></div>`)[0];
+                popup_a1fde0943de652fa00ff311e3a0937d9.setContent(html_16d6a3f8beed91b3b3fa207ce4bee56a);
+            
+        
+
+        circle_marker_0ae52a31e5df3b5d3dbfe4d1d78727cc.bindPopup(popup_a1fde0943de652fa00ff311e3a0937d9)
+        ;
+
+        
+    
+    
+            var circle_marker_5071693ed33d32653ea851f657e5eb0b = L.circleMarker(
+                [-22.840378799999996, -43.3984286],
+                {"bubblingMouseEvents": true, "color": "#1f77b4", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#1f77b4", "fillOpacity": 0.7, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 4, "stroke": true, "weight": 3}
+            ).addTo(feature_group_26d49a4d19f06bb44255a771bc828c6b);
+        
+    
+        var popup_3a466103c633089ded109908ee4c7eaa = L.popup({
+  "maxWidth": 300,
+});
+
+        
+            
+                var html_77ddfbec4c96ffa8a367ee8bb2744cb0 = $(`<div id="html_77ddfbec4c96ffa8a367ee8bb2744cb0" style="width: 100.0%; height: 100.0%;"><div style='font-family: Arial; font-size: 12px; width: 250px;'><b>Detalhes da Feature OSM</b><br><hr><b>Tipo:</b> Point<br><b>railway:</b> station<br><b>name:</b> Ricardo de Albuquerque<br></div></div>`)[0];
+                popup_3a466103c633089ded109908ee4c7eaa.setContent(html_77ddfbec4c96ffa8a367ee8bb2744cb0);
+            
+        
+
+        circle_marker_5071693ed33d32653ea851f657e5eb0b.bindPopup(popup_3a466103c633089ded109908ee4c7eaa)
+        ;
+
+        
+    
+    
+            var circle_marker_fc463d1f62deb83448c5e6f134d22c82 = L.circleMarker(
+                [-22.880979000000007, -43.2915738],
+                {"bubblingMouseEvents": true, "color": "#1f77b4", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#1f77b4", "fillOpacity": 0.7, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 4, "stroke": true, "weight": 3}
+            ).addTo(feature_group_26d49a4d19f06bb44255a771bc828c6b);
+        
+    
+        var popup_c24bfd626e1c9fa136bf9f20b76dbc6c = L.popup({
+  "maxWidth": 300,
+});
+
+        
+            
+                var html_3bac5368c4a3479b47b626e08866f12c = $(`<div id="html_3bac5368c4a3479b47b626e08866f12c" style="width: 100.0%; height: 100.0%;"><div style='font-family: Arial; font-size: 12px; width: 250px;'><b>Detalhes da Feature OSM</b><br><hr><b>Tipo:</b> Point<br><b>railway:</b> station<br><b>name:</b> Pilares<br></div></div>`)[0];
+                popup_c24bfd626e1c9fa136bf9f20b76dbc6c.setContent(html_3bac5368c4a3479b47b626e08866f12c);
+            
+        
+
+        circle_marker_fc463d1f62deb83448c5e6f134d22c82.bindPopup(popup_c24bfd626e1c9fa136bf9f20b76dbc6c)
+        ;
+
+        
+    
+    
+            var circle_marker_010aefd2e5b101faf33449fc322b6bf6 = L.circleMarker(
+                [-22.901977900000002, -43.2620752],
+                {"bubblingMouseEvents": true, "color": "#1f77b4", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#1f77b4", "fillOpacity": 0.7, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 4, "stroke": true, "weight": 3}
+            ).addTo(feature_group_26d49a4d19f06bb44255a771bc828c6b);
+        
+    
+        var popup_b5ccd6e6d78083b2c562cd91e4ab4527 = L.popup({
+  "maxWidth": 300,
+});
+
+        
+            
+                var html_6a1e218fb5b7e1a9230cb8516b1c81e9 = $(`<div id="html_6a1e218fb5b7e1a9230cb8516b1c81e9" style="width: 100.0%; height: 100.0%;"><div style='font-family: Arial; font-size: 12px; width: 250px;'><b>Detalhes da Feature OSM</b><br><hr><b>Tipo:</b> Point<br><b>railway:</b> station<br><b>name:</b> Sampaio<br></div></div>`)[0];
+                popup_b5ccd6e6d78083b2c562cd91e4ab4527.setContent(html_6a1e218fb5b7e1a9230cb8516b1c81e9);
+            
+        
+
+        circle_marker_010aefd2e5b101faf33449fc322b6bf6.bindPopup(popup_b5ccd6e6d78083b2c562cd91e4ab4527)
+        ;
+
+        
+    
+    
+            var circle_marker_6417fd276b85c068a0d242ee199d13a8 = L.circleMarker(
+                [-22.8240151, -43.2959248],
+                {"bubblingMouseEvents": true, "color": "#1f77b4", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#1f77b4", "fillOpacity": 0.7, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 4, "stroke": true, "weight": 3}
+            ).addTo(feature_group_26d49a4d19f06bb44255a771bc828c6b);
+        
+    
+        var popup_db52b1971d149d5efd4418aa18568ad6 = L.popup({
+  "maxWidth": 300,
+});
+
+        
+            
+                var html_57f2b005386c34d7a062ebe78bcb77e9 = $(`<div id="html_57f2b005386c34d7a062ebe78bcb77e9" style="width: 100.0%; height: 100.0%;"><div style='font-family: Arial; font-size: 12px; width: 250px;'><b>Detalhes da Feature OSM</b><br><hr><b>Tipo:</b> Point<br><b>railway:</b> station<br><b>name:</b> Cordovil<br></div></div>`)[0];
+                popup_db52b1971d149d5efd4418aa18568ad6.setContent(html_57f2b005386c34d7a062ebe78bcb77e9);
+            
+        
+
+        circle_marker_6417fd276b85c068a0d242ee199d13a8.bindPopup(popup_db52b1971d149d5efd4418aa18568ad6)
+        ;
+
+        
+    
+    
+            var circle_marker_09788367272a28518a8f8cf1201f58b8 = L.circleMarker(
+                [-22.901472399999996, -43.2555117],
+                {"bubblingMouseEvents": true, "color": "#1f77b4", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#1f77b4", "fillOpacity": 0.7, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 4, "stroke": true, "weight": 3}
+            ).addTo(feature_group_26d49a4d19f06bb44255a771bc828c6b);
+        
+    
+        var popup_cfa13febe1f12c3f62f2ffba5a0e01ac = L.popup({
+  "maxWidth": 300,
+});
+
+        
+            
+                var html_ad9778c33776febf1d6f65d194f64463 = $(`<div id="html_ad9778c33776febf1d6f65d194f64463" style="width: 100.0%; height: 100.0%;"><div style='font-family: Arial; font-size: 12px; width: 250px;'><b>Detalhes da Feature OSM</b><br><hr><b>Tipo:</b> Point<br><b>railway:</b> station<br><b>name:</b> Riachuelo<br></div></div>`)[0];
+                popup_cfa13febe1f12c3f62f2ffba5a0e01ac.setContent(html_ad9778c33776febf1d6f65d194f64463);
+            
+        
+
+        circle_marker_09788367272a28518a8f8cf1201f58b8.bindPopup(popup_cfa13febe1f12c3f62f2ffba5a0e01ac)
+        ;
+
+        
+    
+    
+            var circle_marker_c17daa945dda2e02b201ff77682dd936 = L.circleMarker(
+                [-22.8546618, -43.3517885],
+                {"bubblingMouseEvents": true, "color": "#1f77b4", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#1f77b4", "fillOpacity": 0.7, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 4, "stroke": true, "weight": 3}
+            ).addTo(feature_group_26d49a4d19f06bb44255a771bc828c6b);
+        
+    
+        var popup_4c6cca6fbd4dc03780e1b4ebe0d6edf2 = L.popup({
+  "maxWidth": 300,
+});
+
+        
+            
+                var html_741374e4c884e4f23fd7ae6ef22cfe6d = $(`<div id="html_741374e4c884e4f23fd7ae6ef22cfe6d" style="width: 100.0%; height: 100.0%;"><div style='font-family: Arial; font-size: 12px; width: 250px;'><b>Detalhes da Feature OSM</b><br><hr><b>Tipo:</b> Point<br><b>railway:</b> station<br><b>name:</b> Rocha Miranda<br></div></div>`)[0];
+                popup_4c6cca6fbd4dc03780e1b4ebe0d6edf2.setContent(html_741374e4c884e4f23fd7ae6ef22cfe6d);
+            
+        
+
+        circle_marker_c17daa945dda2e02b201ff77682dd936.bindPopup(popup_4c6cca6fbd4dc03780e1b4ebe0d6edf2)
+        ;
+
+        
+    
+    
+            var circle_marker_3dbff51ef638f91783d56d690857dd03 = L.circleMarker(
+                [-22.916251600000002, -43.6324651],
+                {"bubblingMouseEvents": true, "color": "#1f77b4", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#1f77b4", "fillOpacity": 0.7, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 4, "stroke": true, "weight": 3}
+            ).addTo(feature_group_26d49a4d19f06bb44255a771bc828c6b);
+        
+    
+        var popup_45a5022965b30eb6489362fdc4cb5169 = L.popup({
+  "maxWidth": 300,
+});
+
+        
+            
+                var html_e3e67d7deec109cffac48b8e283d747f = $(`<div id="html_e3e67d7deec109cffac48b8e283d747f" style="width: 100.0%; height: 100.0%;"><div style='font-family: Arial; font-size: 12px; width: 250px;'><b>Detalhes da Feature OSM</b><br><hr><b>Tipo:</b> Point<br><b>railway:</b> station<br><b>name:</b> Paciência<br></div></div>`)[0];
+                popup_45a5022965b30eb6489362fdc4cb5169.setContent(html_e3e67d7deec109cffac48b8e283d747f);
+            
+        
+
+        circle_marker_3dbff51ef638f91783d56d690857dd03.bindPopup(popup_45a5022965b30eb6489362fdc4cb5169)
+        ;
+
+        
+    
+    
+            var circle_marker_f0193a75bbd41bc7f93d95e4cfd21b2a = L.circleMarker(
+                [-22.8166618, -43.3007438],
+                {"bubblingMouseEvents": true, "color": "#1f77b4", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#1f77b4", "fillOpacity": 0.7, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 4, "stroke": true, "weight": 3}
+            ).addTo(feature_group_26d49a4d19f06bb44255a771bc828c6b);
+        
+    
+        var popup_6f72b053ba373eaaa5899fc4ef5325c4 = L.popup({
+  "maxWidth": 300,
+});
+
+        
+            
+                var html_35da44402afac1aee8301d3bf7ec5731 = $(`<div id="html_35da44402afac1aee8301d3bf7ec5731" style="width: 100.0%; height: 100.0%;"><div style='font-family: Arial; font-size: 12px; width: 250px;'><b>Detalhes da Feature OSM</b><br><hr><b>Tipo:</b> Point<br><b>railway:</b> station<br><b>name:</b> Parada de Lucas<br></div></div>`)[0];
+                popup_6f72b053ba373eaaa5899fc4ef5325c4.setContent(html_35da44402afac1aee8301d3bf7ec5731);
+            
+        
+
+        circle_marker_f0193a75bbd41bc7f93d95e4cfd21b2a.bindPopup(popup_6f72b053ba373eaaa5899fc4ef5325c4)
+        ;
+
+        
+    
+    
+            var circle_marker_0cddc92fc30ea65cef67e6963571e7dd = L.circleMarker(
+                [-22.855069399999994, -43.38352510000001],
+                {"bubblingMouseEvents": true, "color": "#1f77b4", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#1f77b4", "fillOpacity": 0.7, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 4, "stroke": true, "weight": 3}
+            ).addTo(feature_group_26d49a4d19f06bb44255a771bc828c6b);
+        
+    
+        var popup_5ce71f08624e744db3d2e990beb395b1 = L.popup({
+  "maxWidth": 300,
+});
+
+        
+            
+                var html_d5f14e2ec61ca4360a571ef3d2b194dd = $(`<div id="html_d5f14e2ec61ca4360a571ef3d2b194dd" style="width: 100.0%; height: 100.0%;"><div style='font-family: Arial; font-size: 12px; width: 250px;'><b>Detalhes da Feature OSM</b><br><hr><b>Tipo:</b> Point<br><b>railway:</b> station<br><b>name:</b> Deodoro<br></div></div>`)[0];
+                popup_5ce71f08624e744db3d2e990beb395b1.setContent(html_d5f14e2ec61ca4360a571ef3d2b194dd);
+            
+        
+
+        circle_marker_0cddc92fc30ea65cef67e6963571e7dd.bindPopup(popup_5ce71f08624e744db3d2e990beb395b1)
+        ;
+
+        
+    
+    
+            var circle_marker_dd3b63ad3a3660c8eb892acef5020f77 = L.circleMarker(
+                [-22.836634299999997, -43.2850429],
+                {"bubblingMouseEvents": true, "color": "#1f77b4", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#1f77b4", "fillOpacity": 0.7, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 4, "stroke": true, "weight": 3}
+            ).addTo(feature_group_26d49a4d19f06bb44255a771bc828c6b);
+        
+    
+        var popup_4b80dec07aa2d042c5eb1bb33cfb14dd = L.popup({
+  "maxWidth": 300,
+});
+
+        
+            
+                var html_8685e1dc0ddd83fa1f6339d0c512ff0e = $(`<div id="html_8685e1dc0ddd83fa1f6339d0c512ff0e" style="width: 100.0%; height: 100.0%;"><div style='font-family: Arial; font-size: 12px; width: 250px;'><b>Detalhes da Feature OSM</b><br><hr><b>Tipo:</b> Point<br><b>railway:</b> station<br><b>name:</b> Penha Circular<br></div></div>`)[0];
+                popup_4b80dec07aa2d042c5eb1bb33cfb14dd.setContent(html_8685e1dc0ddd83fa1f6339d0c512ff0e);
+            
+        
+
+        circle_marker_dd3b63ad3a3660c8eb892acef5020f77.bindPopup(popup_4b80dec07aa2d042c5eb1bb33cfb14dd)
+        ;
+
+        
+    
+    
+            var circle_marker_08ca903f14e30b619c253aaa4bfa2f09 = L.circleMarker(
+                [-22.8796485, -43.5113977],
+                {"bubblingMouseEvents": true, "color": "#1f77b4", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#1f77b4", "fillOpacity": 0.7, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 4, "stroke": true, "weight": 3}
+            ).addTo(feature_group_26d49a4d19f06bb44255a771bc828c6b);
+        
+    
+        var popup_6f4a690988db087001c5b297901e12ae = L.popup({
+  "maxWidth": 300,
+});
+
+        
+            
+                var html_0ccbf28f7dd888938a0d6ea2681b3f2a = $(`<div id="html_0ccbf28f7dd888938a0d6ea2681b3f2a" style="width: 100.0%; height: 100.0%;"><div style='font-family: Arial; font-size: 12px; width: 250px;'><b>Detalhes da Feature OSM</b><br><hr><b>Tipo:</b> Point<br><b>railway:</b> station<br><b>name:</b> Santíssimo<br></div></div>`)[0];
+                popup_6f4a690988db087001c5b297901e12ae.setContent(html_0ccbf28f7dd888938a0d6ea2681b3f2a);
+            
+        
+
+        circle_marker_08ca903f14e30b619c253aaa4bfa2f09.bindPopup(popup_6f4a690988db087001c5b297901e12ae)
+        ;
+
+        
+    
+    
+            var circle_marker_9c3450b3f3927bc5a2cf59b74f041094 = L.circleMarker(
+                [-22.9090062, -43.5950918],
+                {"bubblingMouseEvents": true, "color": "#1f77b4", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#1f77b4", "fillOpacity": 0.7, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 4, "stroke": true, "weight": 3}
+            ).addTo(feature_group_26d49a4d19f06bb44255a771bc828c6b);
+        
+    
+        var popup_c87cf9f351718dcf584f30f679122102 = L.popup({
+  "maxWidth": 300,
+});
+
+        
+            
+                var html_2c228468af5449aab537922c0fb2f545 = $(`<div id="html_2c228468af5449aab537922c0fb2f545" style="width: 100.0%; height: 100.0%;"><div style='font-family: Arial; font-size: 12px; width: 250px;'><b>Detalhes da Feature OSM</b><br><hr><b>Tipo:</b> Point<br><b>railway:</b> station<br><b>name:</b> Inhoaíba<br></div></div>`)[0];
+                popup_c87cf9f351718dcf584f30f679122102.setContent(html_2c228468af5449aab537922c0fb2f545);
+            
+        
+
+        circle_marker_9c3450b3f3927bc5a2cf59b74f041094.bindPopup(popup_c87cf9f351718dcf584f30f679122102)
+        ;
+
+        
+    
+    
+            var circle_marker_18740a8d8dbc6ec39c0c123e1df35e40 = L.circleMarker(
+                [-22.824403899999997, -43.4032236],
+                {"bubblingMouseEvents": true, "color": "#1f77b4", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#1f77b4", "fillOpacity": 0.7, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 4, "stroke": true, "weight": 3}
+            ).addTo(feature_group_26d49a4d19f06bb44255a771bc828c6b);
+        
+    
+        var popup_5b401e123bb517760079a64666656380 = L.popup({
+  "maxWidth": 300,
+});
+
+        
+            
+                var html_d32c4d8183a7d2fb9b7150367e87dc33 = $(`<div id="html_d32c4d8183a7d2fb9b7150367e87dc33" style="width: 100.0%; height: 100.0%;"><div style='font-family: Arial; font-size: 12px; width: 250px;'><b>Detalhes da Feature OSM</b><br><hr><b>Tipo:</b> Point<br><b>railway:</b> station<br><b>name:</b> Anchieta<br></div></div>`)[0];
+                popup_5b401e123bb517760079a64666656380.setContent(html_d32c4d8183a7d2fb9b7150367e87dc33);
+            
+        
+
+        circle_marker_18740a8d8dbc6ec39c0c123e1df35e40.bindPopup(popup_5b401e123bb517760079a64666656380)
+        ;
+
+        
+    
+    
+            var circle_marker_31a9a7749e48ce7891cef29cbac66841 = L.circleMarker(
+                [-22.89304119999999, -43.5373957],
+                {"bubblingMouseEvents": true, "color": "#1f77b4", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#1f77b4", "fillOpacity": 0.7, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 4, "stroke": true, "weight": 3}
+            ).addTo(feature_group_26d49a4d19f06bb44255a771bc828c6b);
+        
+    
+        var popup_14c81e7b84a7b0a12155670dfda222b9 = L.popup({
+  "maxWidth": 300,
+});
+
+        
+            
+                var html_ded1a197dea07d408fb033d1fafad299 = $(`<div id="html_ded1a197dea07d408fb033d1fafad299" style="width: 100.0%; height: 100.0%;"><div style='font-family: Arial; font-size: 12px; width: 250px;'><b>Detalhes da Feature OSM</b><br><hr><b>Tipo:</b> Point<br><b>railway:</b> station<br><b>name:</b> Augusto Vasconcelos<br></div></div>`)[0];
+                popup_14c81e7b84a7b0a12155670dfda222b9.setContent(html_ded1a197dea07d408fb033d1fafad299);
+            
+        
+
+        circle_marker_31a9a7749e48ce7891cef29cbac66841.bindPopup(popup_14c81e7b84a7b0a12155670dfda222b9)
+        ;
+
+        
+    
+    
+            var circle_marker_bf04f3a6c9b4379f7a354d051ba71aaf = L.circleMarker(
+                [-22.830387799999997, -43.2930029],
+                {"bubblingMouseEvents": true, "color": "#1f77b4", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#1f77b4", "fillOpacity": 0.7, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 4, "stroke": true, "weight": 3}
+            ).addTo(feature_group_26d49a4d19f06bb44255a771bc828c6b);
+        
+    
+        var popup_a98e83c91dc348b2e9f82a8b7c9809e7 = L.popup({
+  "maxWidth": 300,
+});
+
+        
+            
+                var html_2670b7c2cf827cbcccdfaddaa3378b2d = $(`<div id="html_2670b7c2cf827cbcccdfaddaa3378b2d" style="width: 100.0%; height: 100.0%;"><div style='font-family: Arial; font-size: 12px; width: 250px;'><b>Detalhes da Feature OSM</b><br><hr><b>Tipo:</b> Point<br><b>railway:</b> station<br><b>name:</b> Brás de Pina<br></div></div>`)[0];
+                popup_a98e83c91dc348b2e9f82a8b7c9809e7.setContent(html_2670b7c2cf827cbcccdfaddaa3378b2d);
+            
+        
+
+        circle_marker_bf04f3a6c9b4379f7a354d051ba71aaf.bindPopup(popup_a98e83c91dc348b2e9f82a8b7c9809e7)
+        ;
+
+        
+    
+    
+            var circle_marker_c88b2db54b437d24f02187cb46f64211 = L.circleMarker(
+                [-22.8643462, -43.36164610000001],
+                {"bubblingMouseEvents": true, "color": "#1f77b4", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#1f77b4", "fillOpacity": 0.7, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 4, "stroke": true, "weight": 3}
+            ).addTo(feature_group_26d49a4d19f06bb44255a771bc828c6b);
+        
+    
+        var popup_c45c3682b112a5aa15f31cbea38e8b7c = L.popup({
+  "maxWidth": 300,
+});
+
+        
+            
+                var html_1b4f2760f4f7e860c2882866f10bbc60 = $(`<div id="html_1b4f2760f4f7e860c2882866f10bbc60" style="width: 100.0%; height: 100.0%;"><div style='font-family: Arial; font-size: 12px; width: 250px;'><b>Detalhes da Feature OSM</b><br><hr><b>Tipo:</b> Point<br><b>railway:</b> station<br><b>name:</b> Prefeito Bento Ribeiro<br></div></div>`)[0];
+                popup_c45c3682b112a5aa15f31cbea38e8b7c.setContent(html_1b4f2760f4f7e860c2882866f10bbc60);
+            
+        
+
+        circle_marker_c88b2db54b437d24f02187cb46f64211.bindPopup(popup_c45c3682b112a5aa15f31cbea38e8b7c)
+        ;
+
+        
+    
+    
+            var circle_marker_622ae702b8f46d2ef529a75a94f65904 = L.circleMarker(
+                [-22.8471867, -43.2663633],
+                {"bubblingMouseEvents": true, "color": "#1f77b4", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#1f77b4", "fillOpacity": 0.7, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 4, "stroke": true, "weight": 3}
+            ).addTo(feature_group_26d49a4d19f06bb44255a771bc828c6b);
+        
+    
+        var popup_0367383b6e3e7a0b678402587203fecc = L.popup({
+  "maxWidth": 300,
+});
+
+        
+            
+                var html_e957ca059ab267717c1dd8c151c3a046 = $(`<div id="html_e957ca059ab267717c1dd8c151c3a046" style="width: 100.0%; height: 100.0%;"><div style='font-family: Arial; font-size: 12px; width: 250px;'><b>Detalhes da Feature OSM</b><br><hr><b>Tipo:</b> Point<br><b>railway:</b> station<br><b>name:</b> Olaria<br></div></div>`)[0];
+                popup_0367383b6e3e7a0b678402587203fecc.setContent(html_e957ca059ab267717c1dd8c151c3a046);
+            
+        
+
+        circle_marker_622ae702b8f46d2ef529a75a94f65904.bindPopup(popup_0367383b6e3e7a0b678402587203fecc)
+        ;
+
+        
+    
+    
+            var circle_marker_fb56c21896757fbd76ab630cf630e9b0 = L.circleMarker(
+                [-22.908746500000003, -43.2062984],
+                {"bubblingMouseEvents": true, "color": "#1f77b4", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#1f77b4", "fillOpacity": 0.7, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 4, "stroke": true, "weight": 3}
+            ).addTo(feature_group_26d49a4d19f06bb44255a771bc828c6b);
+        
+    
+        var popup_d73c1481de14cc20581c12418d791500 = L.popup({
+  "maxWidth": 300,
+});
+
+        
+            
+                var html_b645e6f474f0ea05a29ce809f5442e48 = $(`<div id="html_b645e6f474f0ea05a29ce809f5442e48" style="width: 100.0%; height: 100.0%;"><div style='font-family: Arial; font-size: 12px; width: 250px;'><b>Detalhes da Feature OSM</b><br><hr><b>Tipo:</b> Point<br><b>railway:</b> station<br><b>name:</b> Cidade Nova<br></div></div>`)[0];
+                popup_d73c1481de14cc20581c12418d791500.setContent(html_b645e6f474f0ea05a29ce809f5442e48);
+            
+        
+
+        circle_marker_fb56c21896757fbd76ab630cf630e9b0.bindPopup(popup_d73c1481de14cc20581c12418d791500)
+        ;
+
+        
+    
+    
+            var circle_marker_64051fcf874a615fe951f06f1cfcab8c = L.circleMarker(
+                [-22.904126700000003, -43.2751743],
+                {"bubblingMouseEvents": true, "color": "#1f77b4", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#1f77b4", "fillOpacity": 0.7, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 4, "stroke": true, "weight": 3}
+            ).addTo(feature_group_26d49a4d19f06bb44255a771bc828c6b);
+        
+    
+        var popup_c6abaf2a333f60bc56e6855889949897 = L.popup({
+  "maxWidth": 300,
+});
+
+        
+            
+                var html_f72c49e652f72088893d65bcac68022d = $(`<div id="html_f72c49e652f72088893d65bcac68022d" style="width: 100.0%; height: 100.0%;"><div style='font-family: Arial; font-size: 12px; width: 250px;'><b>Detalhes da Feature OSM</b><br><hr><b>Tipo:</b> Point<br><b>railway:</b> station<br><b>name:</b> Silva Freire<br></div></div>`)[0];
+                popup_c6abaf2a333f60bc56e6855889949897.setContent(html_f72c49e652f72088893d65bcac68022d);
+            
+        
+
+        circle_marker_64051fcf874a615fe951f06f1cfcab8c.bindPopup(popup_c6abaf2a333f60bc56e6855889949897)
+        ;
+
+        
+    
+    
+            var circle_marker_d2e99fad8aa8b24e5b7b8cc21b6de768 = L.circleMarker(
+                [-22.924140999999995, -43.2325924],
+                {"bubblingMouseEvents": true, "color": "#1f77b4", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#1f77b4", "fillOpacity": 0.7, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 4, "stroke": true, "weight": 3}
+            ).addTo(feature_group_26d49a4d19f06bb44255a771bc828c6b);
+        
+    
+        var popup_e0d170fbd2c01344490b7b7fcc7a9b64 = L.popup({
+  "maxWidth": 300,
+});
+
+        
+            
+                var html_f5efb84c4adacd472d2f691a147f712a = $(`<div id="html_f5efb84c4adacd472d2f691a147f712a" style="width: 100.0%; height: 100.0%;"><div style='font-family: Arial; font-size: 12px; width: 250px;'><b>Detalhes da Feature OSM</b><br><hr><b>Tipo:</b> Point<br><b>railway:</b> station<br><b>name:</b> Saens Peña / Tijuca<br></div></div>`)[0];
+                popup_e0d170fbd2c01344490b7b7fcc7a9b64.setContent(html_f5efb84c4adacd472d2f691a147f712a);
+            
+        
+
+        circle_marker_d2e99fad8aa8b24e5b7b8cc21b6de768.bindPopup(popup_e0d170fbd2c01344490b7b7fcc7a9b64)
+        ;
+
+        
+    
+    
+            var circle_marker_7677d4456ff06a6ffafee781e1a22f18 = L.circleMarker(
+                [-22.930941199999992, -43.2382699],
+                {"bubblingMouseEvents": true, "color": "#1f77b4", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#1f77b4", "fillOpacity": 0.7, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 4, "stroke": true, "weight": 3}
+            ).addTo(feature_group_26d49a4d19f06bb44255a771bc828c6b);
+        
+    
+        var popup_c3b043451e1f19a654a9429200032b56 = L.popup({
+  "maxWidth": 300,
+});
+
+        
+            
+                var html_f27fb81ceaa24613be653f84ef1038aa = $(`<div id="html_f27fb81ceaa24613be653f84ef1038aa" style="width: 100.0%; height: 100.0%;"><div style='font-family: Arial; font-size: 12px; width: 250px;'><b>Detalhes da Feature OSM</b><br><hr><b>Tipo:</b> Point<br><b>railway:</b> station<br><b>name:</b> Uruguai / Tijuca<br></div></div>`)[0];
+                popup_c3b043451e1f19a654a9429200032b56.setContent(html_f27fb81ceaa24613be653f84ef1038aa);
+            
+        
+
+        circle_marker_7677d4456ff06a6ffafee781e1a22f18.bindPopup(popup_c3b043451e1f19a654a9429200032b56)
+        ;
+
+        
+    
+    
+            var circle_marker_ef5b12db87c6dbb3b632a8ad6dba0e25 = L.circleMarker(
+                [-22.903340999999998, -43.1861796],
+                {"bubblingMouseEvents": true, "color": "#1f77b4", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#1f77b4", "fillOpacity": 0.7, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 4, "stroke": true, "weight": 3}
+            ).addTo(feature_group_26d49a4d19f06bb44255a771bc828c6b);
+        
+    
+        var popup_379aaa405b8f8f97034ab9e7c6dae0ff = L.popup({
+  "maxWidth": 300,
+});
+
+        
+            
+                var html_f0fb50170a379306489f4ef962e302b6 = $(`<div id="html_f0fb50170a379306489f4ef962e302b6" style="width: 100.0%; height: 100.0%;"><div style='font-family: Arial; font-size: 12px; width: 250px;'><b>Detalhes da Feature OSM</b><br><hr><b>Tipo:</b> Point<br><b>railway:</b> station<br><b>name:</b> Saara / Presidente Vargas<br></div></div>`)[0];
+                popup_379aaa405b8f8f97034ab9e7c6dae0ff.setContent(html_f0fb50170a379306489f4ef962e302b6);
+            
+        
+
+        circle_marker_ef5b12db87c6dbb3b632a8ad6dba0e25.bindPopup(popup_379aaa405b8f8f97034ab9e7c6dae0ff)
+        ;
+
+        
+    
+    
+            var circle_marker_5388a86fedea9c59c29e3dda8ac17e37 = L.circleMarker(
+                [-22.984542900000005, -43.2236274],
+                {"bubblingMouseEvents": true, "color": "#1f77b4", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#1f77b4", "fillOpacity": 0.7, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 4, "stroke": true, "weight": 3}
+            ).addTo(feature_group_26d49a4d19f06bb44255a771bc828c6b);
+        
+    
+        var popup_e852ea1be98d7f45fc5903697067a9d9 = L.popup({
+  "maxWidth": 300,
+});
+
+        
+            
+                var html_f21a6da84d4c6d8fa9d1130c091807e3 = $(`<div id="html_f21a6da84d4c6d8fa9d1130c091807e3" style="width: 100.0%; height: 100.0%;"><div style='font-family: Arial; font-size: 12px; width: 250px;'><b>Detalhes da Feature OSM</b><br><hr><b>Tipo:</b> Point<br><b>railway:</b> station<br><b>name:</b> Antero de Quental / Leblon<br></div></div>`)[0];
+                popup_e852ea1be98d7f45fc5903697067a9d9.setContent(html_f21a6da84d4c6d8fa9d1130c091807e3);
+            
+        
+
+        circle_marker_5388a86fedea9c59c29e3dda8ac17e37.bindPopup(popup_e852ea1be98d7f45fc5903697067a9d9)
+        ;
+
+        
+    
+    
+            var circle_marker_85fd3f37354f38658370add881b1f5ae = L.circleMarker(
+                [-22.983734800000004, -43.2162656],
+                {"bubblingMouseEvents": true, "color": "#1f77b4", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#1f77b4", "fillOpacity": 0.7, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 4, "stroke": true, "weight": 3}
+            ).addTo(feature_group_26d49a4d19f06bb44255a771bc828c6b);
+        
+    
+        var popup_63683799713ae0ddbfa56d2f81daf86e = L.popup({
+  "maxWidth": 300,
+});
+
+        
+            
+                var html_34f0ae7a27b2e51b52b463eb76f7a6b4 = $(`<div id="html_34f0ae7a27b2e51b52b463eb76f7a6b4" style="width: 100.0%; height: 100.0%;"><div style='font-family: Arial; font-size: 12px; width: 250px;'><b>Detalhes da Feature OSM</b><br><hr><b>Tipo:</b> Point<br><b>railway:</b> station<br><b>name:</b> Jardim de Alah / Leblon<br></div></div>`)[0];
+                popup_63683799713ae0ddbfa56d2f81daf86e.setContent(html_34f0ae7a27b2e51b52b463eb76f7a6b4);
+            
+        
+
+        circle_marker_85fd3f37354f38658370add881b1f5ae.bindPopup(popup_63683799713ae0ddbfa56d2f81daf86e)
+        ;
+
+        
+    
+    
+            var circle_marker_e64156030bd2e651b01af53987d26faf = L.circleMarker(
+                [-22.983720799999997, -43.2060232],
+                {"bubblingMouseEvents": true, "color": "#1f77b4", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#1f77b4", "fillOpacity": 0.7, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 4, "stroke": true, "weight": 3}
+            ).addTo(feature_group_26d49a4d19f06bb44255a771bc828c6b);
+        
+    
+        var popup_f03b8adccf0b78302ad2460cbeb228c9 = L.popup({
+  "maxWidth": 300,
+});
+
+        
+            
+                var html_6497763169a1df7a9d0004a20a2bc664 = $(`<div id="html_6497763169a1df7a9d0004a20a2bc664" style="width: 100.0%; height: 100.0%;"><div style='font-family: Arial; font-size: 12px; width: 250px;'><b>Detalhes da Feature OSM</b><br><hr><b>Tipo:</b> Point<br><b>railway:</b> station<br><b>name:</b> Nossa Senhora da Paz / Ipanema<br></div></div>`)[0];
+                popup_f03b8adccf0b78302ad2460cbeb228c9.setContent(html_6497763169a1df7a9d0004a20a2bc664);
+            
+        
+
+        circle_marker_e64156030bd2e651b01af53987d26faf.bindPopup(popup_f03b8adccf0b78302ad2460cbeb228c9)
+        ;
+
+        
+    
+    
+            var circle_marker_10e8327cb1e6bb45936a8a9283e7154b = L.circleMarker(
+                [-22.9029089, -43.1818193],
+                {"bubblingMouseEvents": true, "color": "#1f77b4", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#1f77b4", "fillOpacity": 0.7, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 4, "stroke": true, "weight": 3}
+            ).addTo(feature_group_26d49a4d19f06bb44255a771bc828c6b);
+        
+    
+        var popup_767bb3bd3e67724f9aad06be9d8fce3e = L.popup({
+  "maxWidth": 300,
+});
+
+        
+            
+                var html_fd041adf7a71eebdcde5e3564bee8566 = $(`<div id="html_fd041adf7a71eebdcde5e3564bee8566" style="width: 100.0%; height: 100.0%;"><div style='font-family: Arial; font-size: 12px; width: 250px;'><b>Detalhes da Feature OSM</b><br><hr><b>Tipo:</b> Point<br><b>railway:</b> station<br><b>name:</b> Uruguaiana / Centro<br></div></div>`)[0];
+                popup_767bb3bd3e67724f9aad06be9d8fce3e.setContent(html_fd041adf7a71eebdcde5e3564bee8566);
+            
+        
+
+        circle_marker_10e8327cb1e6bb45936a8a9283e7154b.bindPopup(popup_767bb3bd3e67724f9aad06be9d8fce3e)
+        ;
+
+        
+    
+    
+            var circle_marker_3f2d410d108769469ed54355fb842759 = L.circleMarker(
+                [-22.806318199999996, -43.3654752],
+                {"bubblingMouseEvents": true, "color": "#1f77b4", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#1f77b4", "fillOpacity": 0.7, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 4, "stroke": true, "weight": 3}
+            ).addTo(feature_group_26d49a4d19f06bb44255a771bc828c6b);
+        
+    
+        var popup_e25714f7bf036b112e4a292eaeb14346 = L.popup({
+  "maxWidth": 300,
+});
+
+        
+            
+                var html_efedf1bba7918b827cb8ef995c558298 = $(`<div id="html_efedf1bba7918b827cb8ef995c558298" style="width: 100.0%; height: 100.0%;"><div style='font-family: Arial; font-size: 12px; width: 250px;'><b>Detalhes da Feature OSM</b><br><hr><b>Tipo:</b> Point<br><b>railway:</b> station<br><b>name:</b> Pavuna<br></div></div>`)[0];
+                popup_e25714f7bf036b112e4a292eaeb14346.setContent(html_efedf1bba7918b827cb8ef995c558298);
+            
+        
+
+        circle_marker_3f2d410d108769469ed54355fb842759.bindPopup(popup_e25714f7bf036b112e4a292eaeb14346)
+        ;
+
+        
+    
+    
+            var circle_marker_f131476dbacd7e0c0a83a582aeef5378 = L.circleMarker(
+                [-22.904611099999997, -43.1910571],
+                {"bubblingMouseEvents": true, "color": "#1f77b4", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#1f77b4", "fillOpacity": 0.7, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 4, "stroke": true, "weight": 3}
+            ).addTo(feature_group_26d49a4d19f06bb44255a771bc828c6b);
+        
+    
+        var popup_821f42cb82b878bd83048c92a3cff38c = L.popup({
+  "maxWidth": 300,
+});
+
+        
+            
+                var html_06babbba0fcfa272305a40b1303bb299 = $(`<div id="html_06babbba0fcfa272305a40b1303bb299" style="width: 100.0%; height: 100.0%;"><div style='font-family: Arial; font-size: 12px; width: 250px;'><b>Detalhes da Feature OSM</b><br><hr><b>Tipo:</b> Point<br><b>railway:</b> station<br><b>name:</b> Central do Brasil / Centro<br></div></div>`)[0];
+                popup_821f42cb82b878bd83048c92a3cff38c.setContent(html_06babbba0fcfa272305a40b1303bb299);
+            
+        
+
+        circle_marker_f131476dbacd7e0c0a83a582aeef5378.bindPopup(popup_821f42cb82b878bd83048c92a3cff38c)
+        ;
+
+        
+    
+    
+            var circle_marker_af64cdf9092c2b5462245c2ae026e715 = L.circleMarker(
+                [-22.9821162, -43.1964357],
+                {"bubblingMouseEvents": true, "color": "#1f77b4", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#1f77b4", "fillOpacity": 0.7, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 4, "stroke": true, "weight": 3}
+            ).addTo(feature_group_26d49a4d19f06bb44255a771bc828c6b);
+        
+    
+        var popup_de3385b3d6dd44edf6d71b0bf4cdb364 = L.popup({
+  "maxWidth": 300,
+});
+
+        
+            
+                var html_9790aafc088403f32d766d420231b456 = $(`<div id="html_9790aafc088403f32d766d420231b456" style="width: 100.0%; height: 100.0%;"><div style='font-family: Arial; font-size: 12px; width: 250px;'><b>Detalhes da Feature OSM</b><br><hr><b>Tipo:</b> Point<br><b>railway:</b> station<br><b>name:</b> General Osório / Ipanema<br></div></div>`)[0];
+                popup_de3385b3d6dd44edf6d71b0bf4cdb364.setContent(html_9790aafc088403f32d766d420231b456);
+            
+        
+
+        circle_marker_af64cdf9092c2b5462245c2ae026e715.bindPopup(popup_de3385b3d6dd44edf6d71b0bf4cdb364)
+        ;
+
+        
+    
+    
+            var circle_marker_3fb1ebc8cc1467e24b38c5eb71bc46c3 = L.circleMarker(
+                [-22.9034589, -43.2707632],
+                {"bubblingMouseEvents": true, "color": "#1f77b4", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#1f77b4", "fillOpacity": 0.7, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 4, "stroke": true, "weight": 3}
+            ).addTo(feature_group_26d49a4d19f06bb44255a771bc828c6b);
+        
+    
+        var popup_bbdce1037c79b1fe119635d500401edd = L.popup({
+  "maxWidth": 300,
+});
+
+        
+            
+                var html_10a2d7e38ac19bfc60347e556e30a5de = $(`<div id="html_10a2d7e38ac19bfc60347e556e30a5de" style="width: 100.0%; height: 100.0%;"><div style='font-family: Arial; font-size: 12px; width: 250px;'><b>Detalhes da Feature OSM</b><br><hr><b>Tipo:</b> Point<br><b>railway:</b> station<br><b>name:</b> Engenho Novo<br></div></div>`)[0];
+                popup_bbdce1037c79b1fe119635d500401edd.setContent(html_10a2d7e38ac19bfc60347e556e30a5de);
+            
+        
+
+        circle_marker_3fb1ebc8cc1467e24b38c5eb71bc46c3.bindPopup(popup_bbdce1037c79b1fe119635d500401edd)
+        ;
+
+        
+    
+    
+            var circle_marker_6f14f7e6691962dc63ee8e0a6ab8daa9 = L.circleMarker(
+                [-22.90850749999999, -43.2368314],
+                {"bubblingMouseEvents": true, "color": "#1f77b4", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#1f77b4", "fillOpacity": 0.7, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 4, "stroke": true, "weight": 3}
+            ).addTo(feature_group_26d49a4d19f06bb44255a771bc828c6b);
+        
+    
+        var popup_b3d612828af9952fd8a1ab79c168c18f = L.popup({
+  "maxWidth": 300,
+});
+
+        
+            
+                var html_7a1bc44bb047e587ab403eddc80a30a4 = $(`<div id="html_7a1bc44bb047e587ab403eddc80a30a4" style="width: 100.0%; height: 100.0%;"><div style='font-family: Arial; font-size: 12px; width: 250px;'><b>Detalhes da Feature OSM</b><br><hr><b>Tipo:</b> Point<br><b>railway:</b> station<br><b>name:</b> Mangueira / Jamelão<br></div></div>`)[0];
+                popup_b3d612828af9952fd8a1ab79c168c18f.setContent(html_7a1bc44bb047e587ab403eddc80a30a4);
+            
+        
+
+        circle_marker_6f14f7e6691962dc63ee8e0a6ab8daa9.bindPopup(popup_b3d612828af9952fd8a1ab79c168c18f)
+        ;
+
+        
+    
+    
+            var circle_marker_3e6dca53d12f71e43c2b2c8b86fb2d1e = L.circleMarker(
+                [-22.867610699999993, -43.2552863],
+                {"bubblingMouseEvents": true, "color": "#1f77b4", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#1f77b4", "fillOpacity": 0.7, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 4, "stroke": true, "weight": 3}
+            ).addTo(feature_group_26d49a4d19f06bb44255a771bc828c6b);
+        
+    
+        var popup_6ea1ee6a7637405993d8f67be4552edd = L.popup({
+  "maxWidth": 300,
+});
+
+        
+            
+                var html_1d444ecf25ea6d3d152c59023428365c = $(`<div id="html_1d444ecf25ea6d3d152c59023428365c" style="width: 100.0%; height: 100.0%;"><div style='font-family: Arial; font-size: 12px; width: 250px;'><b>Detalhes da Feature OSM</b><br><hr><b>Tipo:</b> Point<br><b>railway:</b> station<br><b>name:</b> Bonsucesso<br></div></div>`)[0];
+                popup_6ea1ee6a7637405993d8f67be4552edd.setContent(html_1d444ecf25ea6d3d152c59023428365c);
+            
+        
+
+        circle_marker_3e6dca53d12f71e43c2b2c8b86fb2d1e.bindPopup(popup_6ea1ee6a7637405993d8f67be4552edd)
+        ;
+
+        
+    
+    
+            var circle_marker_6df35ea01624818c3692d370dc9ffc25 = L.circleMarker(
+                [-22.879675500000005, -43.2508881],
+                {"bubblingMouseEvents": true, "color": "#1f77b4", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#1f77b4", "fillOpacity": 0.7, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 4, "stroke": true, "weight": 3}
+            ).addTo(feature_group_26d49a4d19f06bb44255a771bc828c6b);
+        
+    
+        var popup_751f88619d3bff0d59b247b8798697b6 = L.popup({
+  "maxWidth": 300,
+});
+
+        
+            
+                var html_aed018429f37f8162d6ef27ddf7a823a = $(`<div id="html_aed018429f37f8162d6ef27ddf7a823a" style="width: 100.0%; height: 100.0%;"><div style='font-family: Arial; font-size: 12px; width: 250px;'><b>Detalhes da Feature OSM</b><br><hr><b>Tipo:</b> Point<br><b>railway:</b> station<br><b>name:</b> Manguinhos<br></div></div>`)[0];
+                popup_751f88619d3bff0d59b247b8798697b6.setContent(html_aed018429f37f8162d6ef27ddf7a823a);
+            
+        
+
+        circle_marker_6df35ea01624818c3692d370dc9ffc25.bindPopup(popup_751f88619d3bff0d59b247b8798697b6)
+        ;
+
+        
+    
+    
+            var circle_marker_152703a2cc3adbdb11dfdef51019b285 = L.circleMarker(
+                [-22.9371994, -43.1785326],
+                {"bubblingMouseEvents": true, "color": "#1f77b4", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#1f77b4", "fillOpacity": 0.7, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 4, "stroke": true, "weight": 3}
+            ).addTo(feature_group_26d49a4d19f06bb44255a771bc828c6b);
+        
+    
+        var popup_89705bf3fa707eb724ed1017124f8ac5 = L.popup({
+  "maxWidth": 300,
+});
+
+        
+            
+                var html_ce03600db10c0455630c358ab5f2731e = $(`<div id="html_ce03600db10c0455630c358ab5f2731e" style="width: 100.0%; height: 100.0%;"><div style='font-family: Arial; font-size: 12px; width: 250px;'><b>Detalhes da Feature OSM</b><br><hr><b>Tipo:</b> Point<br><b>railway:</b> station<br><b>name:</b> Flamengo<br></div></div>`)[0];
+                popup_89705bf3fa707eb724ed1017124f8ac5.setContent(html_ce03600db10c0455630c358ab5f2731e);
+            
+        
+
+        circle_marker_152703a2cc3adbdb11dfdef51019b285.bindPopup(popup_89705bf3fa707eb724ed1017124f8ac5)
+        ;
+
+        
+    
+    
+            var circle_marker_851e34c42b5e62125bf7558e67216c10 = L.circleMarker(
+                [-22.991229599999993, -43.255026900000004],
+                {"bubblingMouseEvents": true, "color": "#1f77b4", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#1f77b4", "fillOpacity": 0.7, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 4, "stroke": true, "weight": 3}
+            ).addTo(feature_group_26d49a4d19f06bb44255a771bc828c6b);
+        
+    
+        var popup_587691cd431b24c28b105551862589af = L.popup({
+  "maxWidth": 300,
+});
+
+        
+            
+                var html_8528bcf8af5453275aa113aa42a665ad = $(`<div id="html_8528bcf8af5453275aa113aa42a665ad" style="width: 100.0%; height: 100.0%;"><div style='font-family: Arial; font-size: 12px; width: 250px;'><b>Detalhes da Feature OSM</b><br><hr><b>Tipo:</b> Point<br><b>railway:</b> station<br><b>name:</b> São Conrado<br></div></div>`)[0];
+                popup_587691cd431b24c28b105551862589af.setContent(html_8528bcf8af5453275aa113aa42a665ad);
+            
+        
+
+        circle_marker_851e34c42b5e62125bf7558e67216c10.bindPopup(popup_587691cd431b24c28b105551862589af)
+        ;
+
+        
+    
+    
+            var circle_marker_fe2f6da99ec6dbc9bdc90ca2df30b15f = L.circleMarker(
+                [-23.006833999999994, -43.3109619],
+                {"bubblingMouseEvents": true, "color": "#1f77b4", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#1f77b4", "fillOpacity": 0.7, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 4, "stroke": true, "weight": 3}
+            ).addTo(feature_group_26d49a4d19f06bb44255a771bc828c6b);
+        
+    
+        var popup_93886133a79cc4023f40ab9aa0115738 = L.popup({
+  "maxWidth": 300,
+});
+
+        
+            
+                var html_01622822810f7116e17b6e41a9f56ecd = $(`<div id="html_01622822810f7116e17b6e41a9f56ecd" style="width: 100.0%; height: 100.0%;"><div style='font-family: Arial; font-size: 12px; width: 250px;'><b>Detalhes da Feature OSM</b><br><hr><b>Tipo:</b> Point<br><b>railway:</b> station<br><b>name:</b> Jardim Oceânico / Barra da Tijuca<br></div></div>`)[0];
+                popup_93886133a79cc4023f40ab9aa0115738.setContent(html_01622822810f7116e17b6e41a9f56ecd);
+            
+        
+
+        circle_marker_fe2f6da99ec6dbc9bdc90ca2df30b15f.bindPopup(popup_93886133a79cc4023f40ab9aa0115738)
+        ;
+
+        
+    
+    
+            var circle_marker_00789b6ca3272277da085bd4c86f9d94 = L.circleMarker(
+                [-22.9457346, -43.2050087],
+                {"bubblingMouseEvents": true, "color": "#1f77b4", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#1f77b4", "fillOpacity": 0.7, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 4, "stroke": true, "weight": 3}
+            ).addTo(feature_group_26d49a4d19f06bb44255a771bc828c6b);
+        
+    
+        var popup_d497532bc989a4e0f218da2569550997 = L.popup({
+  "maxWidth": 300,
+});
+
+        
+            
+                var html_53f949e811ae75a7dcab8f21b633de58 = $(`<div id="html_53f949e811ae75a7dcab8f21b633de58" style="width: 100.0%; height: 100.0%;"><div style='font-family: Arial; font-size: 12px; width: 250px;'><b>Detalhes da Feature OSM</b><br><hr><b>Tipo:</b> Point<br><b>railway:</b> station<br><b>name:</b> Silvestre<br></div></div>`)[0];
+                popup_d497532bc989a4e0f218da2569550997.setContent(html_53f949e811ae75a7dcab8f21b633de58);
+            
+        
+
+        circle_marker_00789b6ca3272277da085bd4c86f9d94.bindPopup(popup_d497532bc989a4e0f218da2569550997)
+        ;
+
+        
+    
+    
+            var circle_marker_80e68afa3473fae52d88c609c6f3bd4b = L.circleMarker(
+                [-22.86808698213216, -43.29669932463864],
+                {"bubblingMouseEvents": true, "color": "#1f77b4", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#1f77b4", "fillOpacity": 0.7, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 4, "stroke": true, "weight": 3}
+            ).addTo(feature_group_26d49a4d19f06bb44255a771bc828c6b);
+        
+    
+        var popup_049d9108049bc2ca4c754b2c0814f776 = L.popup({
+  "maxWidth": 300,
+});
+
+        
+            
+                var html_34713752060740a28bf561104f5820d1 = $(`<div id="html_34713752060740a28bf561104f5820d1" style="width: 100.0%; height: 100.0%;"><div style='font-family: Arial; font-size: 12px; width: 250px;'><b>Detalhes da Feature OSM</b><br><hr><b>Tipo:</b> Point<br><b>railway:</b> station<br><b>name:</b> nan<br></div></div>`)[0];
+                popup_049d9108049bc2ca4c754b2c0814f776.setContent(html_34713752060740a28bf561104f5820d1);
+            
+        
+
+        circle_marker_80e68afa3473fae52d88c609c6f3bd4b.bindPopup(popup_049d9108049bc2ca4c754b2c0814f776)
+        ;
+
+        
+    
+    
+            var circle_marker_61595cc28b05128d00e3834d07eede92 = L.circleMarker(
+                [-22.84271393359913, -43.33382847831544],
+                {"bubblingMouseEvents": true, "color": "#1f77b4", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#1f77b4", "fillOpacity": 0.7, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 4, "stroke": true, "weight": 3}
+            ).addTo(feature_group_26d49a4d19f06bb44255a771bc828c6b);
+        
+    
+        var popup_f627bda5ef2cb515f379335a30490261 = L.popup({
+  "maxWidth": 300,
+});
+
+        
+            
+                var html_053da711bf4d69ae89e463082f70719e = $(`<div id="html_053da711bf4d69ae89e463082f70719e" style="width: 100.0%; height: 100.0%;"><div style='font-family: Arial; font-size: 12px; width: 250px;'><b>Detalhes da Feature OSM</b><br><hr><b>Tipo:</b> Point<br><b>railway:</b> station<br><b>name:</b> nan<br></div></div>`)[0];
+                popup_f627bda5ef2cb515f379335a30490261.setContent(html_053da711bf4d69ae89e463082f70719e);
+            
+        
+
+        circle_marker_61595cc28b05128d00e3834d07eede92.bindPopup(popup_f627bda5ef2cb515f379335a30490261)
+        ;
+
+        
+    
+    
+            var circle_marker_6e0a093bb750429cb4ae48309ae4469c = L.circleMarker(
+                [-22.831841621754826, -43.34296461828508],
+                {"bubblingMouseEvents": true, "color": "#1f77b4", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#1f77b4", "fillOpacity": 0.7, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 4, "stroke": true, "weight": 3}
+            ).addTo(feature_group_26d49a4d19f06bb44255a771bc828c6b);
+        
+    
+        var popup_b305cefee9c34c1cb7a0778d7612a227 = L.popup({
+  "maxWidth": 300,
+});
+
+        
+            
+                var html_78dfb5bb2c692a70cfaa12b29e9ea678 = $(`<div id="html_78dfb5bb2c692a70cfaa12b29e9ea678" style="width: 100.0%; height: 100.0%;"><div style='font-family: Arial; font-size: 12px; width: 250px;'><b>Detalhes da Feature OSM</b><br><hr><b>Tipo:</b> Point<br><b>railway:</b> station<br><b>name:</b> nan<br></div></div>`)[0];
+                popup_b305cefee9c34c1cb7a0778d7612a227.setContent(html_78dfb5bb2c692a70cfaa12b29e9ea678);
+            
+        
+
+        circle_marker_6e0a093bb750429cb4ae48309ae4469c.bindPopup(popup_b305cefee9c34c1cb7a0778d7612a227)
+        ;
+
+        
+    
+    
+            var circle_marker_86fb1b101d97d4831ff5264590db746c = L.circleMarker(
+                [-22.824986200450848, -43.3493627523874],
+                {"bubblingMouseEvents": true, "color": "#1f77b4", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#1f77b4", "fillOpacity": 0.7, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 4, "stroke": true, "weight": 3}
+            ).addTo(feature_group_26d49a4d19f06bb44255a771bc828c6b);
+        
+    
+        var popup_8c3d0327a5146961dc05ecdb1757e61b = L.popup({
+  "maxWidth": 300,
+});
+
+        
+            
+                var html_ee79367369ef2fff377b5ac130926d73 = $(`<div id="html_ee79367369ef2fff377b5ac130926d73" style="width: 100.0%; height: 100.0%;"><div style='font-family: Arial; font-size: 12px; width: 250px;'><b>Detalhes da Feature OSM</b><br><hr><b>Tipo:</b> Point<br><b>railway:</b> station<br><b>name:</b> nan<br></div></div>`)[0];
+                popup_8c3d0327a5146961dc05ecdb1757e61b.setContent(html_ee79367369ef2fff377b5ac130926d73);
+            
+        
+
+        circle_marker_86fb1b101d97d4831ff5264590db746c.bindPopup(popup_8c3d0327a5146961dc05ecdb1757e61b)
+        ;
+
+        
+    
+    
+            var circle_marker_18919650eafe7e67f5442764d05b59ed = L.circleMarker(
+                [-22.84797961743131, -43.32341760221043],
+                {"bubblingMouseEvents": true, "color": "#1f77b4", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#1f77b4", "fillOpacity": 0.7, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 4, "stroke": true, "weight": 3}
+            ).addTo(feature_group_26d49a4d19f06bb44255a771bc828c6b);
+        
+    
+        var popup_708bbaadb43f1709cd1edf06e0349ca2 = L.popup({
+  "maxWidth": 300,
+});
+
+        
+            
+                var html_9b1e23a7a71c034aa20f4657289aca41 = $(`<div id="html_9b1e23a7a71c034aa20f4657289aca41" style="width: 100.0%; height: 100.0%;"><div style='font-family: Arial; font-size: 12px; width: 250px;'><b>Detalhes da Feature OSM</b><br><hr><b>Tipo:</b> Point<br><b>railway:</b> station<br><b>name:</b> nan<br></div></div>`)[0];
+                popup_708bbaadb43f1709cd1edf06e0349ca2.setContent(html_9b1e23a7a71c034aa20f4657289aca41);
+            
+        
+
+        circle_marker_18919650eafe7e67f5442764d05b59ed.bindPopup(popup_708bbaadb43f1709cd1edf06e0349ca2)
+        ;
+
+        
+    
+    
+            var circle_marker_6835531bd8655688d2942fbdfd0b5f4f = L.circleMarker(
+                [-22.940621595778303, -43.198505187075625],
+                {"bubblingMouseEvents": true, "color": "#1f77b4", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#1f77b4", "fillOpacity": 0.7, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 4, "stroke": true, "weight": 3}
+            ).addTo(feature_group_26d49a4d19f06bb44255a771bc828c6b);
+        
+    
+        var popup_c5d1d640257ca079db6f50710965be5a = L.popup({
+  "maxWidth": 300,
+});
+
+        
+            
+                var html_b57aae6447ebb33df522285e389d34b2 = $(`<div id="html_b57aae6447ebb33df522285e389d34b2" style="width: 100.0%; height: 100.0%;"><div style='font-family: Arial; font-size: 12px; width: 250px;'><b>Detalhes da Feature OSM</b><br><hr><b>Tipo:</b> Point<br><b>railway:</b> station<br><b>name:</b> Cosme Velho<br></div></div>`)[0];
+                popup_c5d1d640257ca079db6f50710965be5a.setContent(html_b57aae6447ebb33df522285e389d34b2);
+            
+        
+
+        circle_marker_6835531bd8655688d2942fbdfd0b5f4f.bindPopup(popup_c5d1d640257ca079db6f50710965be5a)
+        ;
+
+        
+    
+    
+            var circle_marker_6ece8b9fd443732ae34f1385546347d1 = L.circleMarker(
+                [-22.854428383987088, -43.35190576524971],
+                {"bubblingMouseEvents": true, "color": "#1f77b4", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#1f77b4", "fillOpacity": 0.7, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 4, "stroke": true, "weight": 3}
+            ).addTo(feature_group_26d49a4d19f06bb44255a771bc828c6b);
+        
+    
+        var popup_98543dcd8e78b3ea5a97ff47b989554e = L.popup({
+  "maxWidth": 300,
+});
+
+        
+            
+                var html_4daceaf4f5ceb6b92d052d6e0c219ace = $(`<div id="html_4daceaf4f5ceb6b92d052d6e0c219ace" style="width: 100.0%; height: 100.0%;"><div style='font-family: Arial; font-size: 12px; width: 250px;'><b>Detalhes da Feature OSM</b><br><hr><b>Tipo:</b> Point<br><b>railway:</b> station<br><b>name:</b> nan<br></div></div>`)[0];
+                popup_98543dcd8e78b3ea5a97ff47b989554e.setContent(html_4daceaf4f5ceb6b92d052d6e0c219ace);
+            
+        
+
+        circle_marker_6ece8b9fd443732ae34f1385546347d1.bindPopup(popup_98543dcd8e78b3ea5a97ff47b989554e)
+        ;
+
+        
+    
+    
+            var circle_marker_e34e530d579f883213b934666d3dac6b = L.circleMarker(
+                [-22.869070023667597, -43.305040826344076],
+                {"bubblingMouseEvents": true, "color": "#1f77b4", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#1f77b4", "fillOpacity": 0.7, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 4, "stroke": true, "weight": 3}
+            ).addTo(feature_group_26d49a4d19f06bb44255a771bc828c6b);
+        
+    
+        var popup_15673e6a149092cd90b243d77a9b3817 = L.popup({
+  "maxWidth": 300,
+});
+
+        
+            
+                var html_329276a8a73b1b66a93bb28d3831a471 = $(`<div id="html_329276a8a73b1b66a93bb28d3831a471" style="width: 100.0%; height: 100.0%;"><div style='font-family: Arial; font-size: 12px; width: 250px;'><b>Detalhes da Feature OSM</b><br><hr><b>Tipo:</b> Point<br><b>railway:</b> station<br><b>name:</b> nan<br></div></div>`)[0];
+                popup_15673e6a149092cd90b243d77a9b3817.setContent(html_329276a8a73b1b66a93bb28d3831a471);
+            
+        
+
+        circle_marker_e34e530d579f883213b934666d3dac6b.bindPopup(popup_15673e6a149092cd90b243d77a9b3817)
+        ;
+
+        
+    
+    
+            var circle_marker_f66ea8415e1c9ee4ad1b8d3a0100cb96 = L.circleMarker(
+                [-22.849862968101988, -43.35692489345002],
+                {"bubblingMouseEvents": true, "color": "#1f77b4", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#1f77b4", "fillOpacity": 0.7, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 4, "stroke": true, "weight": 3}
+            ).addTo(feature_group_26d49a4d19f06bb44255a771bc828c6b);
+        
+    
+        var popup_f1f4391a5f453a881568a1fba9ca8125 = L.popup({
+  "maxWidth": 300,
+});
+
+        
+            
+                var html_8c0531963224ae5b1e1e36ad3d358f9c = $(`<div id="html_8c0531963224ae5b1e1e36ad3d358f9c" style="width: 100.0%; height: 100.0%;"><div style='font-family: Arial; font-size: 12px; width: 250px;'><b>Detalhes da Feature OSM</b><br><hr><b>Tipo:</b> Point<br><b>railway:</b> station<br><b>name:</b> Honório Gurgel<br></div></div>`)[0];
+                popup_f1f4391a5f453a881568a1fba9ca8125.setContent(html_8c0531963224ae5b1e1e36ad3d358f9c);
+            
+        
+
+        circle_marker_f66ea8415e1c9ee4ad1b8d3a0100cb96.bindPopup(popup_f1f4391a5f453a881568a1fba9ca8125)
+        ;
+
+        
+    
+    
+            var circle_marker_6cc609d0aa56c00eed992229ce4ee300 = L.circleMarker(
+                [-22.876093151131517, -43.338524349026855],
+                {"bubblingMouseEvents": true, "color": "#1f77b4", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#1f77b4", "fillOpacity": 0.7, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 4, "stroke": true, "weight": 3}
+            ).addTo(feature_group_26d49a4d19f06bb44255a771bc828c6b);
+        
+    
+        var popup_b9c21b1c310b7fdac2235a311d32710d = L.popup({
+  "maxWidth": 300,
+});
+
+        
+            
+                var html_09d455ec86a192a197814094b312abbf = $(`<div id="html_09d455ec86a192a197814094b312abbf" style="width: 100.0%; height: 100.0%;"><div style='font-family: Arial; font-size: 12px; width: 250px;'><b>Detalhes da Feature OSM</b><br><hr><b>Tipo:</b> Point<br><b>railway:</b> station<br><b>name:</b> Estação de Trem de Madureira<br></div></div>`)[0];
+                popup_b9c21b1c310b7fdac2235a311d32710d.setContent(html_09d455ec86a192a197814094b312abbf);
+            
+        
+
+        circle_marker_6cc609d0aa56c00eed992229ce4ee300.bindPopup(popup_b9c21b1c310b7fdac2235a311d32710d)
+        ;
+
+        
+    
+    
+            var circle_marker_b1c4dcec9a994215e63c8b2549ad1234 = L.circleMarker(
+                [-22.8826955464884, -43.32804179954593],
+                {"bubblingMouseEvents": true, "color": "#1f77b4", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#1f77b4", "fillOpacity": 0.7, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 4, "stroke": true, "weight": 3}
+            ).addTo(feature_group_26d49a4d19f06bb44255a771bc828c6b);
+        
+    
+        var popup_c37c5cb7e3be9ee9091f3b111c11bde7 = L.popup({
+  "maxWidth": 300,
+});
+
+        
+            
+                var html_0bdd6c0260cae65fa756bbe655b289ec = $(`<div id="html_0bdd6c0260cae65fa756bbe655b289ec" style="width: 100.0%; height: 100.0%;"><div style='font-family: Arial; font-size: 12px; width: 250px;'><b>Detalhes da Feature OSM</b><br><hr><b>Tipo:</b> Point<br><b>railway:</b> station<br><b>name:</b> nan<br></div></div>`)[0];
+                popup_c37c5cb7e3be9ee9091f3b111c11bde7.setContent(html_0bdd6c0260cae65fa756bbe655b289ec);
+            
+        
+
+        circle_marker_b1c4dcec9a994215e63c8b2549ad1234.bindPopup(popup_c37c5cb7e3be9ee9091f3b111c11bde7)
+        ;
+
+        
+    
+    
+            var circle_marker_3edef381648d64bf51610c9c32260527 = L.circleMarker(
+                [-22.90152723253504, -43.25619511873649],
+                {"bubblingMouseEvents": true, "color": "#1f77b4", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#1f77b4", "fillOpacity": 0.7, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 4, "stroke": true, "weight": 3}
+            ).addTo(feature_group_26d49a4d19f06bb44255a771bc828c6b);
+        
+    
+        var popup_bf7fbcc1d0e0bf5dacfa51fadfefb84b = L.popup({
+  "maxWidth": 300,
+});
+
+        
+            
+                var html_c391ff11ce3e0b4028a3a55c77335701 = $(`<div id="html_c391ff11ce3e0b4028a3a55c77335701" style="width: 100.0%; height: 100.0%;"><div style='font-family: Arial; font-size: 12px; width: 250px;'><b>Detalhes da Feature OSM</b><br><hr><b>Tipo:</b> Point<br><b>railway:</b> station<br><b>name:</b> nan<br></div></div>`)[0];
+                popup_bf7fbcc1d0e0bf5dacfa51fadfefb84b.setContent(html_c391ff11ce3e0b4028a3a55c77335701);
+            
+        
+
+        circle_marker_3edef381648d64bf51610c9c32260527.bindPopup(popup_bf7fbcc1d0e0bf5dacfa51fadfefb84b)
+        ;
+
+        
+    
+    
+            var circle_marker_21e9459ea7bf64eec55d7c6508cda1fb = L.circleMarker(
+                [-22.877312916104778, -43.33657363987732],
+                {"bubblingMouseEvents": true, "color": "#1f77b4", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#1f77b4", "fillOpacity": 0.7, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 4, "stroke": true, "weight": 3}
+            ).addTo(feature_group_26d49a4d19f06bb44255a771bc828c6b);
+        
+    
+        var popup_de1a815a2dac586d002fbd3d1af4c975 = L.popup({
+  "maxWidth": 300,
+});
+
+        
+            
+                var html_b4fa67a77f974c709a0ab22515bcf5f7 = $(`<div id="html_b4fa67a77f974c709a0ab22515bcf5f7" style="width: 100.0%; height: 100.0%;"><div style='font-family: Arial; font-size: 12px; width: 250px;'><b>Detalhes da Feature OSM</b><br><hr><b>Tipo:</b> Point<br><b>railway:</b> station<br><b>name:</b> Madureira<br></div></div>`)[0];
+                popup_de1a815a2dac586d002fbd3d1af4c975.setContent(html_b4fa67a77f974c709a0ab22515bcf5f7);
+            
+        
+
+        circle_marker_21e9459ea7bf64eec55d7c6508cda1fb.bindPopup(popup_de1a815a2dac586d002fbd3d1af4c975)
+        ;
+
+        
+    
+    
+            var circle_marker_cd9de2f210f2fdb8c4d001add341b71e = L.circleMarker(
+                [-22.895497598749138, -43.29381781721176],
+                {"bubblingMouseEvents": true, "color": "#1f77b4", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#1f77b4", "fillOpacity": 0.7, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 4, "stroke": true, "weight": 3}
+            ).addTo(feature_group_26d49a4d19f06bb44255a771bc828c6b);
+        
+    
+        var popup_2797ffc3d780ae304ded5aa032974207 = L.popup({
+  "maxWidth": 300,
+});
+
+        
+            
+                var html_c4468e7868071c1fbc274ba08b91ea80 = $(`<div id="html_c4468e7868071c1fbc274ba08b91ea80" style="width: 100.0%; height: 100.0%;"><div style='font-family: Arial; font-size: 12px; width: 250px;'><b>Detalhes da Feature OSM</b><br><hr><b>Tipo:</b> Point<br><b>railway:</b> station<br><b>name:</b> nan<br></div></div>`)[0];
+                popup_2797ffc3d780ae304ded5aa032974207.setContent(html_c4468e7868071c1fbc274ba08b91ea80);
+            
+        
+
+        circle_marker_cd9de2f210f2fdb8c4d001add341b71e.bindPopup(popup_2797ffc3d780ae304ded5aa032974207)
+        ;
+
+        
+    
+    
+            var circle_marker_abefd9f6d51a365fb3e611d7f73cacee = L.circleMarker(
+                [-22.874652144489602, -43.282588384884],
+                {"bubblingMouseEvents": true, "color": "#1f77b4", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#1f77b4", "fillOpacity": 0.7, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 4, "stroke": true, "weight": 3}
+            ).addTo(feature_group_26d49a4d19f06bb44255a771bc828c6b);
+        
+    
+        var popup_a0dfe7880824366e4fcc1862cab89c23 = L.popup({
+  "maxWidth": 300,
+});
+
+        
+            
+                var html_1152b9d3df1292a67d57722523d34f73 = $(`<div id="html_1152b9d3df1292a67d57722523d34f73" style="width: 100.0%; height: 100.0%;"><div style='font-family: Arial; font-size: 12px; width: 250px;'><b>Detalhes da Feature OSM</b><br><hr><b>Tipo:</b> Point<br><b>railway:</b> station<br><b>name:</b> nan<br></div></div>`)[0];
+                popup_a0dfe7880824366e4fcc1862cab89c23.setContent(html_1152b9d3df1292a67d57722523d34f73);
+            
+        
+
+        circle_marker_abefd9f6d51a365fb3e611d7f73cacee.bindPopup(popup_a0dfe7880824366e4fcc1862cab89c23)
+        ;
+
+        
+    
+    
+            var circle_marker_81d69c00a93975368571978643d5f49e = L.circleMarker(
+                [-22.863187193528386, -43.30663128166009],
+                {"bubblingMouseEvents": true, "color": "#1f77b4", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#1f77b4", "fillOpacity": 0.7, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 4, "stroke": true, "weight": 3}
+            ).addTo(feature_group_26d49a4d19f06bb44255a771bc828c6b);
+        
+    
+        var popup_43a0ed80bff77abe4e9af021b7446db3 = L.popup({
+  "maxWidth": 300,
+});
+
+        
+            
+                var html_80dd83496e661eb87713461fefabb24e = $(`<div id="html_80dd83496e661eb87713461fefabb24e" style="width: 100.0%; height: 100.0%;"><div style='font-family: Arial; font-size: 12px; width: 250px;'><b>Detalhes da Feature OSM</b><br><hr><b>Tipo:</b> Point<br><b>railway:</b> station<br><b>name:</b> nan<br></div></div>`)[0];
+                popup_43a0ed80bff77abe4e9af021b7446db3.setContent(html_80dd83496e661eb87713461fefabb24e);
+            
+        
+
+        circle_marker_81d69c00a93975368571978643d5f49e.bindPopup(popup_43a0ed80bff77abe4e9af021b7446db3)
+        ;
+
+        
+    
+    
+            var circle_marker_62ec289468f4150d5fece1eb422a64e3 = L.circleMarker(
+                [-22.895549321727678, -43.29267905891403],
+                {"bubblingMouseEvents": true, "color": "#1f77b4", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#1f77b4", "fillOpacity": 0.7, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 4, "stroke": true, "weight": 3}
+            ).addTo(feature_group_26d49a4d19f06bb44255a771bc828c6b);
+        
+    
+        var popup_d5b7deb32a8befe1f24be4dbeded7a8a = L.popup({
+  "maxWidth": 300,
+});
+
+        
+            
+                var html_50b169789d0db1fd982bea61bd704bf9 = $(`<div id="html_50b169789d0db1fd982bea61bd704bf9" style="width: 100.0%; height: 100.0%;"><div style='font-family: Arial; font-size: 12px; width: 250px;'><b>Detalhes da Feature OSM</b><br><hr><b>Tipo:</b> Point<br><b>railway:</b> station<br><b>name:</b> nan<br></div></div>`)[0];
+                popup_d5b7deb32a8befe1f24be4dbeded7a8a.setContent(html_50b169789d0db1fd982bea61bd704bf9);
+            
+        
+
+        circle_marker_62ec289468f4150d5fece1eb422a64e3.bindPopup(popup_d5b7deb32a8befe1f24be4dbeded7a8a)
+        ;
+
+        
+    
+    
+            var circle_marker_1e9b2035a9b37e04bcc738c40fe49f28 = L.circleMarker(
+                [-22.98185100907671, -43.19726614721162],
+                {"bubblingMouseEvents": true, "color": "#1f77b4", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#1f77b4", "fillOpacity": 0.7, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 4, "stroke": true, "weight": 3}
+            ).addTo(feature_group_26d49a4d19f06bb44255a771bc828c6b);
+        
+    
+        var popup_19090a28c8df78eb7dcc320e1db04ced = L.popup({
+  "maxWidth": 300,
+});
+
+        
+            
+                var html_a8219321f6178130c5820da00f0c6abd = $(`<div id="html_a8219321f6178130c5820da00f0c6abd" style="width: 100.0%; height: 100.0%;"><div style='font-family: Arial; font-size: 12px; width: 250px;'><b>Detalhes da Feature OSM</b><br><hr><b>Tipo:</b> Point<br><b>railway:</b> station<br><b>name:</b> nan<br></div></div>`)[0];
+                popup_19090a28c8df78eb7dcc320e1db04ced.setContent(html_a8219321f6178130c5820da00f0c6abd);
+            
+        
+
+        circle_marker_1e9b2035a9b37e04bcc738c40fe49f28.bindPopup(popup_19090a28c8df78eb7dcc320e1db04ced)
+        ;
+
+        
+    
+    
+            var circle_marker_8cb3319c6080b54e0357c999f6042cff = L.circleMarker(
+                [-22.9847686743046, -43.19718015280983],
+                {"bubblingMouseEvents": true, "color": "#1f77b4", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#1f77b4", "fillOpacity": 0.7, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 4, "stroke": true, "weight": 3}
+            ).addTo(feature_group_26d49a4d19f06bb44255a771bc828c6b);
+        
+    
+        var popup_e65086cca751ad460c85077fe480d301 = L.popup({
+  "maxWidth": 300,
+});
+
+        
+            
+                var html_0aad8315efd245362761c67f35333b08 = $(`<div id="html_0aad8315efd245362761c67f35333b08" style="width: 100.0%; height: 100.0%;"><div style='font-family: Arial; font-size: 12px; width: 250px;'><b>Detalhes da Feature OSM</b><br><hr><b>Tipo:</b> Point<br><b>railway:</b> station<br><b>name:</b> nan<br></div></div>`)[0];
+                popup_e65086cca751ad460c85077fe480d301.setContent(html_0aad8315efd245362761c67f35333b08);
+            
+        
+
+        circle_marker_8cb3319c6080b54e0357c999f6042cff.bindPopup(popup_e65086cca751ad460c85077fe480d301)
+        ;
+
+        
+    
+    
+            var circle_marker_4f6b633cee7da3d353f17ee768024f09 = L.circleMarker(
+                [-22.9206197326774, -43.22372051804601],
+                {"bubblingMouseEvents": true, "color": "#1f77b4", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#1f77b4", "fillOpacity": 0.7, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 4, "stroke": true, "weight": 3}
+            ).addTo(feature_group_26d49a4d19f06bb44255a771bc828c6b);
+        
+    
+        var popup_a77351f251047d41f1bf7da0028c34d8 = L.popup({
+  "maxWidth": 300,
+});
+
+        
+            
+                var html_6d9a096be4b03d328e83cbbe323aae18 = $(`<div id="html_6d9a096be4b03d328e83cbbe323aae18" style="width: 100.0%; height: 100.0%;"><div style='font-family: Arial; font-size: 12px; width: 250px;'><b>Detalhes da Feature OSM</b><br><hr><b>Tipo:</b> Point<br><b>railway:</b> station<br><b>name:</b> nan<br></div></div>`)[0];
+                popup_a77351f251047d41f1bf7da0028c34d8.setContent(html_6d9a096be4b03d328e83cbbe323aae18);
+            
+        
+
+        circle_marker_4f6b633cee7da3d353f17ee768024f09.bindPopup(popup_a77351f251047d41f1bf7da0028c34d8)
+        ;
+
+        
+    
+    
+            var circle_marker_235e12e650ebfab4243e7414da5a6d60 = L.circleMarker(
+                [-22.842711747806916, -43.27762450439582],
+                {"bubblingMouseEvents": true, "color": "#1f77b4", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#1f77b4", "fillOpacity": 0.7, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 4, "stroke": true, "weight": 3}
+            ).addTo(feature_group_26d49a4d19f06bb44255a771bc828c6b);
+        
+    
+        var popup_8c500fed18b640ce18733fca325ea3b8 = L.popup({
+  "maxWidth": 300,
+});
+
+        
+            
+                var html_b8992fc003d41fc7f99a0db41e1cfcd0 = $(`<div id="html_b8992fc003d41fc7f99a0db41e1cfcd0" style="width: 100.0%; height: 100.0%;"><div style='font-family: Arial; font-size: 12px; width: 250px;'><b>Detalhes da Feature OSM</b><br><hr><b>Tipo:</b> Point<br><b>railway:</b> station<br><b>name:</b> Estação 1<br></div></div>`)[0];
+                popup_8c500fed18b640ce18733fca325ea3b8.setContent(html_b8992fc003d41fc7f99a0db41e1cfcd0);
+            
+        
+
+        circle_marker_235e12e650ebfab4243e7414da5a6d60.bindPopup(popup_8c500fed18b640ce18733fca325ea3b8)
+        ;
+
+        
+    
+    
+            var circle_marker_c4b2e157ab9396ff731b1b97b6b06b3b = L.circleMarker(
+                [-22.84449780399135, -43.2773319605604],
+                {"bubblingMouseEvents": true, "color": "#1f77b4", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#1f77b4", "fillOpacity": 0.7, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 4, "stroke": true, "weight": 3}
+            ).addTo(feature_group_26d49a4d19f06bb44255a771bc828c6b);
+        
+    
+        var popup_fde46ed486d13102f3eb3e1fc341795d = L.popup({
+  "maxWidth": 300,
+});
+
+        
+            
+                var html_11d4135f9270b1ac6d3274321730db5d = $(`<div id="html_11d4135f9270b1ac6d3274321730db5d" style="width: 100.0%; height: 100.0%;"><div style='font-family: Arial; font-size: 12px; width: 250px;'><b>Detalhes da Feature OSM</b><br><hr><b>Tipo:</b> Point<br><b>railway:</b> station<br><b>name:</b> Estação 2<br></div></div>`)[0];
+                popup_fde46ed486d13102f3eb3e1fc341795d.setContent(html_11d4135f9270b1ac6d3274321730db5d);
+            
+        
+
+        circle_marker_c4b2e157ab9396ff731b1b97b6b06b3b.bindPopup(popup_fde46ed486d13102f3eb3e1fc341795d)
+        ;
+
+        
+    
+    
+            var circle_marker_05de7b7bccbdcf6b872936985125a11b = L.circleMarker(
+                [-22.844881498142648, -43.2770700751239],
+                {"bubblingMouseEvents": true, "color": "#1f77b4", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#1f77b4", "fillOpacity": 0.7, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 4, "stroke": true, "weight": 3}
+            ).addTo(feature_group_26d49a4d19f06bb44255a771bc828c6b);
+        
+    
+        var popup_5bfb4e05ad374da684318123a4504528 = L.popup({
+  "maxWidth": 300,
+});
+
+        
+            
+                var html_1b08255c199fe2c7222e5ded51cda111 = $(`<div id="html_1b08255c199fe2c7222e5ded51cda111" style="width: 100.0%; height: 100.0%;"><div style='font-family: Arial; font-size: 12px; width: 250px;'><b>Detalhes da Feature OSM</b><br><hr><b>Tipo:</b> Point<br><b>railway:</b> station<br><b>name:</b> Estação 3<br></div></div>`)[0];
+                popup_5bfb4e05ad374da684318123a4504528.setContent(html_1b08255c199fe2c7222e5ded51cda111);
+            
+        
+
+        circle_marker_05de7b7bccbdcf6b872936985125a11b.bindPopup(popup_5bfb4e05ad374da684318123a4504528)
+        ;
+
+        
+    
+    
+            feature_group_26d49a4d19f06bb44255a771bc828c6b.addTo(map_841bd6828f91e84a8bdeb9875815f09d);
+        
+    
+            var layer_control_581c00252d4091ad2010088de77a5281_layers = {
+                base_layers : {
+                    "cartodbpositron" : tile_layer_115b460aae13748b49fff7aeddb7811a,
+                },
+                overlays :  {
+                    "station" : feature_group_26d49a4d19f06bb44255a771bc828c6b,
+                },
+            };
+            let layer_control_581c00252d4091ad2010088de77a5281 = L.control.layers(
+                layer_control_581c00252d4091ad2010088de77a5281_layers.base_layers,
+                layer_control_581c00252d4091ad2010088de77a5281_layers.overlays,
+                {
+  "position": "topright",
+  "collapsed": true,
+  "autoZIndex": true,
+}
+            ).addTo(map_841bd6828f91e84a8bdeb9875815f09d);
+
+        
+</script>
+</html>

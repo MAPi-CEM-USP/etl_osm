@@ -1,0 +1,297 @@
+<!DOCTYPE html>
+<html>
+<head>
+    
+    <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
+    <script src="https://cdn.jsdelivr.net/npm/leaflet@1.9.3/dist/leaflet.js"></script>
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Leaflet.awesome-markers/2.0.2/leaflet.awesome-markers.js"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/leaflet@1.9.3/dist/leaflet.css"/>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/css/bootstrap.min.css"/>
+    <link rel="stylesheet" href="https://netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap-glyphicons.css"/>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.2.0/css/all.min.css"/>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/Leaflet.awesome-markers/2.0.2/leaflet.awesome-markers.css"/>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/python-visualization/folium/folium/templates/leaflet.awesome.rotate.min.css"/>
+    
+            <meta name="viewport" content="width=device-width,
+                initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+            <style>
+                #map_82c91cee9971dc9fad8696046c444698 {
+                    position: relative;
+                    width: 100.0%;
+                    height: 100.0%;
+                    left: 0.0%;
+                    top: 0.0%;
+                }
+                .leaflet-container { font-size: 1rem; }
+            </style>
+
+            <style>html, body {
+                width: 100%;
+                height: 100%;
+                margin: 0;
+                padding: 0;
+            }
+            </style>
+
+            <style>#map {
+                position:absolute;
+                top:0;
+                bottom:0;
+                right:0;
+                left:0;
+                }
+            </style>
+
+            <script>
+                L_NO_TOUCH = false;
+                L_DISABLE_3D = false;
+            </script>
+
+        
+</head>
+<body>
+    
+    
+    <div id="legend-container" style="
+        position: fixed;
+        bottom: 50px;
+        left: 50px;
+        width: 220px;
+        background-color: white;
+        border: 2px solid #ccc;
+        border-radius: 5px;
+        padding: 12px;
+        z-index: 9999;
+        font-size: 13px;
+        box-shadow: 0 2px 6px rgba(0,0,0,0.2);
+        font-family: Arial, sans-serif;
+    ">
+        <div style="font-weight: bold; font-size: 14px; margin-bottom: 10px; color: #333;">Legenda</div>
+        <div id="legend-items"></div>
+    </div>
+    
+    <script>
+        var colorMap = {"allotments": "#1f77b4"};
+        var container = document.getElementById('legend-items');
+        
+        for (var tag in colorMap) {
+            var color = colorMap[tag];
+            
+            var item = document.createElement('div');
+            item.style.display = 'flex';
+            item.style.alignItems = 'center';
+            item.style.marginBottom = '8px';
+            item.style.gap = '8px';
+            
+            var box = document.createElement('div');
+            box.style.width = '16px';
+            box.style.height = '16px';
+            box.style.borderRadius = '50%';
+            box.style.border = '1px solid #999';
+            box.style.backgroundColor = color;
+            box.style.flexShrink = '0';
+            
+            var label = document.createElement('div');
+            label.style.color = '#333';
+            label.style.fontSize = '13px';
+            label.textContent = tag;
+            label.title = tag;
+            
+            item.appendChild(box);
+            item.appendChild(label);
+            container.appendChild(item);
+        }
+    </script>
+    
+    
+            <div class="folium-map" id="map_82c91cee9971dc9fad8696046c444698" ></div>
+        
+</body>
+<script>
+    
+    
+            var map_82c91cee9971dc9fad8696046c444698 = L.map(
+                "map_82c91cee9971dc9fad8696046c444698",
+                {
+                    center: [-22.923192621605295, -43.45099032138828],
+                    crs: L.CRS.EPSG3857,
+                    ...{
+  "zoom": 11,
+  "zoomControl": true,
+  "preferCanvas": false,
+}
+
+                }
+            );
+
+            
+
+        
+    
+            var tile_layer_4417c2bcad1d091ebc47ff609716003c = L.tileLayer(
+                "https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png",
+                {
+  "minZoom": 0,
+  "maxZoom": 20,
+  "maxNativeZoom": 20,
+  "noWrap": false,
+  "attribution": "\u0026copy; \u003ca href=\"https://www.openstreetmap.org/copyright\"\u003eOpenStreetMap\u003c/a\u003e contributors \u0026copy; \u003ca href=\"https://carto.com/attributions\"\u003eCARTO\u003c/a\u003e",
+  "subdomains": "abcd",
+  "detectRetina": false,
+  "tms": false,
+  "opacity": 1,
+}
+
+            );
+        
+    
+            tile_layer_4417c2bcad1d091ebc47ff609716003c.addTo(map_82c91cee9971dc9fad8696046c444698);
+        
+    
+            var feature_group_b08df87bf54fce7a41461baa79ed5f9b = L.featureGroup(
+                {
+}
+            );
+        
+    
+            var circle_marker_2a3fd54d59df28c609cceb9efe175a85 = L.circleMarker(
+                [-22.810847600538633, -43.32319888200892],
+                {"bubblingMouseEvents": true, "color": "#1f77b4", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#1f77b4", "fillOpacity": 0.7, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 4, "stroke": true, "weight": 3}
+            ).addTo(feature_group_b08df87bf54fce7a41461baa79ed5f9b);
+        
+    
+        var popup_02772f82e6105b9c1badfc4096372a3c = L.popup({
+  "maxWidth": 300,
+});
+
+        
+            
+                var html_09eba7481a8bcf9de6627142db3919e6 = $(`<div id="html_09eba7481a8bcf9de6627142db3919e6" style="width: 100.0%; height: 100.0%;"><div style='font-family: Arial; font-size: 12px; width: 250px;'><b>Detalhes da Feature OSM</b><br><hr><b>Tipo:</b> Point<br><b>landuse:</b> allotments<br><b>name:</b> horta do fernando<br></div></div>`)[0];
+                popup_02772f82e6105b9c1badfc4096372a3c.setContent(html_09eba7481a8bcf9de6627142db3919e6);
+            
+        
+
+        circle_marker_2a3fd54d59df28c609cceb9efe175a85.bindPopup(popup_02772f82e6105b9c1badfc4096372a3c)
+        ;
+
+        
+    
+    
+            var circle_marker_d0b888418696a1c59bd4a880344fca56 = L.circleMarker(
+                [-22.877782527847476, -43.25256063480165],
+                {"bubblingMouseEvents": true, "color": "#1f77b4", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#1f77b4", "fillOpacity": 0.7, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 4, "stroke": true, "weight": 3}
+            ).addTo(feature_group_b08df87bf54fce7a41461baa79ed5f9b);
+        
+    
+        var popup_16aec4cdb35b7cf80efa02fa1f8a9619 = L.popup({
+  "maxWidth": 300,
+});
+
+        
+            
+                var html_ffae9275d7906755ee6f32cbbf21b474 = $(`<div id="html_ffae9275d7906755ee6f32cbbf21b474" style="width: 100.0%; height: 100.0%;"><div style='font-family: Arial; font-size: 12px; width: 250px;'><b>Detalhes da Feature OSM</b><br><hr><b>Tipo:</b> Point<br><b>landuse:</b> allotments<br><b>name:</b> HORTA<br></div></div>`)[0];
+                popup_16aec4cdb35b7cf80efa02fa1f8a9619.setContent(html_ffae9275d7906755ee6f32cbbf21b474);
+            
+        
+
+        circle_marker_d0b888418696a1c59bd4a880344fca56.bindPopup(popup_16aec4cdb35b7cf80efa02fa1f8a9619)
+        ;
+
+        
+    
+    
+            var circle_marker_2dbc3666ad550c3622ef8256ffbc86ae = L.circleMarker(
+                [-22.84973698035893, -43.380866114023675],
+                {"bubblingMouseEvents": true, "color": "#1f77b4", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#1f77b4", "fillOpacity": 0.7, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 4, "stroke": true, "weight": 3}
+            ).addTo(feature_group_b08df87bf54fce7a41461baa79ed5f9b);
+        
+    
+        var popup_34bfae64e01cb78d50aafb6c60cdb868 = L.popup({
+  "maxWidth": 300,
+});
+
+        
+            
+                var html_a96e03d4f5ec001f32654de810bf3dc0 = $(`<div id="html_a96e03d4f5ec001f32654de810bf3dc0" style="width: 100.0%; height: 100.0%;"><div style='font-family: Arial; font-size: 12px; width: 250px;'><b>Detalhes da Feature OSM</b><br><hr><b>Tipo:</b> Point<br><b>landuse:</b> allotments<br><b>name:</b> horta comunitaria<br></div></div>`)[0];
+                popup_34bfae64e01cb78d50aafb6c60cdb868.setContent(html_a96e03d4f5ec001f32654de810bf3dc0);
+            
+        
+
+        circle_marker_2dbc3666ad550c3622ef8256ffbc86ae.bindPopup(popup_34bfae64e01cb78d50aafb6c60cdb868)
+        ;
+
+        
+    
+    
+            var circle_marker_cd1da89a351d6f856c23e7c32293c4d0 = L.circleMarker(
+                [-22.85036282582364, -43.383277553002046],
+                {"bubblingMouseEvents": true, "color": "#1f77b4", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#1f77b4", "fillOpacity": 0.7, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 4, "stroke": true, "weight": 3}
+            ).addTo(feature_group_b08df87bf54fce7a41461baa79ed5f9b);
+        
+    
+        var popup_f0bec0fca5797a094280377df44360fb = L.popup({
+  "maxWidth": 300,
+});
+
+        
+            
+                var html_fdba81777b5723e18ee46613c9683777 = $(`<div id="html_fdba81777b5723e18ee46613c9683777" style="width: 100.0%; height: 100.0%;"><div style='font-family: Arial; font-size: 12px; width: 250px;'><b>Detalhes da Feature OSM</b><br><hr><b>Tipo:</b> Point<br><b>landuse:</b> allotments<br><b>name:</b> horta comunitaria<br></div></div>`)[0];
+                popup_f0bec0fca5797a094280377df44360fb.setContent(html_fdba81777b5723e18ee46613c9683777);
+            
+        
+
+        circle_marker_cd1da89a351d6f856c23e7c32293c4d0.bindPopup(popup_f0bec0fca5797a094280377df44360fb)
+        ;
+
+        
+    
+    
+            var circle_marker_2862a491763fc17ffa10f7f8cf71a612 = L.circleMarker(
+                [-22.902666924683682, -43.236625105178874],
+                {"bubblingMouseEvents": true, "color": "#1f77b4", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#1f77b4", "fillOpacity": 0.7, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 4, "stroke": true, "weight": 3}
+            ).addTo(feature_group_b08df87bf54fce7a41461baa79ed5f9b);
+        
+    
+        var popup_29961f4e2c3f76eb7d57e0f959c7bd65 = L.popup({
+  "maxWidth": 300,
+});
+
+        
+            
+                var html_700f0c4819fff9233e741e33729a268b = $(`<div id="html_700f0c4819fff9233e741e33729a268b" style="width: 100.0%; height: 100.0%;"><div style='font-family: Arial; font-size: 12px; width: 250px;'><b>Detalhes da Feature OSM</b><br><hr><b>Tipo:</b> Point<br><b>landuse:</b> allotments<br><b>name:</b> ÁFRICA - Agência Facilitadora para Investimentos Culturais<br></div></div>`)[0];
+                popup_29961f4e2c3f76eb7d57e0f959c7bd65.setContent(html_700f0c4819fff9233e741e33729a268b);
+            
+        
+
+        circle_marker_2862a491763fc17ffa10f7f8cf71a612.bindPopup(popup_29961f4e2c3f76eb7d57e0f959c7bd65)
+        ;
+
+        
+    
+    
+            feature_group_b08df87bf54fce7a41461baa79ed5f9b.addTo(map_82c91cee9971dc9fad8696046c444698);
+        
+    
+            var layer_control_c49a99c0a187ff6edfaea756ecba98f4_layers = {
+                base_layers : {
+                    "cartodbpositron" : tile_layer_4417c2bcad1d091ebc47ff609716003c,
+                },
+                overlays :  {
+                    "allotments" : feature_group_b08df87bf54fce7a41461baa79ed5f9b,
+                },
+            };
+            let layer_control_c49a99c0a187ff6edfaea756ecba98f4 = L.control.layers(
+                layer_control_c49a99c0a187ff6edfaea756ecba98f4_layers.base_layers,
+                layer_control_c49a99c0a187ff6edfaea756ecba98f4_layers.overlays,
+                {
+  "position": "topright",
+  "collapsed": true,
+  "autoZIndex": true,
+}
+            ).addTo(map_82c91cee9971dc9fad8696046c444698);
+
+        
+</script>
+</html>

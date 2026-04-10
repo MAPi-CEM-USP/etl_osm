@@ -19,7 +19,7 @@ You must activate the environment every time you open a new terminal session.
 ```
 - macOS / Linux:
 ```Bashsource 
-.venv/bin/activate
+source .venv/bin/activate
 ```
 #### 3. Install Dependencies
 Once activated |  install the required packages defined in `requirements.txt`:

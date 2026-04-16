@@ -1,11 +1,13 @@
 import os
 import json
+import time
 import osmnx as ox
 import geopandas as gpd
 import pandas as pd
 import folium
 import matplotlib.pyplot as plt
 import matplotlib.colors as mcolors
+import requests
 
 # ==========================================
 # CONFIGURAÇÕES GERAIS
@@ -45,6 +47,31 @@ FOOTWAY_INFRASTRUCTURE_DASH_LINES = {'Áreas Pedestrianizadas'}
 # ==========================================
 # PROCESSAMENTO DE DADOS
 # ==========================================
+RETRYABLE_FETCH_ERRORS = (
+    requests.exceptions.RequestException,
+)
+
+
+def _fetch_features_with_retry(city_geom, query_dict, retries=3, wait_seconds=60):
+    """Busca dados no OSM com retentativa para falhas transitórias de rede."""
+    for attempt in range(1, retries + 1):
+        try:
+            return ox.features.features_from_bbox(city_geom.total_bounds, query_dict)
+        except RETRYABLE_FETCH_ERRORS as err:
+            if attempt == retries:
+                print(
+                    f"[retry] OSM fetch failed after {retries} attempts. "
+                    f"Last error: {type(err).__name__}: {err}"
+                )
+                raise
+
+            print(
+                f"[retry] OSM fetch attempt {attempt}/{retries} failed with "
+                f"{type(err).__name__}: {err}. Retrying in {wait_seconds} seconds..."
+            )
+            time.sleep(wait_seconds)
+
+
 def fetch_and_process_features(city_geom, key, tags):
     """Busca features no OSM, converte polígonos em centroides e adiciona pontos médios às linhas.
     Se key é None, processa todas as chaves em tags simultaneamente."""
@@ -57,8 +84,8 @@ def fetch_and_process_features(city_geom, key, tags):
         print(f"Buscando por features com a tag '{key}': \n{tags[key]}\n")
         query_dict = {key: tags[key]}
     
-    # 1. Busca os dados no OSM
-    features = ox.features.features_from_bbox(city_geom.total_bounds, query_dict)
+    # 1. Busca os dados no OSM (com retry para erros de conexão/transporte)
+    features = _fetch_features_with_retry(city_geom, query_dict, retries=3, wait_seconds=60)
     print(f"Quantidade original de features: {len(features)}\n")
     
     # 2. Converte para CRS local (metros) para cálculos precisos
@@ -408,8 +435,23 @@ def save_files(m, features_points, save_path, key, tags_name=None, cd_mun=None, 
     with open(manifest_file, "w", encoding="utf-8") as f:
         json.dump(manifest, f, ensure_ascii=False, indent=2, sort_keys=True)
 
+    # Normaliza IDs para evitar falha do PyArrow com valores mistos (ex: 8893 e "P8893").
+    parquet_gdf = features_points.copy()
+    if "id" in parquet_gdf.columns:
+        parquet_gdf["id"] = parquet_gdf["id"].astype(str)
+    if (
+        parquet_gdf.index.name == "id"
+        or (
+            isinstance(parquet_gdf.index, pd.MultiIndex)
+            and "id" in [name for name in parquet_gdf.index.names if name is not None]
+        )
+    ):
+        parquet_gdf = parquet_gdf.reset_index()
+        if "id" in parquet_gdf.columns:
+            parquet_gdf["id"] = parquet_gdf["id"].astype(str)
+
     pq_file = os.path.join(data_theme_dir, f"features_{cd_mun}.parquet")
-    features_points.to_parquet(pq_file, compression="snappy")
+    parquet_gdf.to_parquet(pq_file, compression="snappy", index=False)
     print(f"Parquet saved: {pq_file}")
 
     pmt_file = os.path.join(data_theme_dir, f"features_{cd_mun}.pmtiles")

@@ -159,10 +159,25 @@
                     return;
                 }
 
+                // Try to load municipalities data
+                let municipalitiesData = {};
+                try {
+                    const munResponse = await fetch("municipios.json", { cache: "no-store" });
+                    if (munResponse.ok) {
+                        municipalitiesData = await munResponse.json();
+                    }
+                } catch (err) {
+                    console.warn("Nao foi possivel carregar municipios.json, usando apenas cd_mun");
+                }
+
                 municipalities.forEach((cdMun) => {
                     const option = document.createElement("option");
                     option.value = cdMun;
-                    option.textContent = cdMun;
+                    
+                    // Format as "cd_mun - nm_mun" if data available
+                    const nmMun = municipalitiesData[cdMun] || "";
+                    option.textContent = nmMun ? `${cdMun} - ${nmMun}` : cdMun;
+                    
                     selectEl.appendChild(option);
                 });
 

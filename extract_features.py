@@ -1,11 +1,13 @@
 import os
 import json
+import time
 import osmnx as ox
 import geopandas as gpd
 import pandas as pd
 import folium
 import matplotlib.pyplot as plt
 import matplotlib.colors as mcolors
+import requests
 
 # ==========================================
 # CONFIGURAÇÕES GERAIS
@@ -43,8 +45,50 @@ FOOTWAY_INFRASTRUCTURE_COLORS = {
 FOOTWAY_INFRASTRUCTURE_DASH_LINES = {'Áreas Pedestrianizadas'}
 
 # ==========================================
+# CONFIGURAÇÃO DE CORES - PUBLIC TRANSPORT INFRASTRUCTURE
+# ==========================================
+# Cores hex para cada categoria de transporte público
+PUBLIC_TRANSPORT_INFRASTRUCTURE_COLORS = {
+    'Metro': '#CC0000',       # Red - Metro/Subway
+    'Bus': '#0066CC',         # Blue - Bus
+    'Train': '#00AA00',       # Green - Train
+    'Light Rail': '#FF8800',  # Orange - Light Rail (VLT)
+    'Tram': '#9933FF',        # Purple - Tram
+    'Other Rail': '#FFAA00'   # Yellow - Other Rail (monorail, funicular)
+}
+
+# Categorias que devem ter linhas tracejadas
+PUBLIC_TRANSPORT_INFRASTRUCTURE_DASH_LINES = {}
+
+
+# ==========================================
 # PROCESSAMENTO DE DADOS
 # ==========================================
+RETRYABLE_FETCH_ERRORS = (
+    requests.exceptions.RequestException,
+)
+
+
+def _fetch_features_with_retry(city_geom, query_dict, retries=3, wait_seconds=60):
+    """Busca dados no OSM com retentativa para falhas transitórias de rede."""
+    for attempt in range(1, retries + 1):
+        try:
+            return ox.features.features_from_bbox(city_geom.total_bounds, query_dict)
+        except RETRYABLE_FETCH_ERRORS as err:
+            if attempt == retries:
+                print(
+                    f"[retry] OSM fetch failed after {retries} attempts. "
+                    f"Last error: {type(err).__name__}: {err}"
+                )
+                raise
+
+            print(
+                f"[retry] OSM fetch attempt {attempt}/{retries} failed with "
+                f"{type(err).__name__}: {err}. Retrying in {wait_seconds} seconds..."
+            )
+            time.sleep(wait_seconds)
+
+
 def fetch_and_process_features(city_geom, key, tags):
     """Busca features no OSM, converte polígonos em centroides e adiciona pontos médios às linhas.
     Se key é None, processa todas as chaves em tags simultaneamente."""
@@ -57,8 +101,8 @@ def fetch_and_process_features(city_geom, key, tags):
         print(f"Buscando por features com a tag '{key}': \n{tags[key]}\n")
         query_dict = {key: tags[key]}
     
-    # 1. Busca os dados no OSM
-    features = ox.features.features_from_bbox(city_geom.total_bounds, query_dict)
+    # 1. Busca os dados no OSM (com retry para erros de conexão/transporte)
+    features = _fetch_features_with_retry(city_geom, query_dict, retries=3, wait_seconds=60)
     print(f"Quantidade original de features: {len(features)}\n")
     
     # 2. Converte para CRS local (metros) para cálculos precisos
@@ -221,6 +265,51 @@ def _categorize_footway_features(row):
     
     return None
 
+def _categorize_public_transport_features(row):
+    """Categoriza features de transporte público baseado nas especificações OSM.
+    
+    Categorias:
+    - Metro: station=subway (metrô/metrô de superfície)
+    - Bus: amenity=bus_station, highway=bus_stop, bus=yes (ônibus)
+    - Train: railway=station com station=train (trem)
+    - Light Rail: station=light_rail (VLT - Veículo Leve sobre Trilhos)
+    - Tram: station=tram (bonde/pré-metrô)
+    """
+    
+    # 1. METRO/SUBWAY - Estações de metrô
+    if pd.notna(row.get('station')) and row['station'] == 'subway':
+        return 'Metro'
+    
+    # 2. TRAM - Bonde/Pré-metrô
+    if pd.notna(row.get('station')) and row['station'] == 'tram':
+        return 'Tram'
+    
+    # 3. LIGHT RAIL - VLT (Veículo Leve sobre Trilhos)
+    if pd.notna(row.get('station')) and row['station'] == 'light_rail':
+        return 'Light Rail'
+    
+    # 4. TRAIN - Trem/Estação Ferroviária
+    if pd.notna(row.get('railway')) and row['railway'] == 'station':
+        if pd.notna(row.get('station')) and row['station'] == 'train':
+            return 'Train'
+    
+    # 5. BUS - Estações e paradas de ônibus
+    bus_indicators = [
+        (pd.notna(row.get('amenity')) and row['amenity'] == 'bus_station'),
+        (pd.notna(row.get('highway')) and row['highway'] == 'bus_stop'),
+        (pd.notna(row.get('bus')) and row['bus'] == 'yes'),
+        (pd.notna(row.get('public_transport')) and row['public_transport'] in ['stop_position', 'platform'])
+    ]
+    
+    if any(bus_indicators):
+        return 'Bus'
+    
+    # 6. OTHER RAIL STATIONS - Outras estações de trem/rail (monorail, funicular, etc)
+    if pd.notna(row.get('station')) and row['station'] in ['monorail', 'funicular']:
+        return 'Other Rail'
+    
+    return None
+
 def _add_native_legend(folium_map, color_map):
     """Adiciona legenda de cores visível ao mapa usando folium.Element."""
     
@@ -316,6 +405,9 @@ def create_map(features_points, city_geom, key, columns_to_show=None, use_custom
         if custom_type == 'footway':
             color_map = {tag: FOOTWAY_INFRASTRUCTURE_COLORS.get(tag, '#808080') for tag in unique_tags}
             dash_lines = FOOTWAY_INFRASTRUCTURE_DASH_LINES
+        elif custom_type == 'public_transport':
+            color_map = {tag: PUBLIC_TRANSPORT_INFRASTRUCTURE_COLORS.get(tag, '#808080') for tag in unique_tags}
+            dash_lines = PUBLIC_TRANSPORT_INFRASTRUCTURE_DASH_LINES
         else:  # default para bike
             color_map = {tag: BIKE_INFRASTRUCTURE_COLORS.get(tag, '#808080') for tag in unique_tags}
             dash_lines = BIKE_INFRASTRUCTURE_DASH_LINES
@@ -370,38 +462,81 @@ def create_map(features_points, city_geom, key, columns_to_show=None, use_custom
 # ==========================================
 # FUNÇÕES DE EXPORTAÇÃO E ORQUESTRAÇÃO
 # ==========================================
-def save_files(m, features_points, save_path, key, tags_name=None):
-    """Salva os resultados em HTML, Parquet e PMTiles."""
-    os.makedirs(save_path, exist_ok=True)
-    
-    # Define o suffix do arquivo baseado na chave
-    if key is None:
-        file_suffix = tags_name if tags_name else "all"
-    else:
-        file_suffix = key
-    
-    # HTML
-    html_file = f"docs/mapas/features_map_{file_suffix}.html"
-    os.makedirs(os.path.dirname(html_file), exist_ok=True)
+def save_files(m, features_points, save_path, key, tags_name=None, cd_mun=None, theme_name=None):
+    """Salva os resultados em HTML, Parquet e PMTiles com organização por cd_mun e tema."""
+    if cd_mun is None or str(cd_mun).strip() == "":
+        raise ValueError("cd_mun is required and cannot be empty.")
+
+    if theme_name is None or str(theme_name).strip() == "":
+        raise ValueError("theme_name is required and cannot be empty.")
+
+    cd_mun = str(cd_mun)
+    theme_name = str(theme_name)
+    features_points = features_points.copy()
+
+    if "id" in features_points.columns:
+        features_points["id"] = features_points["id"].astype(str)
+
+    # Dados: organização por tema (Dados/Saída/{theme}/features_{cd_mun}.{ext})
+    data_theme_dir = os.path.join(save_path, theme_name)
+    os.makedirs(data_theme_dir, exist_ok=True)
+
+    # Docs: organização por município/tema (docs/mapas/{cd_mun}/{theme}/features_map.html)
+    html_dir = os.path.join("docs", "mapas", cd_mun, theme_name)
+    os.makedirs(html_dir, exist_ok=True)
+    html_file = os.path.join(html_dir, "features_map.html")
     m.save(html_file)
     print(f"Map saved: {html_file}")
-    
 
-    # Parquet
-    pq_file = os.path.join(save_path, f"features_{file_suffix}.parquet")
-    features_points.to_parquet(pq_file, compression="snappy")
+    manifest_file = os.path.join("docs", "mapas", "manifest.json")
+    manifest = {}
+    if os.path.exists(manifest_file):
+        try:
+            with open(manifest_file, "r", encoding="utf-8") as f:
+                manifest = json.load(f)
+        except json.JSONDecodeError:
+            manifest = {}
+    manifest.setdefault(cd_mun, {})[theme_name] = f"mapas/{cd_mun}/{theme_name}/features_map.html"
+    with open(manifest_file, "w", encoding="utf-8") as f:
+        json.dump(manifest, f, ensure_ascii=False, indent=2, sort_keys=True)
+
+    # Normaliza IDs para evitar falha do PyArrow com valores mistos (ex: 8893 e "P8893").
+    parquet_gdf = features_points.copy()
+    if "id" in parquet_gdf.columns:
+        parquet_gdf["id"] = parquet_gdf["id"].astype(str)
+    if (
+        parquet_gdf.index.name == "id"
+        or (
+            isinstance(parquet_gdf.index, pd.MultiIndex)
+            and "id" in [name for name in parquet_gdf.index.names if name is not None]
+        )
+    ):
+        parquet_gdf = parquet_gdf.reset_index()
+        if "id" in parquet_gdf.columns:
+            parquet_gdf["id"] = parquet_gdf["id"].astype(str)
+
+    pq_file = os.path.join(data_theme_dir, f"features_{cd_mun}.parquet")
+    parquet_gdf.to_parquet(pq_file, compression="snappy", index=False)
     print(f"Parquet saved: {pq_file}")
-    
-    # PMTiles
-    pmt_file = os.path.join(save_path, f"features_{file_suffix}.pmtiles")
-    if os.path.exists(pmt_file): os.remove(pmt_file)
+
+    pmt_file = os.path.join(data_theme_dir, f"features_{cd_mun}.pmtiles")
+    if os.path.exists(pmt_file):
+        os.remove(pmt_file)
     try:
-        features_points.to_file(pmt_file, driver="PMTiles", engine="pyogrio", encoding="utf-8", MINZOOM=0, MAXZOOM=14, NAME=f"layer_{file_suffix}")
+        features_points.to_file(
+            pmt_file,
+            driver="PMTiles",
+            engine="pyogrio",
+            encoding="utf-8",
+            MINZOOM=0,
+            MAXZOOM=14,
+            NAME=f"layer_{theme_name}_{cd_mun}"
+        )
         print(f"PMTiles saved: {pmt_file}")
     except UnicodeEncodeError:
-        print(f"Warning: Could not save PMTiles due to encoding issues. Skipping PMTiles export.")
+        print("Warning: Could not save PMTiles due to encoding issues. Skipping PMTiles export.")
 
-def process_key(key=None, tags=None, city_geom=None, save_path="Dados/Saída/", columns_to_show=None, tags_name=None, use_custom_type=False, custom_type='bike'):
+def process_key(key=None, tags=None, city_geom=None, save_path="Dados/Saída/", columns_to_show=None, tags_name=None, use_custom_type=False, custom_type='bike', cd_mun=None, theme_name=None):
     """
     Função principal que orquestra a execução ponta a ponta.
     Se key é None, processa todas as chaves em tags simultaneamente.
@@ -411,10 +546,17 @@ def process_key(key=None, tags=None, city_geom=None, save_path="Dados/Saída/", 
                  - 'bike': Categorização de infraestrutura de bicicletas
                  - 'footway': Categorização de infraestrutura de pedestres
     """
+    if cd_mun is None or str(cd_mun).strip() == "":
+        raise ValueError("cd_mun is required and cannot be empty.")
+
+    resolved_theme_name = theme_name if theme_name else (tags_name if key is None else key)
+    if resolved_theme_name is None or str(resolved_theme_name).strip() == "":
+        raise ValueError("theme_name could not be resolved. Provide theme_name explicitly.")
+
     if key is None:
         # Processa todas as chaves simultaneamente
         output_name = tags_name if tags_name else "all"
-        print(f"\n{'='*50}\nProcessing all tags ({output_name})...\n{'='*50}")
+        print(f"\n{'='*50}\nProcessing all tags ({output_name}) for cd_mun={cd_mun}...\n{'='*50}")
         
         features_points = fetch_and_process_features(city_geom, None, tags)
         
@@ -422,17 +564,19 @@ def process_key(key=None, tags=None, city_geom=None, save_path="Dados/Saída/", 
         if use_custom_type:
             if custom_type == 'footway':
                 features_points['_type'] = features_points.apply(_categorize_footway_features, axis=1)
+            elif custom_type == 'public_transport':
+                features_points['_type'] = features_points.apply(_categorize_public_transport_features, axis=1)
             else:  # default para bike
                 features_points['_type'] = features_points.apply(_categorize_bike_features, axis=1)
         
         m = create_map(features_points, city_geom, None, columns_to_show, use_custom_type=use_custom_type, custom_type=custom_type)
-        save_files(m, features_points, save_path, None, tags_name)
+        save_files(m, features_points, save_path, None, tags_name, cd_mun=cd_mun, theme_name=resolved_theme_name)
         
         print(f"✓ Completed processing all tags\n")
         return features_points
     else:
         # Processa uma chave específica
-        print(f"\n{'='*50}\nProcessing {key}...\n{'='*50}")
+        print(f"\n{'='*50}\nProcessing {key} for cd_mun={cd_mun}...\n{'='*50}")
         
         features_points = fetch_and_process_features(city_geom, key, tags)
         
@@ -440,11 +584,13 @@ def process_key(key=None, tags=None, city_geom=None, save_path="Dados/Saída/", 
         if use_custom_type:
             if custom_type == 'footway':
                 features_points['_type'] = features_points.apply(_categorize_footway_features, axis=1)
+            elif custom_type == 'public_transport':
+                features_points['_type'] = features_points.apply(_categorize_public_transport_features, axis=1)
             else:  # default para bike
                 features_points['_type'] = features_points.apply(_categorize_bike_features, axis=1)
         
         m = create_map(features_points, city_geom, key, columns_to_show, use_custom_type=use_custom_type, custom_type=custom_type)
-        save_files(m, features_points, save_path, key, None)
+        save_files(m, features_points, save_path, key, None, cd_mun=cd_mun, theme_name=resolved_theme_name)
         
         print(f"✓ Completed {key}\n")
         return features_points

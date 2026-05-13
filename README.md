@@ -36,3 +36,26 @@ Export Deps | `pip freeze > requirements.txt` | Save your current environment st
 Check Version | `python --version` | Confirms you are using the correct Python executable.
 
 **Note**: Do not commit the `.venv` folder to GitHub. Ensure `.venv/` is added to your `.gitignore` file.
+
+### ETL Output Conventions
+
+The ETL now requires explicit `cd_mun` selection in the notebook flow.
+
+- Data outputs (theme-first):
+	- `Dados/Saída/{theme}/features_{cd_mun}.parquet`
+	- `Dados/Saída/{theme}/features_{cd_mun}.pmtiles`
+- Docs maps (municipality-first):
+	- `docs/mapas/{cd_mun}/{theme}/features_map.html`
+- Docs manifest for index dropdown:
+	- `docs/mapas/manifest.json`
+
+### Posterior Merge
+
+Use `merge_outputs.ipynb` after municipal runs to build merged outputs per theme.
+
+- Merge scope modes:
+	- `merge_scope = "selected"` and provide `selected_cd_mun`
+	- `merge_scope = "all"` to merge all municipal files found
+- Merged outputs:
+	- `Dados/Saída/merged/{theme}/features_merged.parquet`
+	- `Dados/Saída/merged/{theme}/features_merged.pmtiles`

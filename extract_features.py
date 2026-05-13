@@ -354,7 +354,7 @@ def _categorize_public_transport_features(row):
         (pd.notna(row.get('bus')) and row['bus'] == 'yes')),
         ((pd.notna(row.get('highway')) and row['highway'] == 'bus_stop') and
         (pd.notna(row.get('bus')) and row['bus'] == 'yes')),
-        ((pd.notna(row.get('public_transport')) and row['public_transport'] in ['stop_position', 'platform']) and
+        ((pd.notna(row.get('public_transport')) and row['public_transport'] == ['station']) and
         (pd.notna(row.get('bus')) and row['bus'] == 'yes'))
     ]
     if any(bus_indicators):

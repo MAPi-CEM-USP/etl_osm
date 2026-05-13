@@ -45,6 +45,23 @@ FOOTWAY_INFRASTRUCTURE_COLORS = {
 FOOTWAY_INFRASTRUCTURE_DASH_LINES = {'Áreas Pedestrianizadas'}
 
 # ==========================================
+# CONFIGURAÇÃO DE CORES - PUBLIC TRANSPORT INFRASTRUCTURE
+# ==========================================
+# Cores hex para cada categoria de transporte público
+PUBLIC_TRANSPORT_INFRASTRUCTURE_COLORS = {
+    'Metro': '#CC0000',       # Red - Metro/Subway
+    'Bus': '#0066CC',         # Blue - Bus
+    'Train': '#00AA00',       # Green - Train
+    'Light Rail': '#FF8800',  # Orange - Light Rail (VLT)
+    'Tram': '#9933FF',        # Purple - Tram
+    'Other Rail': '#FFAA00'   # Yellow - Other Rail (monorail, funicular)
+}
+
+# Categorias que devem ter linhas tracejadas
+PUBLIC_TRANSPORT_INFRASTRUCTURE_DASH_LINES = {}
+
+
+# ==========================================
 # PROCESSAMENTO DE DADOS
 # ==========================================
 RETRYABLE_FETCH_ERRORS = (
@@ -248,6 +265,51 @@ def _categorize_footway_features(row):
     
     return None
 
+def _categorize_public_transport_features(row):
+    """Categoriza features de transporte público baseado nas especificações OSM.
+    
+    Categorias:
+    - Metro: station=subway (metrô/metrô de superfície)
+    - Bus: amenity=bus_station, highway=bus_stop, bus=yes (ônibus)
+    - Train: railway=station com station=train (trem)
+    - Light Rail: station=light_rail (VLT - Veículo Leve sobre Trilhos)
+    - Tram: station=tram (bonde/pré-metrô)
+    """
+    
+    # 1. METRO/SUBWAY - Estações de metrô
+    if pd.notna(row.get('station')) and row['station'] == 'subway':
+        return 'Metro'
+    
+    # 2. TRAM - Bonde/Pré-metrô
+    if pd.notna(row.get('station')) and row['station'] == 'tram':
+        return 'Tram'
+    
+    # 3. LIGHT RAIL - VLT (Veículo Leve sobre Trilhos)
+    if pd.notna(row.get('station')) and row['station'] == 'light_rail':
+        return 'Light Rail'
+    
+    # 4. TRAIN - Trem/Estação Ferroviária
+    if pd.notna(row.get('railway')) and row['railway'] == 'station':
+        if pd.notna(row.get('station')) and row['station'] == 'train':
+            return 'Train'
+    
+    # 5. BUS - Estações e paradas de ônibus
+    bus_indicators = [
+        (pd.notna(row.get('amenity')) and row['amenity'] == 'bus_station'),
+        (pd.notna(row.get('highway')) and row['highway'] == 'bus_stop'),
+        (pd.notna(row.get('bus')) and row['bus'] == 'yes'),
+        (pd.notna(row.get('public_transport')) and row['public_transport'] in ['stop_position', 'platform'])
+    ]
+    
+    if any(bus_indicators):
+        return 'Bus'
+    
+    # 6. OTHER RAIL STATIONS - Outras estações de trem/rail (monorail, funicular, etc)
+    if pd.notna(row.get('station')) and row['station'] in ['monorail', 'funicular']:
+        return 'Other Rail'
+    
+    return None
+
 def _add_native_legend(folium_map, color_map):
     """Adiciona legenda de cores visível ao mapa usando folium.Element."""
     
@@ -343,6 +405,9 @@ def create_map(features_points, city_geom, key, columns_to_show=None, use_custom
         if custom_type == 'footway':
             color_map = {tag: FOOTWAY_INFRASTRUCTURE_COLORS.get(tag, '#808080') for tag in unique_tags}
             dash_lines = FOOTWAY_INFRASTRUCTURE_DASH_LINES
+        elif custom_type == 'public_transport':
+            color_map = {tag: PUBLIC_TRANSPORT_INFRASTRUCTURE_COLORS.get(tag, '#808080') for tag in unique_tags}
+            dash_lines = PUBLIC_TRANSPORT_INFRASTRUCTURE_DASH_LINES
         else:  # default para bike
             color_map = {tag: BIKE_INFRASTRUCTURE_COLORS.get(tag, '#808080') for tag in unique_tags}
             dash_lines = BIKE_INFRASTRUCTURE_DASH_LINES
@@ -499,6 +564,8 @@ def process_key(key=None, tags=None, city_geom=None, save_path="Dados/Saída/", 
         if use_custom_type:
             if custom_type == 'footway':
                 features_points['_type'] = features_points.apply(_categorize_footway_features, axis=1)
+            elif custom_type == 'public_transport':
+                features_points['_type'] = features_points.apply(_categorize_public_transport_features, axis=1)
             else:  # default para bike
                 features_points['_type'] = features_points.apply(_categorize_bike_features, axis=1)
         
@@ -517,6 +584,8 @@ def process_key(key=None, tags=None, city_geom=None, save_path="Dados/Saída/", 
         if use_custom_type:
             if custom_type == 'footway':
                 features_points['_type'] = features_points.apply(_categorize_footway_features, axis=1)
+            elif custom_type == 'public_transport':
+                features_points['_type'] = features_points.apply(_categorize_public_transport_features, axis=1)
             else:  # default para bike
                 features_points['_type'] = features_points.apply(_categorize_bike_features, axis=1)
         

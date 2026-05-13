@@ -270,70 +270,101 @@ def _categorize_footway_features(row):
 def _categorize_public_transport_features(row):
     """Categoriza features de transporte público baseado nas especificações OSM.
     
+    Cada tipo de transporte é identificado por múltiplos indicadores.
+    As variáveis diretas (bus=yes, train=yes, etc) sempre acompanham as outras verificações.
+    
     Categorias:
-    - Metro: station=subway (metrô/metrô de superfície)
-    - Bus: amenity=bus_station, highway=bus_stop, bus=yes (ônibus)
-    - Train: railway=station com station=train (trem)
-    - Light Rail: station=light_rail (VLT - Veículo Leve sobre Trilhos)
-    - Tram: station=tram ou railway=tram_stop (bonde/pré-metrô)
-    - Ferry: amenity=ferry_terminal, ferry=yes (balsa)
+    - Metro: station=subway ou subway=yes (metrô/metrô de superfície)
+    - Tram: station=tram, railway=tram_stop ou tram=yes (bonde/pré-metrô)
+    - Light Rail: station=light_rail ou light_rail=yes (VLT - Veículo Leve sobre Trilhos)
+    - Train: (railway=station + station=train) ou train=yes (trem)
+    - Ferry: amenity=ferry_terminal ou ferry=yes (balsa)
     - Aerial Way: aerialway=station (teleférico, bondinho)
+    - Bus: amenity=bus_station, highway=bus_stop ou bus=yes (ônibus)
     """
     
-    # 1. METRO/SUBWAY - Estações de metrô
-    if pd.notna(row.get('station')) and row['station'] == 'subway':
+    # 1. METRO/SUBWAY - Estações de metrô (maior prioridade)
+    metro_indicators = [
+        ((pd.notna(row.get('station')) and row['station'] == 'subway') and
+        (pd.notna(row.get('subway')) and row['subway'] == 'yes')),
+        ((pd.notna(row.get('railway')) and row['railway'] == 'station') and
+        (pd.notna(row.get('subway')) and row['subway'] == 'yes')),
+        ((pd.notna(row.get('public_transport')) and row['public_transport'] == 'station') and
+        (pd.notna(row.get('subway')) and row['subway'] == 'yes'))
+    ]
+    if any(metro_indicators):
         return 'Metro'
     
     # 2. TRAM - Bonde/Pré-metrô
     tram_indicators = [
-        (pd.notna(row.get('station')) and row['station'] == 'tram'),
-        (pd.notna(row.get('railway')) and row['railway'] == 'tram_stop'),
-        (pd.notna(row.get('tram')) and row['tram'] == 'yes')
+        ((pd.notna(row.get('station')) and row['station'] == 'tram') and
+        (pd.notna(row.get('tram')) and row['tram'] == 'yes')),
+        ((pd.notna(row.get('railway')) and row['railway'] == 'tram_stop') and
+        (pd.notna(row.get('tram')) and row['tram'] == 'yes')),
+        ((pd.notna(row.get('public_transport')) and row['public_transport'] == 'station') and
+        (pd.notna(row.get('tram')) and row['tram'] == 'yes'))
     ]
     if any(tram_indicators):
         return 'Tram'
     
     # 3. LIGHT RAIL - VLT (Veículo Leve sobre Trilhos)
-    if pd.notna(row.get('station')) and row['station'] == 'light_rail':
+    light_rail_indicators = [
+        ((pd.notna(row.get('station')) and row['station'] == 'light_rail') and
+        (pd.notna(row.get('light_rail')) and row['light_rail'] == 'yes')),
+        ((pd.notna(row.get('railway')) and row['railway'] == 'station') and
+        (pd.notna(row.get('light_rail')) and row['light_rail'] == 'yes')),
+        ((pd.notna(row.get('public_transport')) and row['public_transport'] == 'station') and
+        (pd.notna(row.get('light_rail')) and row['light_rail'] == 'yes'))
+    ]
+    if any(light_rail_indicators):
         return 'Light Rail'
     
     # 4. TRAIN - Trem/Estação Ferroviária
     train_indicators = [
-        (pd.notna(row.get('railway')) and row['railway'] == 'station' and pd.notna(row.get('station')) and row['station'] == 'train'),
-        (pd.notna(row.get('train')) and row['train'] == 'yes')
+        ((pd.notna(row.get('station')) and row['station'] == 'train') and
+        (pd.notna(row.get('train')) and row['train'] == 'yes')),
+        ((pd.notna(row.get('railway')) and row['railway'] == 'station') and
+        (pd.notna(row.get('train')) and row['train'] == 'yes')),
+        ((pd.notna(row.get('public_transport')) and row['public_transport'] == 'station') and
+        (pd.notna(row.get('train')) and row['train'] == 'yes'))
     ]
     if any(train_indicators):
         return 'Train'
     
     # 5. FERRY - Terminais e serviços de balsa
     ferry_indicators = [
-        (pd.notna(row.get('amenity')) and row['amenity'] == 'ferry_terminal'),
-        (pd.notna(row.get('ferry')) and row['ferry'] == 'yes')
+        ((pd.notna(row.get('amenity')) and row['amenity'] == 'ferry_terminal') and
+        (pd.notna(row.get('ferry')) and row['ferry'] == 'yes')),
+        ((pd.notna(row.get('public_transport')) and row['public_transport'] == 'station') and
+        (pd.notna(row.get('ferry')) and row['ferry'] == 'yes'))
     ]
     if any(ferry_indicators):
         return 'Ferry'
     
     # 6. AERIAL WAY - Teleféricos, bondinhos
-    if pd.notna(row.get('aerialway')) and row['aerialway'] == 'station':
+    aerial_way_indicators = [
+        (pd.notna(row.get('aerialway')) and row['aerialway'] == 'station')
+    ]
+    if any(aerial_way_indicators):
         return 'Aerial Way'
     
     # 7. BUS - Estações e paradas de ônibus
     bus_indicators = [
-        (pd.notna(row.get('amenity')) and row['amenity'] == 'bus_station'),
-        (pd.notna(row.get('highway')) and row['highway'] == 'bus_stop'),
-        (pd.notna(row.get('bus')) and row['bus'] == 'yes'),
-        (pd.notna(row.get('public_transport')) and row['public_transport'] in ['stop_position', 'platform'])
+        ((pd.notna(row.get('amenity')) and row['amenity'] == 'bus_station') and
+        (pd.notna(row.get('bus')) and row['bus'] == 'yes')),
+        ((pd.notna(row.get('highway')) and row['highway'] == 'bus_stop') and
+        (pd.notna(row.get('bus')) and row['bus'] == 'yes')),
+        ((pd.notna(row.get('public_transport')) and row['public_transport'] in ['stop_position', 'platform']) and
+        (pd.notna(row.get('bus')) and row['bus'] == 'yes'))
     ]
-    
     if any(bus_indicators):
         return 'Bus'
     
-    # 8. SUBWAY - Também capturado por station=subway mas inclui subway=yes
-    if pd.notna(row.get('subway')) and row['subway'] == 'yes':
-        return 'Metro'
-    
-    # 9. OTHER RAIL STATIONS - Outras estações de trem/rail (monorail, funicular, etc)
-    if pd.notna(row.get('station')) and row['station'] in ['monorail', 'funicular']:
+    # 8. OTHER RAIL STATIONS - Outras estações de trem/rail (monorail, funicular, etc)
+    other_rail_indicators = [
+        (pd.notna(row.get('station')) and row['station'] in ['monorail', 'funicular'])
+    ]
+    if any(other_rail_indicators):
         return 'Other Rail'
     
     return None

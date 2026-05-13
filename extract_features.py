@@ -273,7 +273,7 @@ def _categorize_public_transport_features(row):
     - Bus: amenity=bus_station, highway=bus_stop, bus=yes (ônibus)
     - Train: railway=station com station=train (trem)
     - Light Rail: station=light_rail (VLT - Veículo Leve sobre Trilhos)
-    - Tram: station=tram (bonde/pré-metrô)
+    - Tram: station=tram ou railway=tram_stop (bonde/pré-metrô)
     """
     
     # 1. METRO/SUBWAY - Estações de metrô
@@ -281,7 +281,12 @@ def _categorize_public_transport_features(row):
         return 'Metro'
     
     # 2. TRAM - Bonde/Pré-metrô
-    if pd.notna(row.get('station')) and row['station'] == 'tram':
+    tram_indicators = [
+        (pd.notna(row.get('station')) and row['station'] == 'tram'),
+        (pd.notna(row.get('railway')) and row['railway'] == 'tram_stop'),
+        (pd.notna(row.get('tram')) and row['tram'] == 'yes')
+    ]
+    if any(tram_indicators):
         return 'Tram'
     
     # 3. LIGHT RAIL - VLT (Veículo Leve sobre Trilhos)
@@ -289,9 +294,12 @@ def _categorize_public_transport_features(row):
         return 'Light Rail'
     
     # 4. TRAIN - Trem/Estação Ferroviária
-    if pd.notna(row.get('railway')) and row['railway'] == 'station':
-        if pd.notna(row.get('station')) and row['station'] == 'train':
-            return 'Train'
+    train_indicators = [
+        (pd.notna(row.get('railway')) and row['railway'] == 'station' and pd.notna(row.get('station')) and row['station'] == 'train'),
+        (pd.notna(row.get('train')) and row['train'] == 'yes')
+    ]
+    if any(train_indicators):
+        return 'Train'
     
     # 5. BUS - Estações e paradas de ônibus
     bus_indicators = [
@@ -304,7 +312,11 @@ def _categorize_public_transport_features(row):
     if any(bus_indicators):
         return 'Bus'
     
-    # 6. OTHER RAIL STATIONS - Outras estações de trem/rail (monorail, funicular, etc)
+    # 6. SUBWAY - Também capturado por station=subway mas inclui subway=yes
+    if pd.notna(row.get('subway')) and row['subway'] == 'yes':
+        return 'Metro'
+    
+    # 7. OTHER RAIL STATIONS - Outras estações de trem/rail (monorail, funicular, etc)
     if pd.notna(row.get('station')) and row['station'] in ['monorail', 'funicular']:
         return 'Other Rail'
     

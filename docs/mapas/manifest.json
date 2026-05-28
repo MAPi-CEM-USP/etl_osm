@@ -7,6 +7,45 @@
     "infrastructure": "mapas/3304557/infrastructure/features_map.html",
     "public_transport_tags": "mapas/3304557/public_transport_tags/features_map.html"
   },
+  "3502507": {
+    "commercial": "mapas/3502507/commercial/features_map.html",
+    "equipments": "mapas/3502507/equipments/features_map.html",
+    "infrastructure": "mapas/3502507/infrastructure/features_map.html"
+  },
+  "3513009": {
+    "commercial": "mapas/3513009/commercial/features_map.html",
+    "equipments": "mapas/3513009/equipments/features_map.html",
+    "infrastructure": "mapas/3513009/infrastructure/features_map.html"
+  },
+  "3522802": {
+    "commercial": "mapas/3522802/commercial/features_map.html",
+    "equipments": "mapas/3522802/equipments/features_map.html"
+  },
+  "3532801": {
+    "commercial": "mapas/3532801/commercial/features_map.html",
+    "equipments": "mapas/3532801/equipments/features_map.html"
+  },
+  "3532827": {
+    "commercial": "mapas/3532827/commercial/features_map.html",
+    "equipments": "mapas/3532827/equipments/features_map.html",
+    "infrastructure": "mapas/3532827/infrastructure/features_map.html"
+  },
+  "3535903": {
+    "equipments": "mapas/3535903/equipments/features_map.html"
+  },
+  "3542008": {
+    "commercial": "mapas/3542008/commercial/features_map.html",
+    "equipments": "mapas/3542008/equipments/features_map.html",
+    "infrastructure": "mapas/3542008/infrastructure/features_map.html"
+  },
+  "3543303": {
+    "commercial": "mapas/3543303/commercial/features_map.html",
+    "equipments": "mapas/3543303/equipments/features_map.html",
+    "infrastructure": "mapas/3543303/infrastructure/features_map.html"
+  },
+  "3545100": {
+    "equipments": "mapas/3545100/equipments/features_map.html"
+  },
   "3550308": {
     "bike_tags": "mapas/3550308/bike_tags/features_map.html",
     "commercial": "mapas/3550308/commercial/features_map.html",

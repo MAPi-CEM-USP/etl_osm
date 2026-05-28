@@ -1,0 +1,1066 @@
+<!DOCTYPE html>
+<html>
+<head>
+    
+    <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
+    <script src="https://cdn.jsdelivr.net/npm/leaflet@1.9.3/dist/leaflet.js"></script>
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Leaflet.awesome-markers/2.0.2/leaflet.awesome-markers.js"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/leaflet@1.9.3/dist/leaflet.css"/>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/css/bootstrap.min.css"/>
+    <link rel="stylesheet" href="https://netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap-glyphicons.css"/>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.2.0/css/all.min.css"/>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/Leaflet.awesome-markers/2.0.2/leaflet.awesome-markers.css"/>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/python-visualization/folium/folium/templates/leaflet.awesome.rotate.min.css"/>
+    
+            <meta name="viewport" content="width=device-width,
+                initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+            <style>
+                #map_90c73edebc53e1f2e8294dfbfb2d5ada {
+                    position: relative;
+                    width: 100.0%;
+                    height: 100.0%;
+                    left: 0.0%;
+                    top: 0.0%;
+                }
+                .leaflet-container { font-size: 1rem; }
+            </style>
+
+            <style>html, body {
+                width: 100%;
+                height: 100%;
+                margin: 0;
+                padding: 0;
+            }
+            </style>
+
+            <style>#map {
+                position:absolute;
+                top:0;
+                bottom:0;
+                right:0;
+                left:0;
+                }
+            </style>
+
+            <script>
+                L_NO_TOUCH = false;
+                L_DISABLE_3D = false;
+            </script>
+
+        
+</head>
+<body>
+    
+    
+    <div id="legend-container" style="
+        position: fixed;
+        bottom: 50px;
+        left: 50px;
+        width: 220px;
+        background-color: white;
+        border: 2px solid #ccc;
+        border-radius: 5px;
+        padding: 12px;
+        z-index: 9999;
+        font-size: 13px;
+        box-shadow: 0 2px 6px rgba(0,0,0,0.2);
+        font-family: Arial, sans-serif;
+    ">
+        <div style="font-weight: bold; font-size: 14px; margin-bottom: 10px; color: #333;">Legenda</div>
+        <div id="legend-items"></div>
+    </div>
+    
+    <script>
+        var colorMap = {"amenity": "#1f77b4", "leisure": "#9edae5"};
+        var container = document.getElementById('legend-items');
+        
+        for (var tag in colorMap) {
+            var color = colorMap[tag];
+            
+            var item = document.createElement('div');
+            item.style.display = 'flex';
+            item.style.alignItems = 'center';
+            item.style.marginBottom = '8px';
+            item.style.gap = '8px';
+            
+            var box = document.createElement('div');
+            box.style.width = '16px';
+            box.style.height = '16px';
+            box.style.borderRadius = '50%';
+            box.style.border = '1px solid #999';
+            box.style.backgroundColor = color;
+            box.style.flexShrink = '0';
+            
+            var label = document.createElement('div');
+            label.style.color = '#333';
+            label.style.fontSize = '13px';
+            label.textContent = tag;
+            label.title = tag;
+            
+            item.appendChild(box);
+            item.appendChild(label);
+            container.appendChild(item);
+        }
+    </script>
+    
+    
+            <div class="folium-map" id="map_90c73edebc53e1f2e8294dfbfb2d5ada" ></div>
+        
+</body>
+<script>
+    
+    
+            var map_90c73edebc53e1f2e8294dfbfb2d5ada = L.map(
+                "map_90c73edebc53e1f2e8294dfbfb2d5ada",
+                {
+                    center: [-24.19062212735448, -48.9729133502219],
+                    crs: L.CRS.EPSG3857,
+                    ...{
+  "zoom": 11,
+  "zoomControl": true,
+  "preferCanvas": false,
+}
+
+                }
+            );
+
+            
+
+        
+    
+            var tile_layer_d35d72e6343cf45fa731b9c0a9487dc6 = L.tileLayer(
+                "https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png",
+                {
+  "minZoom": 0,
+  "maxZoom": 20,
+  "maxNativeZoom": 20,
+  "noWrap": false,
+  "attribution": "\u0026copy; \u003ca href=\"https://www.openstreetmap.org/copyright\"\u003eOpenStreetMap\u003c/a\u003e contributors \u0026copy; \u003ca href=\"https://carto.com/attributions\"\u003eCARTO\u003c/a\u003e",
+  "subdomains": "abcd",
+  "detectRetina": false,
+  "tms": false,
+  "opacity": 1,
+}
+
+            );
+        
+    
+            tile_layer_d35d72e6343cf45fa731b9c0a9487dc6.addTo(map_90c73edebc53e1f2e8294dfbfb2d5ada);
+        
+    
+            var feature_group_572321ac65bff2edc3c125585cd76f4d = L.featureGroup(
+                {
+}
+            );
+        
+    
+            var circle_marker_f46876bb8a96fa0e3733433b8336aa7c = L.circleMarker(
+                [-24.2552631, -48.9995453],
+                {"bubblingMouseEvents": true, "color": "#1f77b4", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#1f77b4", "fillOpacity": 0.7, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 4, "stroke": true, "weight": 3}
+            ).addTo(feature_group_572321ac65bff2edc3c125585cd76f4d);
+        
+    
+        var popup_4cdafb4927532337bd82ab6913fe32db = L.popup({
+  "maxWidth": 300,
+});
+
+        
+            
+                var html_c3858e1dfc038cdf1838078576507920 = $(`<div id="html_c3858e1dfc038cdf1838078576507920" style="width: 100.0%; height: 100.0%;"><div style='font-family: Arial; font-size: 12px; width: 250px;'><b>Detalhes da Feature OSM</b><br><hr><b>Tipo:</b> Point<br><b>amenity:</b> place_of_worship<br><b>leisure:</b> nan<br><b>name:</b> Igreja Presbiteriana<br></div></div>`)[0];
+                popup_4cdafb4927532337bd82ab6913fe32db.setContent(html_c3858e1dfc038cdf1838078576507920);
+            
+        
+
+        circle_marker_f46876bb8a96fa0e3733433b8336aa7c.bindPopup(popup_4cdafb4927532337bd82ab6913fe32db)
+        ;
+
+        
+    
+    
+            var circle_marker_51bfe51c97e2a5405a7fcd07c5892a26 = L.circleMarker(
+                [-24.25939959999999, -49.003684],
+                {"bubblingMouseEvents": true, "color": "#1f77b4", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#1f77b4", "fillOpacity": 0.7, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 4, "stroke": true, "weight": 3}
+            ).addTo(feature_group_572321ac65bff2edc3c125585cd76f4d);
+        
+    
+        var popup_b0c03d179093129c9a4946240d0a48d0 = L.popup({
+  "maxWidth": 300,
+});
+
+        
+            
+                var html_4903b25b00906e63e527ae2eea979e0e = $(`<div id="html_4903b25b00906e63e527ae2eea979e0e" style="width: 100.0%; height: 100.0%;"><div style='font-family: Arial; font-size: 12px; width: 250px;'><b>Detalhes da Feature OSM</b><br><hr><b>Tipo:</b> Point<br><b>amenity:</b> school<br><b>leisure:</b> nan<br><b>name:</b> EMEI Júlia Franco de Lima<br></div></div>`)[0];
+                popup_b0c03d179093129c9a4946240d0a48d0.setContent(html_4903b25b00906e63e527ae2eea979e0e);
+            
+        
+
+        circle_marker_51bfe51c97e2a5405a7fcd07c5892a26.bindPopup(popup_b0c03d179093129c9a4946240d0a48d0)
+        ;
+
+        
+    
+    
+            var circle_marker_d79217c6eeb28b96c8e9c4c5bebcb3a5 = L.circleMarker(
+                [-24.2593403, -48.9982607],
+                {"bubblingMouseEvents": true, "color": "#1f77b4", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#1f77b4", "fillOpacity": 0.7, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 4, "stroke": true, "weight": 3}
+            ).addTo(feature_group_572321ac65bff2edc3c125585cd76f4d);
+        
+    
+        var popup_20a73ad9d5d0ad374e879ac2daaf4a4a = L.popup({
+  "maxWidth": 300,
+});
+
+        
+            
+                var html_bf97659d2171535609314b7324125cad = $(`<div id="html_bf97659d2171535609314b7324125cad" style="width: 100.0%; height: 100.0%;"><div style='font-family: Arial; font-size: 12px; width: 250px;'><b>Detalhes da Feature OSM</b><br><hr><b>Tipo:</b> Point<br><b>amenity:</b> clinic<br><b>leisure:</b> nan<br><b>name:</b> Posto de Saúde<br></div></div>`)[0];
+                popup_20a73ad9d5d0ad374e879ac2daaf4a4a.setContent(html_bf97659d2171535609314b7324125cad);
+            
+        
+
+        circle_marker_d79217c6eeb28b96c8e9c4c5bebcb3a5.bindPopup(popup_20a73ad9d5d0ad374e879ac2daaf4a4a)
+        ;
+
+        
+    
+    
+            var circle_marker_076a6c54d00c9230d7c96ee722b26c6e = L.circleMarker(
+                [-24.260163099999996, -49.00026900000001],
+                {"bubblingMouseEvents": true, "color": "#1f77b4", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#1f77b4", "fillOpacity": 0.7, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 4, "stroke": true, "weight": 3}
+            ).addTo(feature_group_572321ac65bff2edc3c125585cd76f4d);
+        
+    
+        var popup_2739115b5e7de9f3bf84f509fbed2b64 = L.popup({
+  "maxWidth": 300,
+});
+
+        
+            
+                var html_15697d8b93fffb4795ad8b1fe1348135 = $(`<div id="html_15697d8b93fffb4795ad8b1fe1348135" style="width: 100.0%; height: 100.0%;"><div style='font-family: Arial; font-size: 12px; width: 250px;'><b>Detalhes da Feature OSM</b><br><hr><b>Tipo:</b> Point<br><b>amenity:</b> place_of_worship<br><b>leisure:</b> nan<br><b>name:</b> Igreja Católica<br></div></div>`)[0];
+                popup_2739115b5e7de9f3bf84f509fbed2b64.setContent(html_15697d8b93fffb4795ad8b1fe1348135);
+            
+        
+
+        circle_marker_076a6c54d00c9230d7c96ee722b26c6e.bindPopup(popup_2739115b5e7de9f3bf84f509fbed2b64)
+        ;
+
+        
+    
+    
+            var circle_marker_f27ed75648bfa8cf1671c7d5c613765e = L.circleMarker(
+                [-24.26110449999999, -49.0101156],
+                {"bubblingMouseEvents": true, "color": "#1f77b4", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#1f77b4", "fillOpacity": 0.7, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 4, "stroke": true, "weight": 3}
+            ).addTo(feature_group_572321ac65bff2edc3c125585cd76f4d);
+        
+    
+        var popup_48a406f79162bc71eeac26972d0b60d3 = L.popup({
+  "maxWidth": 300,
+});
+
+        
+            
+                var html_14febc40886326f783aac0deb1b3c610 = $(`<div id="html_14febc40886326f783aac0deb1b3c610" style="width: 100.0%; height: 100.0%;"><div style='font-family: Arial; font-size: 12px; width: 250px;'><b>Detalhes da Feature OSM</b><br><hr><b>Tipo:</b> Point<br><b>amenity:</b> place_of_worship<br><b>leisure:</b> nan<br><b>name:</b> CCB Itaoca<br></div></div>`)[0];
+                popup_48a406f79162bc71eeac26972d0b60d3.setContent(html_14febc40886326f783aac0deb1b3c610);
+            
+        
+
+        circle_marker_f27ed75648bfa8cf1671c7d5c613765e.bindPopup(popup_48a406f79162bc71eeac26972d0b60d3)
+        ;
+
+        
+    
+    
+            var circle_marker_bbf913250549627834189bfff079c259 = L.circleMarker(
+                [-24.259725699999994, -49.00613950000001],
+                {"bubblingMouseEvents": true, "color": "#1f77b4", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#1f77b4", "fillOpacity": 0.7, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 4, "stroke": true, "weight": 3}
+            ).addTo(feature_group_572321ac65bff2edc3c125585cd76f4d);
+        
+    
+        var popup_2cf21696754f0b22425bf27f0dd4a949 = L.popup({
+  "maxWidth": 300,
+});
+
+        
+            
+                var html_ffdcb858e92f24918fa92da0c86d0212 = $(`<div id="html_ffdcb858e92f24918fa92da0c86d0212" style="width: 100.0%; height: 100.0%;"><div style='font-family: Arial; font-size: 12px; width: 250px;'><b>Detalhes da Feature OSM</b><br><hr><b>Tipo:</b> Point<br><b>amenity:</b> place_of_worship<br><b>leisure:</b> nan<br><b>name:</b> Assembléia de Deus<br></div></div>`)[0];
+                popup_2cf21696754f0b22425bf27f0dd4a949.setContent(html_ffdcb858e92f24918fa92da0c86d0212);
+            
+        
+
+        circle_marker_bbf913250549627834189bfff079c259.bindPopup(popup_2cf21696754f0b22425bf27f0dd4a949)
+        ;
+
+        
+    
+    
+            var circle_marker_1dbe347762a27e0ac6662e90bb2b6dac = L.circleMarker(
+                [-24.195719600000004, -48.942414500000005],
+                {"bubblingMouseEvents": true, "color": "#1f77b4", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#1f77b4", "fillOpacity": 0.7, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 4, "stroke": true, "weight": 3}
+            ).addTo(feature_group_572321ac65bff2edc3c125585cd76f4d);
+        
+    
+        var popup_138f2799962f43bccd7615f1bdc85db2 = L.popup({
+  "maxWidth": 300,
+});
+
+        
+            
+                var html_974dccfdcf3c38f1db7d36fe6d134a9b = $(`<div id="html_974dccfdcf3c38f1db7d36fe6d134a9b" style="width: 100.0%; height: 100.0%;"><div style='font-family: Arial; font-size: 12px; width: 250px;'><b>Detalhes da Feature OSM</b><br><hr><b>Tipo:</b> Point<br><b>amenity:</b> place_of_worship<br><b>leisure:</b> nan<br><b>name:</b> Assembléia de Deus<br></div></div>`)[0];
+                popup_138f2799962f43bccd7615f1bdc85db2.setContent(html_974dccfdcf3c38f1db7d36fe6d134a9b);
+            
+        
+
+        circle_marker_1dbe347762a27e0ac6662e90bb2b6dac.bindPopup(popup_138f2799962f43bccd7615f1bdc85db2)
+        ;
+
+        
+    
+    
+            var circle_marker_a2b7e1a9df45c252cdc404120aec52b2 = L.circleMarker(
+                [-24.1866858, -48.9430568],
+                {"bubblingMouseEvents": true, "color": "#1f77b4", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#1f77b4", "fillOpacity": 0.7, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 4, "stroke": true, "weight": 3}
+            ).addTo(feature_group_572321ac65bff2edc3c125585cd76f4d);
+        
+    
+        var popup_f1d091120413fc86d5d79d1c2796eb63 = L.popup({
+  "maxWidth": 300,
+});
+
+        
+            
+                var html_4b120c09e74edcd031ec2edc53fe0088 = $(`<div id="html_4b120c09e74edcd031ec2edc53fe0088" style="width: 100.0%; height: 100.0%;"><div style='font-family: Arial; font-size: 12px; width: 250px;'><b>Detalhes da Feature OSM</b><br><hr><b>Tipo:</b> Point<br><b>amenity:</b> place_of_worship<br><b>leisure:</b> nan<br><b>name:</b> CCB Barreiro<br></div></div>`)[0];
+                popup_f1d091120413fc86d5d79d1c2796eb63.setContent(html_4b120c09e74edcd031ec2edc53fe0088);
+            
+        
+
+        circle_marker_a2b7e1a9df45c252cdc404120aec52b2.bindPopup(popup_f1d091120413fc86d5d79d1c2796eb63)
+        ;
+
+        
+    
+    
+            var circle_marker_165c6db070cdcd9b46c049381f243578 = L.circleMarker(
+                [-24.122505099999994, -48.9025131],
+                {"bubblingMouseEvents": true, "color": "#1f77b4", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#1f77b4", "fillOpacity": 0.7, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 4, "stroke": true, "weight": 3}
+            ).addTo(feature_group_572321ac65bff2edc3c125585cd76f4d);
+        
+    
+        var popup_a697a935c5fce0d5c1a7da82b5149a85 = L.popup({
+  "maxWidth": 300,
+});
+
+        
+            
+                var html_a17ad4c1af886a354231156a4de22c00 = $(`<div id="html_a17ad4c1af886a354231156a4de22c00" style="width: 100.0%; height: 100.0%;"><div style='font-family: Arial; font-size: 12px; width: 250px;'><b>Detalhes da Feature OSM</b><br><hr><b>Tipo:</b> Point<br><b>amenity:</b> place_of_worship<br><b>leisure:</b> nan<br><b>name:</b> Salão do Reino Testemunhas de Jeová<br></div></div>`)[0];
+                popup_a697a935c5fce0d5c1a7da82b5149a85.setContent(html_a17ad4c1af886a354231156a4de22c00);
+            
+        
+
+        circle_marker_165c6db070cdcd9b46c049381f243578.bindPopup(popup_a697a935c5fce0d5c1a7da82b5149a85)
+        ;
+
+        
+    
+    
+            var circle_marker_a65a1cabeb79aa81de5289be80b57380 = L.circleMarker(
+                [-24.126779200000005, -48.9019606],
+                {"bubblingMouseEvents": true, "color": "#1f77b4", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#1f77b4", "fillOpacity": 0.7, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 4, "stroke": true, "weight": 3}
+            ).addTo(feature_group_572321ac65bff2edc3c125585cd76f4d);
+        
+    
+        var popup_40794b0d1850f850e93165abf695f312 = L.popup({
+  "maxWidth": 300,
+});
+
+        
+            
+                var html_f2b27c53c213c356ea43a4ed1fcc611c = $(`<div id="html_f2b27c53c213c356ea43a4ed1fcc611c" style="width: 100.0%; height: 100.0%;"><div style='font-family: Arial; font-size: 12px; width: 250px;'><b>Detalhes da Feature OSM</b><br><hr><b>Tipo:</b> Point<br><b>amenity:</b> place_of_worship<br><b>leisure:</b> nan<br><b>name:</b> Igreja Presbiteriana<br></div></div>`)[0];
+                popup_40794b0d1850f850e93165abf695f312.setContent(html_f2b27c53c213c356ea43a4ed1fcc611c);
+            
+        
+
+        circle_marker_a65a1cabeb79aa81de5289be80b57380.bindPopup(popup_40794b0d1850f850e93165abf695f312)
+        ;
+
+        
+    
+    
+            var circle_marker_144196514535c51d5fe13ec086d6ce45 = L.circleMarker(
+                [-24.180877000000002, -48.9049984],
+                {"bubblingMouseEvents": true, "color": "#1f77b4", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#1f77b4", "fillOpacity": 0.7, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 4, "stroke": true, "weight": 3}
+            ).addTo(feature_group_572321ac65bff2edc3c125585cd76f4d);
+        
+    
+        var popup_1e687f514586c491197cbe0ba6db46de = L.popup({
+  "maxWidth": 300,
+});
+
+        
+            
+                var html_6649760f6f7a451209349dec756c9cd3 = $(`<div id="html_6649760f6f7a451209349dec756c9cd3" style="width: 100.0%; height: 100.0%;"><div style='font-family: Arial; font-size: 12px; width: 250px;'><b>Detalhes da Feature OSM</b><br><hr><b>Tipo:</b> Point<br><b>amenity:</b> place_of_worship<br><b>leisure:</b> nan<br><b>name:</b> Igreja Católica<br></div></div>`)[0];
+                popup_1e687f514586c491197cbe0ba6db46de.setContent(html_6649760f6f7a451209349dec756c9cd3);
+            
+        
+
+        circle_marker_144196514535c51d5fe13ec086d6ce45.bindPopup(popup_1e687f514586c491197cbe0ba6db46de)
+        ;
+
+        
+    
+    
+            var circle_marker_5211ed5ccea7081185c9a27aa352ade6 = L.circleMarker(
+                [-24.121844769910673, -48.90509239342587],
+                {"bubblingMouseEvents": true, "color": "#1f77b4", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#1f77b4", "fillOpacity": 0.7, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 4, "stroke": true, "weight": 3}
+            ).addTo(feature_group_572321ac65bff2edc3c125585cd76f4d);
+        
+    
+        var popup_65b8f17028549380e1a86d924548c14d = L.popup({
+  "maxWidth": 300,
+});
+
+        
+            
+                var html_1e8c6022714ac0eb55de38c3cb2273c8 = $(`<div id="html_1e8c6022714ac0eb55de38c3cb2273c8" style="width: 100.0%; height: 100.0%;"><div style='font-family: Arial; font-size: 12px; width: 250px;'><b>Detalhes da Feature OSM</b><br><hr><b>Tipo:</b> Point<br><b>amenity:</b> place_of_worship<br><b>leisure:</b> nan<br><b>name:</b> Igreja Presbiteriana<br></div></div>`)[0];
+                popup_65b8f17028549380e1a86d924548c14d.setContent(html_1e8c6022714ac0eb55de38c3cb2273c8);
+            
+        
+
+        circle_marker_5211ed5ccea7081185c9a27aa352ade6.bindPopup(popup_65b8f17028549380e1a86d924548c14d)
+        ;
+
+        
+    
+    
+            var circle_marker_225610e38fe0170b527f76b203d3d09f = L.circleMarker(
+                [-24.12310348650009, -48.90690335075253],
+                {"bubblingMouseEvents": true, "color": "#1f77b4", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#1f77b4", "fillOpacity": 0.7, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 4, "stroke": true, "weight": 3}
+            ).addTo(feature_group_572321ac65bff2edc3c125585cd76f4d);
+        
+    
+        var popup_96dbbf0799c670e93a6a9def797561a3 = L.popup({
+  "maxWidth": 300,
+});
+
+        
+            
+                var html_95779cb17d0df4b828345159d8c89848 = $(`<div id="html_95779cb17d0df4b828345159d8c89848" style="width: 100.0%; height: 100.0%;"><div style='font-family: Arial; font-size: 12px; width: 250px;'><b>Detalhes da Feature OSM</b><br><hr><b>Tipo:</b> Point<br><b>amenity:</b> place_of_worship<br><b>leisure:</b> nan<br><b>name:</b> Congragação Cristã no Brasil<br></div></div>`)[0];
+                popup_96dbbf0799c670e93a6a9def797561a3.setContent(html_95779cb17d0df4b828345159d8c89848);
+            
+        
+
+        circle_marker_225610e38fe0170b527f76b203d3d09f.bindPopup(popup_96dbbf0799c670e93a6a9def797561a3)
+        ;
+
+        
+    
+    
+            var circle_marker_d366fe9364fe49bb3d98651b451d0244 = L.circleMarker(
+                [-24.119073279101794, -48.9054743514911],
+                {"bubblingMouseEvents": true, "color": "#1f77b4", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#1f77b4", "fillOpacity": 0.7, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 4, "stroke": true, "weight": 3}
+            ).addTo(feature_group_572321ac65bff2edc3c125585cd76f4d);
+        
+    
+        var popup_85f6c6694a444b7756dd62a5ef3045fa = L.popup({
+  "maxWidth": 300,
+});
+
+        
+            
+                var html_14c07642a661cd7354ceee39bafe6577 = $(`<div id="html_14c07642a661cd7354ceee39bafe6577" style="width: 100.0%; height: 100.0%;"><div style='font-family: Arial; font-size: 12px; width: 250px;'><b>Detalhes da Feature OSM</b><br><hr><b>Tipo:</b> Point<br><b>amenity:</b> school<br><b>leisure:</b> nan<br><b>name:</b> EE Simpliciano Campolim de Almeida; EM Ari Antunes de Moura<br></div></div>`)[0];
+                popup_85f6c6694a444b7756dd62a5ef3045fa.setContent(html_14c07642a661cd7354ceee39bafe6577);
+            
+        
+
+        circle_marker_d366fe9364fe49bb3d98651b451d0244.bindPopup(popup_85f6c6694a444b7756dd62a5ef3045fa)
+        ;
+
+        
+    
+    
+            var circle_marker_2b5ee456cd67b5180ceaae8c5d31796b = L.circleMarker(
+                [-24.118872210404916, -48.89741126730523],
+                {"bubblingMouseEvents": true, "color": "#1f77b4", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#1f77b4", "fillOpacity": 0.7, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 4, "stroke": true, "weight": 3}
+            ).addTo(feature_group_572321ac65bff2edc3c125585cd76f4d);
+        
+    
+        var popup_285f86f29f78cdc6e3ebe690b90bab11 = L.popup({
+  "maxWidth": 300,
+});
+
+        
+            
+                var html_deb7f584c6acd7914e2ac833506f593f = $(`<div id="html_deb7f584c6acd7914e2ac833506f593f" style="width: 100.0%; height: 100.0%;"><div style='font-family: Arial; font-size: 12px; width: 250px;'><b>Detalhes da Feature OSM</b><br><hr><b>Tipo:</b> Point<br><b>amenity:</b> school<br><b>leisure:</b> nan<br><b>name:</b> nan<br></div></div>`)[0];
+                popup_285f86f29f78cdc6e3ebe690b90bab11.setContent(html_deb7f584c6acd7914e2ac833506f593f);
+            
+        
+
+        circle_marker_2b5ee456cd67b5180ceaae8c5d31796b.bindPopup(popup_285f86f29f78cdc6e3ebe690b90bab11)
+        ;
+
+        
+    
+    
+            var circle_marker_839edf293cb94f2c9c370568d0117480 = L.circleMarker(
+                [-24.125716390734514, -48.90175038323811],
+                {"bubblingMouseEvents": true, "color": "#1f77b4", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#1f77b4", "fillOpacity": 0.7, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 4, "stroke": true, "weight": 3}
+            ).addTo(feature_group_572321ac65bff2edc3c125585cd76f4d);
+        
+    
+        var popup_08d09bd2dff09660dd0872071be53b03 = L.popup({
+  "maxWidth": 300,
+});
+
+        
+            
+                var html_d4e4307afe38acf5c1dc2713bc12bf1b = $(`<div id="html_d4e4307afe38acf5c1dc2713bc12bf1b" style="width: 100.0%; height: 100.0%;"><div style='font-family: Arial; font-size: 12px; width: 250px;'><b>Detalhes da Feature OSM</b><br><hr><b>Tipo:</b> Point<br><b>amenity:</b> school<br><b>leisure:</b> nan<br><b>name:</b> nan<br></div></div>`)[0];
+                popup_08d09bd2dff09660dd0872071be53b03.setContent(html_d4e4307afe38acf5c1dc2713bc12bf1b);
+            
+        
+
+        circle_marker_839edf293cb94f2c9c370568d0117480.bindPopup(popup_08d09bd2dff09660dd0872071be53b03)
+        ;
+
+        
+    
+    
+            var circle_marker_0d83a17e10489b6693dae57de490a78a = L.circleMarker(
+                [-24.121326428704, -48.90346467780449],
+                {"bubblingMouseEvents": true, "color": "#1f77b4", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#1f77b4", "fillOpacity": 0.7, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 4, "stroke": true, "weight": 3}
+            ).addTo(feature_group_572321ac65bff2edc3c125585cd76f4d);
+        
+    
+        var popup_d8e58a46edde4b52cf8956a8c2a28b24 = L.popup({
+  "maxWidth": 300,
+});
+
+        
+            
+                var html_253f0d5c2a3c0744926eafe92f1e930e = $(`<div id="html_253f0d5c2a3c0744926eafe92f1e930e" style="width: 100.0%; height: 100.0%;"><div style='font-family: Arial; font-size: 12px; width: 250px;'><b>Detalhes da Feature OSM</b><br><hr><b>Tipo:</b> Point<br><b>amenity:</b> place_of_worship<br><b>leisure:</b> nan<br><b>name:</b> Igreja Católica Apostólica Romana<br></div></div>`)[0];
+                popup_d8e58a46edde4b52cf8956a8c2a28b24.setContent(html_253f0d5c2a3c0744926eafe92f1e930e);
+            
+        
+
+        circle_marker_0d83a17e10489b6693dae57de490a78a.bindPopup(popup_d8e58a46edde4b52cf8956a8c2a28b24)
+        ;
+
+        
+    
+    
+            var circle_marker_afeb81cd2faca74e617e0f96c5794f33 = L.circleMarker(
+                [-24.11917167708135, -48.9028118309036],
+                {"bubblingMouseEvents": true, "color": "#1f77b4", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#1f77b4", "fillOpacity": 0.7, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 4, "stroke": true, "weight": 3}
+            ).addTo(feature_group_572321ac65bff2edc3c125585cd76f4d);
+        
+    
+        var popup_02c5b720f626c393ccf7c3e2d8a300db = L.popup({
+  "maxWidth": 300,
+});
+
+        
+            
+                var html_5d9ff24de9f399b2b3d2e0bd55f3f78d = $(`<div id="html_5d9ff24de9f399b2b3d2e0bd55f3f78d" style="width: 100.0%; height: 100.0%;"><div style='font-family: Arial; font-size: 12px; width: 250px;'><b>Detalhes da Feature OSM</b><br><hr><b>Tipo:</b> Point<br><b>amenity:</b> school<br><b>leisure:</b> nan<br><b>name:</b> EM João Antônio<br></div></div>`)[0];
+                popup_02c5b720f626c393ccf7c3e2d8a300db.setContent(html_5d9ff24de9f399b2b3d2e0bd55f3f78d);
+            
+        
+
+        circle_marker_afeb81cd2faca74e617e0f96c5794f33.bindPopup(popup_02c5b720f626c393ccf7c3e2d8a300db)
+        ;
+
+        
+    
+    
+            var circle_marker_9cb9a32e9acbcbbd3be9ae95f9087153 = L.circleMarker(
+                [-24.118729334366193, -48.90156313606721],
+                {"bubblingMouseEvents": true, "color": "#1f77b4", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#1f77b4", "fillOpacity": 0.7, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 4, "stroke": true, "weight": 3}
+            ).addTo(feature_group_572321ac65bff2edc3c125585cd76f4d);
+        
+    
+        var popup_9c64aea42c273ac225250ffe4b045cfb = L.popup({
+  "maxWidth": 300,
+});
+
+        
+            
+                var html_9784489ede7a6eec435eb2a491aff9a6 = $(`<div id="html_9784489ede7a6eec435eb2a491aff9a6" style="width: 100.0%; height: 100.0%;"><div style='font-family: Arial; font-size: 12px; width: 250px;'><b>Detalhes da Feature OSM</b><br><hr><b>Tipo:</b> Point<br><b>amenity:</b> school<br><b>leisure:</b> nan<br><b>name:</b> nan<br></div></div>`)[0];
+                popup_9c64aea42c273ac225250ffe4b045cfb.setContent(html_9784489ede7a6eec435eb2a491aff9a6);
+            
+        
+
+        circle_marker_9cb9a32e9acbcbbd3be9ae95f9087153.bindPopup(popup_9c64aea42c273ac225250ffe4b045cfb)
+        ;
+
+        
+    
+    
+            var circle_marker_43476a70820decc8bc524ce69030273d = L.circleMarker(
+                [-24.11808699775762, -48.90192407981093],
+                {"bubblingMouseEvents": true, "color": "#1f77b4", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#1f77b4", "fillOpacity": 0.7, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 4, "stroke": true, "weight": 3}
+            ).addTo(feature_group_572321ac65bff2edc3c125585cd76f4d);
+        
+    
+        var popup_e66333c2c9cc262100103bb68c2b1820 = L.popup({
+  "maxWidth": 300,
+});
+
+        
+            
+                var html_ab5bced310b3ae169485dad44f25748d = $(`<div id="html_ab5bced310b3ae169485dad44f25748d" style="width: 100.0%; height: 100.0%;"><div style='font-family: Arial; font-size: 12px; width: 250px;'><b>Detalhes da Feature OSM</b><br><hr><b>Tipo:</b> Point<br><b>amenity:</b> events_venue<br><b>leisure:</b> park<br><b>name:</b> Praça de Eventos<br></div></div>`)[0];
+                popup_e66333c2c9cc262100103bb68c2b1820.setContent(html_ab5bced310b3ae169485dad44f25748d);
+            
+        
+
+        circle_marker_43476a70820decc8bc524ce69030273d.bindPopup(popup_e66333c2c9cc262100103bb68c2b1820)
+        ;
+
+        
+    
+    
+            var circle_marker_a1417fc366471bb45d148f9cb0b9effd = L.circleMarker(
+                [-24.121013111867995, -48.907320431259755],
+                {"bubblingMouseEvents": true, "color": "#1f77b4", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#1f77b4", "fillOpacity": 0.7, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 4, "stroke": true, "weight": 3}
+            ).addTo(feature_group_572321ac65bff2edc3c125585cd76f4d);
+        
+    
+        var popup_399cba3baf0b9f16cbffaac92a918bad = L.popup({
+  "maxWidth": 300,
+});
+
+        
+            
+                var html_c9a9442d499df0e25958c55279e0e0fd = $(`<div id="html_c9a9442d499df0e25958c55279e0e0fd" style="width: 100.0%; height: 100.0%;"><div style='font-family: Arial; font-size: 12px; width: 250px;'><b>Detalhes da Feature OSM</b><br><hr><b>Tipo:</b> Point<br><b>amenity:</b> clinic<br><b>leisure:</b> nan<br><b>name:</b> Posto de Saúde de Nova Campina<br></div></div>`)[0];
+                popup_399cba3baf0b9f16cbffaac92a918bad.setContent(html_c9a9442d499df0e25958c55279e0e0fd);
+            
+        
+
+        circle_marker_a1417fc366471bb45d148f9cb0b9effd.bindPopup(popup_399cba3baf0b9f16cbffaac92a918bad)
+        ;
+
+        
+    
+    
+            var circle_marker_ac71c4adc3f0ecb5429bf976a2255903 = L.circleMarker(
+                [-24.126246128707677, -48.91079961868028],
+                {"bubblingMouseEvents": true, "color": "#1f77b4", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#1f77b4", "fillOpacity": 0.7, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 4, "stroke": true, "weight": 3}
+            ).addTo(feature_group_572321ac65bff2edc3c125585cd76f4d);
+        
+    
+        var popup_446f2e583c55c1c43f3f95cd436097ae = L.popup({
+  "maxWidth": 300,
+});
+
+        
+            
+                var html_3b4f7350794a0d08fa9248aa61379a0e = $(`<div id="html_3b4f7350794a0d08fa9248aa61379a0e" style="width: 100.0%; height: 100.0%;"><div style='font-family: Arial; font-size: 12px; width: 250px;'><b>Detalhes da Feature OSM</b><br><hr><b>Tipo:</b> Point<br><b>amenity:</b> school<br><b>leisure:</b> nan<br><b>name:</b> EMEF Humberto de Morais Vasconcelos<br></div></div>`)[0];
+                popup_446f2e583c55c1c43f3f95cd436097ae.setContent(html_3b4f7350794a0d08fa9248aa61379a0e);
+            
+        
+
+        circle_marker_ac71c4adc3f0ecb5429bf976a2255903.bindPopup(popup_446f2e583c55c1c43f3f95cd436097ae)
+        ;
+
+        
+    
+    
+            var circle_marker_e4a105b7751c33376783d150dcb91911 = L.circleMarker(
+                [-24.120125826709348, -48.90624740527888],
+                {"bubblingMouseEvents": true, "color": "#1f77b4", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#1f77b4", "fillOpacity": 0.7, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 4, "stroke": true, "weight": 3}
+            ).addTo(feature_group_572321ac65bff2edc3c125585cd76f4d);
+        
+    
+        var popup_be05a0393a4d9ad61cc766bc9a4ada3d = L.popup({
+  "maxWidth": 300,
+});
+
+        
+            
+                var html_3defd112dc0cb19e8166ea4d819561df = $(`<div id="html_3defd112dc0cb19e8166ea4d819561df" style="width: 100.0%; height: 100.0%;"><div style='font-family: Arial; font-size: 12px; width: 250px;'><b>Detalhes da Feature OSM</b><br><hr><b>Tipo:</b> Point<br><b>amenity:</b> place_of_worship<br><b>leisure:</b> nan<br><b>name:</b> Igreja Quadrangular<br></div></div>`)[0];
+                popup_be05a0393a4d9ad61cc766bc9a4ada3d.setContent(html_3defd112dc0cb19e8166ea4d819561df);
+            
+        
+
+        circle_marker_e4a105b7751c33376783d150dcb91911.bindPopup(popup_be05a0393a4d9ad61cc766bc9a4ada3d)
+        ;
+
+        
+    
+    
+            var circle_marker_2cf553fcebd7251b65aff934ace2885e = L.circleMarker(
+                [-24.12254934585217, -48.90251186345155],
+                {"bubblingMouseEvents": true, "color": "#1f77b4", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#1f77b4", "fillOpacity": 0.7, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 4, "stroke": true, "weight": 3}
+            ).addTo(feature_group_572321ac65bff2edc3c125585cd76f4d);
+        
+    
+        var popup_a64e711296192ae1112a5eb6bc842dad = L.popup({
+  "maxWidth": 300,
+});
+
+        
+            
+                var html_28af81a60754d408475f720b5c2dde2b = $(`<div id="html_28af81a60754d408475f720b5c2dde2b" style="width: 100.0%; height: 100.0%;"><div style='font-family: Arial; font-size: 12px; width: 250px;'><b>Detalhes da Feature OSM</b><br><hr><b>Tipo:</b> Point<br><b>amenity:</b> place_of_worship<br><b>leisure:</b> nan<br><b>name:</b> Salão do Reino Testemunhas de Jeová<br></div></div>`)[0];
+                popup_a64e711296192ae1112a5eb6bc842dad.setContent(html_28af81a60754d408475f720b5c2dde2b);
+            
+        
+
+        circle_marker_2cf553fcebd7251b65aff934ace2885e.bindPopup(popup_a64e711296192ae1112a5eb6bc842dad)
+        ;
+
+        
+    
+    
+            var circle_marker_e3734dfb73c61e0ce257ac126637e2d9 = L.circleMarker(
+                [-24.260217956609647, -49.00162882782252],
+                {"bubblingMouseEvents": true, "color": "#1f77b4", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#1f77b4", "fillOpacity": 0.7, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 4, "stroke": true, "weight": 3}
+            ).addTo(feature_group_572321ac65bff2edc3c125585cd76f4d);
+        
+    
+        var popup_c9a47c403ee92755876250ccc71b2203 = L.popup({
+  "maxWidth": 300,
+});
+
+        
+            
+                var html_904e0ec009bc766c7d1793ec2227f711 = $(`<div id="html_904e0ec009bc766c7d1793ec2227f711" style="width: 100.0%; height: 100.0%;"><div style='font-family: Arial; font-size: 12px; width: 250px;'><b>Detalhes da Feature OSM</b><br><hr><b>Tipo:</b> Point<br><b>amenity:</b> school<br><b>leisure:</b> nan<br><b>name:</b> nan<br></div></div>`)[0];
+                popup_c9a47c403ee92755876250ccc71b2203.setContent(html_904e0ec009bc766c7d1793ec2227f711);
+            
+        
+
+        circle_marker_e3734dfb73c61e0ce257ac126637e2d9.bindPopup(popup_c9a47c403ee92755876250ccc71b2203)
+        ;
+
+        
+    
+    
+            var circle_marker_8b61590d56c3a4e1f96c676aa6a87734 = L.circleMarker(
+                [-24.259395888741853, -49.003703199221626],
+                {"bubblingMouseEvents": true, "color": "#1f77b4", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#1f77b4", "fillOpacity": 0.7, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 4, "stroke": true, "weight": 3}
+            ).addTo(feature_group_572321ac65bff2edc3c125585cd76f4d);
+        
+    
+        var popup_1f062b3fa8379459b3502c440a303a39 = L.popup({
+  "maxWidth": 300,
+});
+
+        
+            
+                var html_99d665a739e53be90dc5128a255b9842 = $(`<div id="html_99d665a739e53be90dc5128a255b9842" style="width: 100.0%; height: 100.0%;"><div style='font-family: Arial; font-size: 12px; width: 250px;'><b>Detalhes da Feature OSM</b><br><hr><b>Tipo:</b> Point<br><b>amenity:</b> school<br><b>leisure:</b> nan<br><b>name:</b> nan<br></div></div>`)[0];
+                popup_1f062b3fa8379459b3502c440a303a39.setContent(html_99d665a739e53be90dc5128a255b9842);
+            
+        
+
+        circle_marker_8b61590d56c3a4e1f96c676aa6a87734.bindPopup(popup_1f062b3fa8379459b3502c440a303a39)
+        ;
+
+        
+    
+    
+            var circle_marker_43d514082965d3e03b788aad8770004d = L.circleMarker(
+                [-24.259782049998368, -49.00611150001628],
+                {"bubblingMouseEvents": true, "color": "#1f77b4", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#1f77b4", "fillOpacity": 0.7, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 4, "stroke": true, "weight": 3}
+            ).addTo(feature_group_572321ac65bff2edc3c125585cd76f4d);
+        
+    
+        var popup_53c4e0a97ecf1c193b68ae0495271435 = L.popup({
+  "maxWidth": 300,
+});
+
+        
+            
+                var html_a5bde3b1c1c01451cd4b256acf895af3 = $(`<div id="html_a5bde3b1c1c01451cd4b256acf895af3" style="width: 100.0%; height: 100.0%;"><div style='font-family: Arial; font-size: 12px; width: 250px;'><b>Detalhes da Feature OSM</b><br><hr><b>Tipo:</b> Point<br><b>amenity:</b> place_of_worship<br><b>leisure:</b> nan<br><b>name:</b> Assembléia de Deus<br></div></div>`)[0];
+                popup_53c4e0a97ecf1c193b68ae0495271435.setContent(html_a5bde3b1c1c01451cd4b256acf895af3);
+            
+        
+
+        circle_marker_43d514082965d3e03b788aad8770004d.bindPopup(popup_53c4e0a97ecf1c193b68ae0495271435)
+        ;
+
+        
+    
+    
+            var circle_marker_28ad96f5e6a856a7262bdcc6d1ffff41 = L.circleMarker(
+                [-24.261120069262518, -49.00998643365147],
+                {"bubblingMouseEvents": true, "color": "#1f77b4", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#1f77b4", "fillOpacity": 0.7, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 4, "stroke": true, "weight": 3}
+            ).addTo(feature_group_572321ac65bff2edc3c125585cd76f4d);
+        
+    
+        var popup_39522d10961121bc770cef71ab27f4a6 = L.popup({
+  "maxWidth": 300,
+});
+
+        
+            
+                var html_503fd61fd52b7410eca9915009718ed2 = $(`<div id="html_503fd61fd52b7410eca9915009718ed2" style="width: 100.0%; height: 100.0%;"><div style='font-family: Arial; font-size: 12px; width: 250px;'><b>Detalhes da Feature OSM</b><br><hr><b>Tipo:</b> Point<br><b>amenity:</b> place_of_worship<br><b>leisure:</b> nan<br><b>name:</b> Congregação Cristã no Brasil<br></div></div>`)[0];
+                popup_39522d10961121bc770cef71ab27f4a6.setContent(html_503fd61fd52b7410eca9915009718ed2);
+            
+        
+
+        circle_marker_28ad96f5e6a856a7262bdcc6d1ffff41.bindPopup(popup_39522d10961121bc770cef71ab27f4a6)
+        ;
+
+        
+    
+    
+            var circle_marker_dbbeeb8fecbe486d98da709148b3a110 = L.circleMarker(
+                [-24.260181136255127, -49.00028679142628],
+                {"bubblingMouseEvents": true, "color": "#1f77b4", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#1f77b4", "fillOpacity": 0.7, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 4, "stroke": true, "weight": 3}
+            ).addTo(feature_group_572321ac65bff2edc3c125585cd76f4d);
+        
+    
+        var popup_18ec19458482d270a5900b916b09b8c4 = L.popup({
+  "maxWidth": 300,
+});
+
+        
+            
+                var html_9c805668888866890c1870f0c28a1a21 = $(`<div id="html_9c805668888866890c1870f0c28a1a21" style="width: 100.0%; height: 100.0%;"><div style='font-family: Arial; font-size: 12px; width: 250px;'><b>Detalhes da Feature OSM</b><br><hr><b>Tipo:</b> Point<br><b>amenity:</b> place_of_worship<br><b>leisure:</b> nan<br><b>name:</b> Igreja Católica<br></div></div>`)[0];
+                popup_18ec19458482d270a5900b916b09b8c4.setContent(html_9c805668888866890c1870f0c28a1a21);
+            
+        
+
+        circle_marker_dbbeeb8fecbe486d98da709148b3a110.bindPopup(popup_18ec19458482d270a5900b916b09b8c4)
+        ;
+
+        
+    
+    
+            var circle_marker_f453401b557d8ad5e1d5bc83d2b51c0a = L.circleMarker(
+                [-24.25939191198575, -48.99828278578836],
+                {"bubblingMouseEvents": true, "color": "#1f77b4", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#1f77b4", "fillOpacity": 0.7, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 4, "stroke": true, "weight": 3}
+            ).addTo(feature_group_572321ac65bff2edc3c125585cd76f4d);
+        
+    
+        var popup_1560b0397c990ce61e9651ba9832a0b9 = L.popup({
+  "maxWidth": 300,
+});
+
+        
+            
+                var html_d1c9aeae7d9ec58c1e00931df455abef = $(`<div id="html_d1c9aeae7d9ec58c1e00931df455abef" style="width: 100.0%; height: 100.0%;"><div style='font-family: Arial; font-size: 12px; width: 250px;'><b>Detalhes da Feature OSM</b><br><hr><b>Tipo:</b> Point<br><b>amenity:</b> clinic<br><b>leisure:</b> nan<br><b>name:</b> nan<br></div></div>`)[0];
+                popup_1560b0397c990ce61e9651ba9832a0b9.setContent(html_d1c9aeae7d9ec58c1e00931df455abef);
+            
+        
+
+        circle_marker_f453401b557d8ad5e1d5bc83d2b51c0a.bindPopup(popup_1560b0397c990ce61e9651ba9832a0b9)
+        ;
+
+        
+    
+    
+            var circle_marker_fffe65ad142e92287de7707de7a74c2e = L.circleMarker(
+                [-24.169522050885117, -48.95508745510735],
+                {"bubblingMouseEvents": true, "color": "#1f77b4", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#1f77b4", "fillOpacity": 0.7, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 4, "stroke": true, "weight": 3}
+            ).addTo(feature_group_572321ac65bff2edc3c125585cd76f4d);
+        
+    
+        var popup_f7f034bdd423de701ef94f867ebaf45e = L.popup({
+  "maxWidth": 300,
+});
+
+        
+            
+                var html_129237ec9ce117e368eb80942f38f019 = $(`<div id="html_129237ec9ce117e368eb80942f38f019" style="width: 100.0%; height: 100.0%;"><div style='font-family: Arial; font-size: 12px; width: 250px;'><b>Detalhes da Feature OSM</b><br><hr><b>Tipo:</b> Point<br><b>amenity:</b> place_of_worship<br><b>leisure:</b> nan<br><b>name:</b> CCB<br></div></div>`)[0];
+                popup_f7f034bdd423de701ef94f867ebaf45e.setContent(html_129237ec9ce117e368eb80942f38f019);
+            
+        
+
+        circle_marker_fffe65ad142e92287de7707de7a74c2e.bindPopup(popup_f7f034bdd423de701ef94f867ebaf45e)
+        ;
+
+        
+    
+    
+            feature_group_572321ac65bff2edc3c125585cd76f4d.addTo(map_90c73edebc53e1f2e8294dfbfb2d5ada);
+        
+    
+            var feature_group_ba01afd95cf15bd0b842f181a3bec595 = L.featureGroup(
+                {
+}
+            );
+        
+    
+            var circle_marker_20e56e66d22c54616fbf4b52e65f8c88 = L.circleMarker(
+                [-24.121232344736974, -48.904544496942066],
+                {"bubblingMouseEvents": true, "color": "#9edae5", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#9edae5", "fillOpacity": 0.7, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 4, "stroke": true, "weight": 3}
+            ).addTo(feature_group_ba01afd95cf15bd0b842f181a3bec595);
+        
+    
+        var popup_f1140155061179161adac355a0669732 = L.popup({
+  "maxWidth": 300,
+});
+
+        
+            
+                var html_c62a8a7e4c3cecdd04b7c2eea90a3631 = $(`<div id="html_c62a8a7e4c3cecdd04b7c2eea90a3631" style="width: 100.0%; height: 100.0%;"><div style='font-family: Arial; font-size: 12px; width: 250px;'><b>Detalhes da Feature OSM</b><br><hr><b>Tipo:</b> Point<br><b>amenity:</b> nan<br><b>leisure:</b> park<br><b>name:</b> Praça Jeconias David Müzel<br></div></div>`)[0];
+                popup_f1140155061179161adac355a0669732.setContent(html_c62a8a7e4c3cecdd04b7c2eea90a3631);
+            
+        
+
+        circle_marker_20e56e66d22c54616fbf4b52e65f8c88.bindPopup(popup_f1140155061179161adac355a0669732)
+        ;
+
+        
+    
+    
+            var circle_marker_a943c5f0f4795d49e9da53959fa0fc5a = L.circleMarker(
+                [-24.12128839595745, -48.905307484472665],
+                {"bubblingMouseEvents": true, "color": "#9edae5", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#9edae5", "fillOpacity": 0.7, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 4, "stroke": true, "weight": 3}
+            ).addTo(feature_group_ba01afd95cf15bd0b842f181a3bec595);
+        
+    
+        var popup_ac06ba0d7a92388bb1ea52c01e8d2862 = L.popup({
+  "maxWidth": 300,
+});
+
+        
+            
+                var html_f1d54cde479e2da19e74033e3ec4bdd4 = $(`<div id="html_f1d54cde479e2da19e74033e3ec4bdd4" style="width: 100.0%; height: 100.0%;"><div style='font-family: Arial; font-size: 12px; width: 250px;'><b>Detalhes da Feature OSM</b><br><hr><b>Tipo:</b> Point<br><b>amenity:</b> nan<br><b>leisure:</b> park<br><b>name:</b> nan<br></div></div>`)[0];
+                popup_ac06ba0d7a92388bb1ea52c01e8d2862.setContent(html_f1d54cde479e2da19e74033e3ec4bdd4);
+            
+        
+
+        circle_marker_a943c5f0f4795d49e9da53959fa0fc5a.bindPopup(popup_ac06ba0d7a92388bb1ea52c01e8d2862)
+        ;
+
+        
+    
+    
+            var circle_marker_9565f5e16a8d78a5e9ba7eb1bf4df9eb = L.circleMarker(
+                [-24.122972123361667, -48.90326066545463],
+                {"bubblingMouseEvents": true, "color": "#9edae5", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#9edae5", "fillOpacity": 0.7, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 4, "stroke": true, "weight": 3}
+            ).addTo(feature_group_ba01afd95cf15bd0b842f181a3bec595);
+        
+    
+        var popup_44e9411a0074ff65de2cea8dba537f78 = L.popup({
+  "maxWidth": 300,
+});
+
+        
+            
+                var html_dd7bf127de3f6f83cca52bf79ebc95fe = $(`<div id="html_dd7bf127de3f6f83cca52bf79ebc95fe" style="width: 100.0%; height: 100.0%;"><div style='font-family: Arial; font-size: 12px; width: 250px;'><b>Detalhes da Feature OSM</b><br><hr><b>Tipo:</b> Point<br><b>amenity:</b> nan<br><b>leisure:</b> park<br><b>name:</b> Praça da Dolina<br></div></div>`)[0];
+                popup_44e9411a0074ff65de2cea8dba537f78.setContent(html_dd7bf127de3f6f83cca52bf79ebc95fe);
+            
+        
+
+        circle_marker_9565f5e16a8d78a5e9ba7eb1bf4df9eb.bindPopup(popup_44e9411a0074ff65de2cea8dba537f78)
+        ;
+
+        
+    
+    
+            var circle_marker_9e5c7d4b128de60f0772d042928e6555 = L.circleMarker(
+                [-24.124271828139875, -48.9042560072137],
+                {"bubblingMouseEvents": true, "color": "#9edae5", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#9edae5", "fillOpacity": 0.7, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 4, "stroke": true, "weight": 3}
+            ).addTo(feature_group_ba01afd95cf15bd0b842f181a3bec595);
+        
+    
+        var popup_1f2e315d5fc60ac8cea3b4db75fa2386 = L.popup({
+  "maxWidth": 300,
+});
+
+        
+            
+                var html_12dffbb5a578befecc8bf67b286222fa = $(`<div id="html_12dffbb5a578befecc8bf67b286222fa" style="width: 100.0%; height: 100.0%;"><div style='font-family: Arial; font-size: 12px; width: 250px;'><b>Detalhes da Feature OSM</b><br><hr><b>Tipo:</b> Point<br><b>amenity:</b> nan<br><b>leisure:</b> park<br><b>name:</b> Parque do Idoso<br></div></div>`)[0];
+                popup_1f2e315d5fc60ac8cea3b4db75fa2386.setContent(html_12dffbb5a578befecc8bf67b286222fa);
+            
+        
+
+        circle_marker_9e5c7d4b128de60f0772d042928e6555.bindPopup(popup_1f2e315d5fc60ac8cea3b4db75fa2386)
+        ;
+
+        
+    
+    
+            var circle_marker_38b67d1eb44dea68634550eed08614f4 = L.circleMarker(
+                [-24.12396227428581, -48.906203283345626],
+                {"bubblingMouseEvents": true, "color": "#9edae5", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#9edae5", "fillOpacity": 0.7, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 4, "stroke": true, "weight": 3}
+            ).addTo(feature_group_ba01afd95cf15bd0b842f181a3bec595);
+        
+    
+        var popup_2d21359641e7b6a0559c2d72547e5342 = L.popup({
+  "maxWidth": 300,
+});
+
+        
+            
+                var html_658d211c0ce3eac35115a8d2acfe3f94 = $(`<div id="html_658d211c0ce3eac35115a8d2acfe3f94" style="width: 100.0%; height: 100.0%;"><div style='font-family: Arial; font-size: 12px; width: 250px;'><b>Detalhes da Feature OSM</b><br><hr><b>Tipo:</b> Point<br><b>amenity:</b> nan<br><b>leisure:</b> park<br><b>name:</b> Parquinho Infantil<br></div></div>`)[0];
+                popup_2d21359641e7b6a0559c2d72547e5342.setContent(html_658d211c0ce3eac35115a8d2acfe3f94);
+            
+        
+
+        circle_marker_38b67d1eb44dea68634550eed08614f4.bindPopup(popup_2d21359641e7b6a0559c2d72547e5342)
+        ;
+
+        
+    
+    
+            var circle_marker_2ddfc41431f46235ce5d29c55b1a8b5f = L.circleMarker(
+                [-24.18012900000225, -48.9038670496648],
+                {"bubblingMouseEvents": true, "color": "#9edae5", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#9edae5", "fillOpacity": 0.7, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 4, "stroke": true, "weight": 3}
+            ).addTo(feature_group_ba01afd95cf15bd0b842f181a3bec595);
+        
+    
+        var popup_fb729d771b632feb292537b440252667 = L.popup({
+  "maxWidth": 300,
+});
+
+        
+            
+                var html_b79ea51b041589d4915952e740c476aa = $(`<div id="html_b79ea51b041589d4915952e740c476aa" style="width: 100.0%; height: 100.0%;"><div style='font-family: Arial; font-size: 12px; width: 250px;'><b>Detalhes da Feature OSM</b><br><hr><b>Tipo:</b> Point<br><b>amenity:</b> nan<br><b>leisure:</b> pitch<br><b>name:</b> nan<br></div></div>`)[0];
+                popup_fb729d771b632feb292537b440252667.setContent(html_b79ea51b041589d4915952e740c476aa);
+            
+        
+
+        circle_marker_2ddfc41431f46235ce5d29c55b1a8b5f.bindPopup(popup_fb729d771b632feb292537b440252667)
+        ;
+
+        
+    
+    
+            var circle_marker_c735ceddc2e6234d5f1fcc2c87879831 = L.circleMarker(
+                [-24.25360441872346, -49.00103867226428],
+                {"bubblingMouseEvents": true, "color": "#9edae5", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#9edae5", "fillOpacity": 0.7, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 4, "stroke": true, "weight": 3}
+            ).addTo(feature_group_ba01afd95cf15bd0b842f181a3bec595);
+        
+    
+        var popup_fe8504abe0264986e20954b8f2a837cf = L.popup({
+  "maxWidth": 300,
+});
+
+        
+            
+                var html_f6d7d84e50cb3ae5edcefe51ddd6d8a1 = $(`<div id="html_f6d7d84e50cb3ae5edcefe51ddd6d8a1" style="width: 100.0%; height: 100.0%;"><div style='font-family: Arial; font-size: 12px; width: 250px;'><b>Detalhes da Feature OSM</b><br><hr><b>Tipo:</b> Point<br><b>amenity:</b> nan<br><b>leisure:</b> pitch<br><b>name:</b> nan<br></div></div>`)[0];
+                popup_fe8504abe0264986e20954b8f2a837cf.setContent(html_f6d7d84e50cb3ae5edcefe51ddd6d8a1);
+            
+        
+
+        circle_marker_c735ceddc2e6234d5f1fcc2c87879831.bindPopup(popup_fe8504abe0264986e20954b8f2a837cf)
+        ;
+
+        
+    
+    
+            feature_group_ba01afd95cf15bd0b842f181a3bec595.addTo(map_90c73edebc53e1f2e8294dfbfb2d5ada);
+        
+    
+            var layer_control_8401c294e256e94ce82bc19f1b91a3bb_layers = {
+                base_layers : {
+                    "cartodbpositron" : tile_layer_d35d72e6343cf45fa731b9c0a9487dc6,
+                },
+                overlays :  {
+                    "amenity" : feature_group_572321ac65bff2edc3c125585cd76f4d,
+                    "leisure" : feature_group_ba01afd95cf15bd0b842f181a3bec595,
+                },
+            };
+            let layer_control_8401c294e256e94ce82bc19f1b91a3bb = L.control.layers(
+                layer_control_8401c294e256e94ce82bc19f1b91a3bb_layers.base_layers,
+                layer_control_8401c294e256e94ce82bc19f1b91a3bb_layers.overlays,
+                {
+  "position": "topright",
+  "collapsed": true,
+  "autoZIndex": true,
+}
+            ).addTo(map_90c73edebc53e1f2e8294dfbfb2d5ada);
+
+        
+</script>
+</html>

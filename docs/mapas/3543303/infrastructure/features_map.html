@@ -1,0 +1,895 @@
+<!DOCTYPE html>
+<html>
+<head>
+    
+    <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
+    <script src="https://cdn.jsdelivr.net/npm/leaflet@1.9.3/dist/leaflet.js"></script>
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Leaflet.awesome-markers/2.0.2/leaflet.awesome-markers.js"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/leaflet@1.9.3/dist/leaflet.css"/>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/css/bootstrap.min.css"/>
+    <link rel="stylesheet" href="https://netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap-glyphicons.css"/>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.2.0/css/all.min.css"/>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/Leaflet.awesome-markers/2.0.2/leaflet.awesome-markers.css"/>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/python-visualization/folium/folium/templates/leaflet.awesome.rotate.min.css"/>
+    
+            <meta name="viewport" content="width=device-width,
+                initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+            <style>
+                #map_fcd17ce1c23ca1aceb512d21b7dd7c42 {
+                    position: relative;
+                    width: 100.0%;
+                    height: 100.0%;
+                    left: 0.0%;
+                    top: 0.0%;
+                }
+                .leaflet-container { font-size: 1rem; }
+            </style>
+
+            <style>html, body {
+                width: 100%;
+                height: 100%;
+                margin: 0;
+                padding: 0;
+            }
+            </style>
+
+            <style>#map {
+                position:absolute;
+                top:0;
+                bottom:0;
+                right:0;
+                left:0;
+                }
+            </style>
+
+            <script>
+                L_NO_TOUCH = false;
+                L_DISABLE_3D = false;
+            </script>
+
+        
+</head>
+<body>
+    
+    
+    <div id="legend-container" style="
+        position: fixed;
+        bottom: 50px;
+        left: 50px;
+        width: 220px;
+        background-color: white;
+        border: 2px solid #ccc;
+        border-radius: 5px;
+        padding: 12px;
+        z-index: 9999;
+        font-size: 13px;
+        box-shadow: 0 2px 6px rgba(0,0,0,0.2);
+        font-family: Arial, sans-serif;
+    ">
+        <div style="font-weight: bold; font-size: 14px; margin-bottom: 10px; color: #333;">Legenda</div>
+        <div id="legend-items"></div>
+    </div>
+    
+    <script>
+        var colorMap = {"highway": "#1f77b4"};
+        var container = document.getElementById('legend-items');
+        
+        for (var tag in colorMap) {
+            var color = colorMap[tag];
+            
+            var item = document.createElement('div');
+            item.style.display = 'flex';
+            item.style.alignItems = 'center';
+            item.style.marginBottom = '8px';
+            item.style.gap = '8px';
+            
+            var box = document.createElement('div');
+            box.style.width = '16px';
+            box.style.height = '16px';
+            box.style.borderRadius = '50%';
+            box.style.border = '1px solid #999';
+            box.style.backgroundColor = color;
+            box.style.flexShrink = '0';
+            
+            var label = document.createElement('div');
+            label.style.color = '#333';
+            label.style.fontSize = '13px';
+            label.textContent = tag;
+            label.title = tag;
+            
+            item.appendChild(box);
+            item.appendChild(label);
+            container.appendChild(item);
+        }
+    </script>
+    
+    
+            <div class="folium-map" id="map_fcd17ce1c23ca1aceb512d21b7dd7c42" ></div>
+        
+</body>
+<script>
+    
+    
+            var map_fcd17ce1c23ca1aceb512d21b7dd7c42 = L.map(
+                "map_fcd17ce1c23ca1aceb512d21b7dd7c42",
+                {
+                    center: [-23.701078895008695, -46.40280398464695],
+                    crs: L.CRS.EPSG3857,
+                    ...{
+  "zoom": 11,
+  "zoomControl": true,
+  "preferCanvas": false,
+}
+
+                }
+            );
+
+            
+
+        
+    
+            var tile_layer_b39bba937d7374a7eeb8ddf8820ee4d2 = L.tileLayer(
+                "https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png",
+                {
+  "minZoom": 0,
+  "maxZoom": 20,
+  "maxNativeZoom": 20,
+  "noWrap": false,
+  "attribution": "\u0026copy; \u003ca href=\"https://www.openstreetmap.org/copyright\"\u003eOpenStreetMap\u003c/a\u003e contributors \u0026copy; \u003ca href=\"https://carto.com/attributions\"\u003eCARTO\u003c/a\u003e",
+  "subdomains": "abcd",
+  "detectRetina": false,
+  "tms": false,
+  "opacity": 1,
+}
+
+            );
+        
+    
+            tile_layer_b39bba937d7374a7eeb8ddf8820ee4d2.addTo(map_fcd17ce1c23ca1aceb512d21b7dd7c42);
+        
+    
+            var feature_group_a01eda656869a55896a52ba2db5adb85 = L.featureGroup(
+                {
+}
+            );
+        
+    
+            var circle_marker_a150718fbd0febb6b16d89102618649b = L.circleMarker(
+                [-23.647922399999988, -46.3614226],
+                {"bubblingMouseEvents": true, "color": "#1f77b4", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#1f77b4", "fillOpacity": 0.7, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 4, "stroke": true, "weight": 3}
+            ).addTo(feature_group_a01eda656869a55896a52ba2db5adb85);
+        
+    
+        var popup_e1c323276cdb2c9d5a0fc9a097a87ed9 = L.popup({
+  "maxWidth": 300,
+});
+
+        
+            
+                var html_a3ec59066eaa1647abf21f0679a13bbd = $(`<div id="html_a3ec59066eaa1647abf21f0679a13bbd" style="width: 100.0%; height: 100.0%;"><div style='font-family: Arial; font-size: 12px; width: 250px;'><b>Detalhes da Feature OSM</b><br><hr><b>Tipo:</b> Point<br><b>amenity:</b> nan<br><b>highway:</b> street_lamp<br><b>name:</b> nan<br></div></div>`)[0];
+                popup_e1c323276cdb2c9d5a0fc9a097a87ed9.setContent(html_a3ec59066eaa1647abf21f0679a13bbd);
+            
+        
+
+        circle_marker_a150718fbd0febb6b16d89102618649b.bindPopup(popup_e1c323276cdb2c9d5a0fc9a097a87ed9)
+        ;
+
+        
+    
+    
+            var circle_marker_66ce7b2ba0fcd84ac99e6dcf54bfe8dc = L.circleMarker(
+                [-23.647991199999996, -46.3612268],
+                {"bubblingMouseEvents": true, "color": "#1f77b4", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#1f77b4", "fillOpacity": 0.7, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 4, "stroke": true, "weight": 3}
+            ).addTo(feature_group_a01eda656869a55896a52ba2db5adb85);
+        
+    
+        var popup_876a71cb5b91a12feacff1e850f58352 = L.popup({
+  "maxWidth": 300,
+});
+
+        
+            
+                var html_674b3051f55f66fbfff058a82903a74c = $(`<div id="html_674b3051f55f66fbfff058a82903a74c" style="width: 100.0%; height: 100.0%;"><div style='font-family: Arial; font-size: 12px; width: 250px;'><b>Detalhes da Feature OSM</b><br><hr><b>Tipo:</b> Point<br><b>amenity:</b> nan<br><b>highway:</b> street_lamp<br><b>name:</b> nan<br></div></div>`)[0];
+                popup_876a71cb5b91a12feacff1e850f58352.setContent(html_674b3051f55f66fbfff058a82903a74c);
+            
+        
+
+        circle_marker_66ce7b2ba0fcd84ac99e6dcf54bfe8dc.bindPopup(popup_876a71cb5b91a12feacff1e850f58352)
+        ;
+
+        
+    
+    
+            var circle_marker_303b776fb55ada9c376c8b4f43654aca = L.circleMarker(
+                [-23.647993700000004, -46.3610311],
+                {"bubblingMouseEvents": true, "color": "#1f77b4", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#1f77b4", "fillOpacity": 0.7, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 4, "stroke": true, "weight": 3}
+            ).addTo(feature_group_a01eda656869a55896a52ba2db5adb85);
+        
+    
+        var popup_1dbebbd49cfa41636badedfcc32bfd09 = L.popup({
+  "maxWidth": 300,
+});
+
+        
+            
+                var html_f3fbf92449504b5493dfb3219e38d2f8 = $(`<div id="html_f3fbf92449504b5493dfb3219e38d2f8" style="width: 100.0%; height: 100.0%;"><div style='font-family: Arial; font-size: 12px; width: 250px;'><b>Detalhes da Feature OSM</b><br><hr><b>Tipo:</b> Point<br><b>amenity:</b> nan<br><b>highway:</b> street_lamp<br><b>name:</b> nan<br></div></div>`)[0];
+                popup_1dbebbd49cfa41636badedfcc32bfd09.setContent(html_f3fbf92449504b5493dfb3219e38d2f8);
+            
+        
+
+        circle_marker_303b776fb55ada9c376c8b4f43654aca.bindPopup(popup_1dbebbd49cfa41636badedfcc32bfd09)
+        ;
+
+        
+    
+    
+            var circle_marker_9fb8358dee0ba25779be2eea20d7ff19 = L.circleMarker(
+                [-23.647981399999995, -46.3608245],
+                {"bubblingMouseEvents": true, "color": "#1f77b4", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#1f77b4", "fillOpacity": 0.7, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 4, "stroke": true, "weight": 3}
+            ).addTo(feature_group_a01eda656869a55896a52ba2db5adb85);
+        
+    
+        var popup_638af2873e6146a5dc2c47384f15c506 = L.popup({
+  "maxWidth": 300,
+});
+
+        
+            
+                var html_b40059e78e9b687ced08241f0b60d752 = $(`<div id="html_b40059e78e9b687ced08241f0b60d752" style="width: 100.0%; height: 100.0%;"><div style='font-family: Arial; font-size: 12px; width: 250px;'><b>Detalhes da Feature OSM</b><br><hr><b>Tipo:</b> Point<br><b>amenity:</b> nan<br><b>highway:</b> street_lamp<br><b>name:</b> nan<br></div></div>`)[0];
+                popup_638af2873e6146a5dc2c47384f15c506.setContent(html_b40059e78e9b687ced08241f0b60d752);
+            
+        
+
+        circle_marker_9fb8358dee0ba25779be2eea20d7ff19.bindPopup(popup_638af2873e6146a5dc2c47384f15c506)
+        ;
+
+        
+    
+    
+            var circle_marker_d124b997dfb3c7f28714dc37b8f13c99 = L.circleMarker(
+                [-23.64794699999999, -46.3605724],
+                {"bubblingMouseEvents": true, "color": "#1f77b4", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#1f77b4", "fillOpacity": 0.7, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 4, "stroke": true, "weight": 3}
+            ).addTo(feature_group_a01eda656869a55896a52ba2db5adb85);
+        
+    
+        var popup_a82edd96fb7ead23ac74f79f2f3f9aae = L.popup({
+  "maxWidth": 300,
+});
+
+        
+            
+                var html_4eda001d4b46b1ee2c56c0f09d16575c = $(`<div id="html_4eda001d4b46b1ee2c56c0f09d16575c" style="width: 100.0%; height: 100.0%;"><div style='font-family: Arial; font-size: 12px; width: 250px;'><b>Detalhes da Feature OSM</b><br><hr><b>Tipo:</b> Point<br><b>amenity:</b> nan<br><b>highway:</b> street_lamp<br><b>name:</b> nan<br></div></div>`)[0];
+                popup_a82edd96fb7ead23ac74f79f2f3f9aae.setContent(html_4eda001d4b46b1ee2c56c0f09d16575c);
+            
+        
+
+        circle_marker_d124b997dfb3c7f28714dc37b8f13c99.bindPopup(popup_a82edd96fb7ead23ac74f79f2f3f9aae)
+        ;
+
+        
+    
+    
+            var circle_marker_f7b912773da66211fb0f3eaddf739de4 = L.circleMarker(
+                [-23.6477554, -46.3613153],
+                {"bubblingMouseEvents": true, "color": "#1f77b4", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#1f77b4", "fillOpacity": 0.7, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 4, "stroke": true, "weight": 3}
+            ).addTo(feature_group_a01eda656869a55896a52ba2db5adb85);
+        
+    
+        var popup_4931e6f3208c3c7203830ea1b5ee6b42 = L.popup({
+  "maxWidth": 300,
+});
+
+        
+            
+                var html_79697cd2838879bd507e72d2cffd89b4 = $(`<div id="html_79697cd2838879bd507e72d2cffd89b4" style="width: 100.0%; height: 100.0%;"><div style='font-family: Arial; font-size: 12px; width: 250px;'><b>Detalhes da Feature OSM</b><br><hr><b>Tipo:</b> Point<br><b>amenity:</b> nan<br><b>highway:</b> street_lamp<br><b>name:</b> nan<br></div></div>`)[0];
+                popup_4931e6f3208c3c7203830ea1b5ee6b42.setContent(html_79697cd2838879bd507e72d2cffd89b4);
+            
+        
+
+        circle_marker_f7b912773da66211fb0f3eaddf739de4.bindPopup(popup_4931e6f3208c3c7203830ea1b5ee6b42)
+        ;
+
+        
+    
+    
+            var circle_marker_c168e55efe81835470c4c139e29a997b = L.circleMarker(
+                [-23.6472566, -46.3609506],
+                {"bubblingMouseEvents": true, "color": "#1f77b4", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#1f77b4", "fillOpacity": 0.7, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 4, "stroke": true, "weight": 3}
+            ).addTo(feature_group_a01eda656869a55896a52ba2db5adb85);
+        
+    
+        var popup_84c4d19b9e269815c4300db26c82c089 = L.popup({
+  "maxWidth": 300,
+});
+
+        
+            
+                var html_2b61289747e5a4887de9310398a077c5 = $(`<div id="html_2b61289747e5a4887de9310398a077c5" style="width: 100.0%; height: 100.0%;"><div style='font-family: Arial; font-size: 12px; width: 250px;'><b>Detalhes da Feature OSM</b><br><hr><b>Tipo:</b> Point<br><b>amenity:</b> nan<br><b>highway:</b> street_lamp<br><b>name:</b> nan<br></div></div>`)[0];
+                popup_84c4d19b9e269815c4300db26c82c089.setContent(html_2b61289747e5a4887de9310398a077c5);
+            
+        
+
+        circle_marker_c168e55efe81835470c4c139e29a997b.bindPopup(popup_84c4d19b9e269815c4300db26c82c089)
+        ;
+
+        
+    
+    
+            var circle_marker_e05edcc3bcc132f912f45e87442387ac = L.circleMarker(
+                [-23.646792199999997, -46.3605241],
+                {"bubblingMouseEvents": true, "color": "#1f77b4", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#1f77b4", "fillOpacity": 0.7, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 4, "stroke": true, "weight": 3}
+            ).addTo(feature_group_a01eda656869a55896a52ba2db5adb85);
+        
+    
+        var popup_de3e3b298d543f43d8db16a9b7d7fb89 = L.popup({
+  "maxWidth": 300,
+});
+
+        
+            
+                var html_b1e99532cec5330f9937e2a36e8230b3 = $(`<div id="html_b1e99532cec5330f9937e2a36e8230b3" style="width: 100.0%; height: 100.0%;"><div style='font-family: Arial; font-size: 12px; width: 250px;'><b>Detalhes da Feature OSM</b><br><hr><b>Tipo:</b> Point<br><b>amenity:</b> nan<br><b>highway:</b> street_lamp<br><b>name:</b> nan<br></div></div>`)[0];
+                popup_de3e3b298d543f43d8db16a9b7d7fb89.setContent(html_b1e99532cec5330f9937e2a36e8230b3);
+            
+        
+
+        circle_marker_e05edcc3bcc132f912f45e87442387ac.bindPopup(popup_de3e3b298d543f43d8db16a9b7d7fb89)
+        ;
+
+        
+    
+    
+            var poly_line_424232400d9ff2e95569d8dbfbfb7985 = L.polyline(
+                [[-23.686939400000004, -46.3818406], [-23.686710799999997, -46.3815096]],
+                {"bubblingMouseEvents": true, "color": "#1f77b4", "dashArray": null, "dashOffset": null, "fill": false, "fillColor": "#1f77b4", "fillOpacity": 0.2, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "noClip": false, "opacity": 0.8, "smoothFactor": 1.0, "stroke": true, "weight": 2}
+            ).addTo(feature_group_a01eda656869a55896a52ba2db5adb85);
+        
+    
+        var popup_f26ccd4eca36bf3d4dd6b0e2f8dec443 = L.popup({
+  "maxWidth": 300,
+});
+
+        
+            
+                var html_0005713a0822e271d88191929f423e24 = $(`<div id="html_0005713a0822e271d88191929f423e24" style="width: 100.0%; height: 100.0%;"><div style='font-family: Arial; font-size: 12px; width: 250px;'><b>Detalhes da Feature OSM</b><br><hr><b>Tipo:</b> LineString<br><b>amenity:</b> nan<br><b>highway:</b> steps<br><b>name:</b> nan<br></div></div>`)[0];
+                popup_f26ccd4eca36bf3d4dd6b0e2f8dec443.setContent(html_0005713a0822e271d88191929f423e24);
+            
+        
+
+        poly_line_424232400d9ff2e95569d8dbfbfb7985.bindPopup(popup_f26ccd4eca36bf3d4dd6b0e2f8dec443)
+        ;
+
+        
+    
+    
+            var poly_line_630d12d983d9ca5086ae385731a5bdc6 = L.polyline(
+                [[-23.696818000000004, -46.433005], [-23.697084499999995, -46.4324042]],
+                {"bubblingMouseEvents": true, "color": "#1f77b4", "dashArray": null, "dashOffset": null, "fill": false, "fillColor": "#1f77b4", "fillOpacity": 0.2, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "noClip": false, "opacity": 0.8, "smoothFactor": 1.0, "stroke": true, "weight": 2}
+            ).addTo(feature_group_a01eda656869a55896a52ba2db5adb85);
+        
+    
+        var popup_c24f81afb4f765328486a433307df447 = L.popup({
+  "maxWidth": 300,
+});
+
+        
+            
+                var html_fffbad267a2214eeff179ef61bfead28 = $(`<div id="html_fffbad267a2214eeff179ef61bfead28" style="width: 100.0%; height: 100.0%;"><div style='font-family: Arial; font-size: 12px; width: 250px;'><b>Detalhes da Feature OSM</b><br><hr><b>Tipo:</b> LineString<br><b>amenity:</b> nan<br><b>highway:</b> steps<br><b>name:</b> nan<br></div></div>`)[0];
+                popup_c24f81afb4f765328486a433307df447.setContent(html_fffbad267a2214eeff179ef61bfead28);
+            
+        
+
+        poly_line_630d12d983d9ca5086ae385731a5bdc6.bindPopup(popup_c24f81afb4f765328486a433307df447)
+        ;
+
+        
+    
+    
+            var poly_line_05563c755c88e72ebda670f3c40828f2 = L.polyline(
+                [[-23.687842900000003, -46.3818484], [-23.687214999999988, -46.3818749], [-23.687119099999993, -46.3819044], [-23.6869762, -46.381822500000006]],
+                {"bubblingMouseEvents": true, "color": "#1f77b4", "dashArray": null, "dashOffset": null, "fill": false, "fillColor": "#1f77b4", "fillOpacity": 0.2, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "noClip": false, "opacity": 0.8, "smoothFactor": 1.0, "stroke": true, "weight": 2}
+            ).addTo(feature_group_a01eda656869a55896a52ba2db5adb85);
+        
+    
+        var popup_8a17f30ea56320f7e9911c771e516923 = L.popup({
+  "maxWidth": 300,
+});
+
+        
+            
+                var html_af3a236f68ff5772925e30756701fc86 = $(`<div id="html_af3a236f68ff5772925e30756701fc86" style="width: 100.0%; height: 100.0%;"><div style='font-family: Arial; font-size: 12px; width: 250px;'><b>Detalhes da Feature OSM</b><br><hr><b>Tipo:</b> LineString<br><b>amenity:</b> nan<br><b>highway:</b> steps<br><b>name:</b> nan<br></div></div>`)[0];
+                popup_8a17f30ea56320f7e9911c771e516923.setContent(html_af3a236f68ff5772925e30756701fc86);
+            
+        
+
+        poly_line_05563c755c88e72ebda670f3c40828f2.bindPopup(popup_8a17f30ea56320f7e9911c771e516923)
+        ;
+
+        
+    
+    
+            var poly_line_5301cb2d491c3d17e2f5704185ad3a26 = L.polyline(
+                [[-23.685551, -46.3966464], [-23.685226099999994, -46.3974054]],
+                {"bubblingMouseEvents": true, "color": "#1f77b4", "dashArray": null, "dashOffset": null, "fill": false, "fillColor": "#1f77b4", "fillOpacity": 0.2, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "noClip": false, "opacity": 0.8, "smoothFactor": 1.0, "stroke": true, "weight": 2}
+            ).addTo(feature_group_a01eda656869a55896a52ba2db5adb85);
+        
+    
+        var popup_5ebe09859a70b121289965d9dd9e4456 = L.popup({
+  "maxWidth": 300,
+});
+
+        
+            
+                var html_ead02c05de0e41439817daa209ace5fc = $(`<div id="html_ead02c05de0e41439817daa209ace5fc" style="width: 100.0%; height: 100.0%;"><div style='font-family: Arial; font-size: 12px; width: 250px;'><b>Detalhes da Feature OSM</b><br><hr><b>Tipo:</b> LineString<br><b>amenity:</b> nan<br><b>highway:</b> steps<br><b>name:</b> nan<br></div></div>`)[0];
+                popup_5ebe09859a70b121289965d9dd9e4456.setContent(html_ead02c05de0e41439817daa209ace5fc);
+            
+        
+
+        poly_line_5301cb2d491c3d17e2f5704185ad3a26.bindPopup(popup_5ebe09859a70b121289965d9dd9e4456)
+        ;
+
+        
+    
+    
+            var poly_line_99a881efb6d4f9e22a2f3f3e26b2d213 = L.polyline(
+                [[-23.688659299999994, -46.3985189], [-23.68873669999999, -46.39769780000001]],
+                {"bubblingMouseEvents": true, "color": "#1f77b4", "dashArray": null, "dashOffset": null, "fill": false, "fillColor": "#1f77b4", "fillOpacity": 0.2, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "noClip": false, "opacity": 0.8, "smoothFactor": 1.0, "stroke": true, "weight": 2}
+            ).addTo(feature_group_a01eda656869a55896a52ba2db5adb85);
+        
+    
+        var popup_dcc4c769f54adb9ccefe10e6047ed060 = L.popup({
+  "maxWidth": 300,
+});
+
+        
+            
+                var html_4a55e4373c3507d37b16c5f3bfdba729 = $(`<div id="html_4a55e4373c3507d37b16c5f3bfdba729" style="width: 100.0%; height: 100.0%;"><div style='font-family: Arial; font-size: 12px; width: 250px;'><b>Detalhes da Feature OSM</b><br><hr><b>Tipo:</b> LineString<br><b>amenity:</b> nan<br><b>highway:</b> steps<br><b>name:</b> nan<br></div></div>`)[0];
+                popup_dcc4c769f54adb9ccefe10e6047ed060.setContent(html_4a55e4373c3507d37b16c5f3bfdba729);
+            
+        
+
+        poly_line_99a881efb6d4f9e22a2f3f3e26b2d213.bindPopup(popup_dcc4c769f54adb9ccefe10e6047ed060)
+        ;
+
+        
+    
+    
+            var poly_line_d07f4dc09948c5f6b62d8923b9383d77 = L.polyline(
+                [[-23.702266399999996, -46.4002906], [-23.70175830000001, -46.3999441]],
+                {"bubblingMouseEvents": true, "color": "#1f77b4", "dashArray": null, "dashOffset": null, "fill": false, "fillColor": "#1f77b4", "fillOpacity": 0.2, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "noClip": false, "opacity": 0.8, "smoothFactor": 1.0, "stroke": true, "weight": 2}
+            ).addTo(feature_group_a01eda656869a55896a52ba2db5adb85);
+        
+    
+        var popup_5573897c932ac46f1920e14715a7422c = L.popup({
+  "maxWidth": 300,
+});
+
+        
+            
+                var html_3df1e169a936b5828548b2bb26eec755 = $(`<div id="html_3df1e169a936b5828548b2bb26eec755" style="width: 100.0%; height: 100.0%;"><div style='font-family: Arial; font-size: 12px; width: 250px;'><b>Detalhes da Feature OSM</b><br><hr><b>Tipo:</b> LineString<br><b>amenity:</b> nan<br><b>highway:</b> steps<br><b>name:</b> nan<br></div></div>`)[0];
+                popup_5573897c932ac46f1920e14715a7422c.setContent(html_3df1e169a936b5828548b2bb26eec755);
+            
+        
+
+        poly_line_d07f4dc09948c5f6b62d8923b9383d77.bindPopup(popup_5573897c932ac46f1920e14715a7422c)
+        ;
+
+        
+    
+    
+            var poly_line_943462bd3c249f200480ccd910ddee08 = L.polyline(
+                [[-23.719145299999997, -46.4153266], [-23.71895449999999, -46.4154993]],
+                {"bubblingMouseEvents": true, "color": "#1f77b4", "dashArray": null, "dashOffset": null, "fill": false, "fillColor": "#1f77b4", "fillOpacity": 0.2, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "noClip": false, "opacity": 0.8, "smoothFactor": 1.0, "stroke": true, "weight": 2}
+            ).addTo(feature_group_a01eda656869a55896a52ba2db5adb85);
+        
+    
+        var popup_ca1e6e0200721a95a6bf2338646b1e7d = L.popup({
+  "maxWidth": 300,
+});
+
+        
+            
+                var html_5923944026af7ca92569be5d28a141d3 = $(`<div id="html_5923944026af7ca92569be5d28a141d3" style="width: 100.0%; height: 100.0%;"><div style='font-family: Arial; font-size: 12px; width: 250px;'><b>Detalhes da Feature OSM</b><br><hr><b>Tipo:</b> LineString<br><b>amenity:</b> nan<br><b>highway:</b> steps<br><b>name:</b> nan<br></div></div>`)[0];
+                popup_ca1e6e0200721a95a6bf2338646b1e7d.setContent(html_5923944026af7ca92569be5d28a141d3);
+            
+        
+
+        poly_line_943462bd3c249f200480ccd910ddee08.bindPopup(popup_ca1e6e0200721a95a6bf2338646b1e7d)
+        ;
+
+        
+    
+    
+            var poly_line_b43069ceb9e1ab78ee23d0084dccaa01 = L.polyline(
+                [[-23.7343677, -46.41893], [-23.734119500000002, -46.4183533]],
+                {"bubblingMouseEvents": true, "color": "#1f77b4", "dashArray": null, "dashOffset": null, "fill": false, "fillColor": "#1f77b4", "fillOpacity": 0.2, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "noClip": false, "opacity": 0.8, "smoothFactor": 1.0, "stroke": true, "weight": 2}
+            ).addTo(feature_group_a01eda656869a55896a52ba2db5adb85);
+        
+    
+        var popup_bf7abda9c42ceb836d6f164bf163670f = L.popup({
+  "maxWidth": 300,
+});
+
+        
+            
+                var html_51987c0e19501d9230d05adcdbf8b3e2 = $(`<div id="html_51987c0e19501d9230d05adcdbf8b3e2" style="width: 100.0%; height: 100.0%;"><div style='font-family: Arial; font-size: 12px; width: 250px;'><b>Detalhes da Feature OSM</b><br><hr><b>Tipo:</b> LineString<br><b>amenity:</b> nan<br><b>highway:</b> steps<br><b>name:</b> nan<br></div></div>`)[0];
+                popup_bf7abda9c42ceb836d6f164bf163670f.setContent(html_51987c0e19501d9230d05adcdbf8b3e2);
+            
+        
+
+        poly_line_b43069ceb9e1ab78ee23d0084dccaa01.bindPopup(popup_bf7abda9c42ceb836d6f164bf163670f)
+        ;
+
+        
+    
+    
+            var poly_line_2feeef0247e7ea81543e1a2a5113607e = L.polyline(
+                [[-23.733627399999996, -46.4158133], [-23.7340033, -46.415681]],
+                {"bubblingMouseEvents": true, "color": "#1f77b4", "dashArray": null, "dashOffset": null, "fill": false, "fillColor": "#1f77b4", "fillOpacity": 0.2, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "noClip": false, "opacity": 0.8, "smoothFactor": 1.0, "stroke": true, "weight": 2}
+            ).addTo(feature_group_a01eda656869a55896a52ba2db5adb85);
+        
+    
+        var popup_ae11625bf0bb5dd3c78dce913d093ce2 = L.popup({
+  "maxWidth": 300,
+});
+
+        
+            
+                var html_a07c6582fca923ff5e38f1d830ab1cd2 = $(`<div id="html_a07c6582fca923ff5e38f1d830ab1cd2" style="width: 100.0%; height: 100.0%;"><div style='font-family: Arial; font-size: 12px; width: 250px;'><b>Detalhes da Feature OSM</b><br><hr><b>Tipo:</b> LineString<br><b>amenity:</b> nan<br><b>highway:</b> steps<br><b>name:</b> nan<br></div></div>`)[0];
+                popup_ae11625bf0bb5dd3c78dce913d093ce2.setContent(html_a07c6582fca923ff5e38f1d830ab1cd2);
+            
+        
+
+        poly_line_2feeef0247e7ea81543e1a2a5113607e.bindPopup(popup_ae11625bf0bb5dd3c78dce913d093ce2)
+        ;
+
+        
+    
+    
+            var poly_line_57d033a68d568dcade8c9bd0cdd216f2 = L.polyline(
+                [[-23.7088792, -46.420516], [-23.7087502, -46.4206566], [-23.70874750000001, -46.4206642], [-23.708750799999994, -46.4206736], [-23.708865, -46.4207762], [-23.708895099999992, -46.4208211], [-23.708915399999995, -46.4208573], [-23.708926999999992, -46.4208929], [-23.708933799999993, -46.4209223], [-23.708938099999994, -46.4209573], [-23.7089387, -46.4210001], [-23.708908600000004, -46.4211805], [-23.708903699999993, -46.4212583], [-23.7089148, -46.4213093], [-23.7092635, -46.421729], [-23.709274500000003, -46.4217787], [-23.709269599999995, -46.421831000000005], [-23.709247499999993, -46.4218993], [-23.709191, -46.4219986], [-23.709140700000003, -46.42204420000001], [-23.709047399999996, -46.4221179], [-23.708954699999996, -46.4222011]],
+                {"bubblingMouseEvents": true, "color": "#1f77b4", "dashArray": null, "dashOffset": null, "fill": false, "fillColor": "#1f77b4", "fillOpacity": 0.2, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "noClip": false, "opacity": 0.8, "smoothFactor": 1.0, "stroke": true, "weight": 2}
+            ).addTo(feature_group_a01eda656869a55896a52ba2db5adb85);
+        
+    
+        var popup_af4973f384e208d2c32f5580cdc3fe10 = L.popup({
+  "maxWidth": 300,
+});
+
+        
+            
+                var html_92e1a4bac3071761979c65dfab400095 = $(`<div id="html_92e1a4bac3071761979c65dfab400095" style="width: 100.0%; height: 100.0%;"><div style='font-family: Arial; font-size: 12px; width: 250px;'><b>Detalhes da Feature OSM</b><br><hr><b>Tipo:</b> LineString<br><b>amenity:</b> nan<br><b>highway:</b> steps<br><b>name:</b> Via Crucis<br></div></div>`)[0];
+                popup_af4973f384e208d2c32f5580cdc3fe10.setContent(html_92e1a4bac3071761979c65dfab400095);
+            
+        
+
+        poly_line_57d033a68d568dcade8c9bd0cdd216f2.bindPopup(popup_af4973f384e208d2c32f5580cdc3fe10)
+        ;
+
+        
+    
+    
+            var poly_line_df79fea6b892f09c0e9f1c05bdea9057 = L.polyline(
+                [[-23.711165499999996, -46.3757117], [-23.711206799999996, -46.3757852]],
+                {"bubblingMouseEvents": true, "color": "#1f77b4", "dashArray": null, "dashOffset": null, "fill": false, "fillColor": "#1f77b4", "fillOpacity": 0.2, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "noClip": false, "opacity": 0.8, "smoothFactor": 1.0, "stroke": true, "weight": 2}
+            ).addTo(feature_group_a01eda656869a55896a52ba2db5adb85);
+        
+    
+        var popup_93af13feb6a220c57f872b5e2fd73b9b = L.popup({
+  "maxWidth": 300,
+});
+
+        
+            
+                var html_bf7b7ffa61567bfc7aec885056ee6cfc = $(`<div id="html_bf7b7ffa61567bfc7aec885056ee6cfc" style="width: 100.0%; height: 100.0%;"><div style='font-family: Arial; font-size: 12px; width: 250px;'><b>Detalhes da Feature OSM</b><br><hr><b>Tipo:</b> LineString<br><b>amenity:</b> nan<br><b>highway:</b> steps<br><b>name:</b> nan<br></div></div>`)[0];
+                popup_93af13feb6a220c57f872b5e2fd73b9b.setContent(html_bf7b7ffa61567bfc7aec885056ee6cfc);
+            
+        
+
+        poly_line_df79fea6b892f09c0e9f1c05bdea9057.bindPopup(popup_93af13feb6a220c57f872b5e2fd73b9b)
+        ;
+
+        
+    
+    
+            var poly_line_593753ed6e772e0e250c9406fb7950ef = L.polyline(
+                [[-23.694232100000008, -46.4313702], [-23.694013799999997, -46.4312287]],
+                {"bubblingMouseEvents": true, "color": "#1f77b4", "dashArray": null, "dashOffset": null, "fill": false, "fillColor": "#1f77b4", "fillOpacity": 0.2, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "noClip": false, "opacity": 0.8, "smoothFactor": 1.0, "stroke": true, "weight": 2}
+            ).addTo(feature_group_a01eda656869a55896a52ba2db5adb85);
+        
+    
+        var popup_bb0ceec62eae339caa5041d24ee76d84 = L.popup({
+  "maxWidth": 300,
+});
+
+        
+            
+                var html_7718520766045c8b9430837fb8819747 = $(`<div id="html_7718520766045c8b9430837fb8819747" style="width: 100.0%; height: 100.0%;"><div style='font-family: Arial; font-size: 12px; width: 250px;'><b>Detalhes da Feature OSM</b><br><hr><b>Tipo:</b> LineString<br><b>amenity:</b> nan<br><b>highway:</b> steps<br><b>name:</b> Escadão - Comendador Abdalla Chiedde "R"<br></div></div>`)[0];
+                popup_bb0ceec62eae339caa5041d24ee76d84.setContent(html_7718520766045c8b9430837fb8819747);
+            
+        
+
+        poly_line_593753ed6e772e0e250c9406fb7950ef.bindPopup(popup_bb0ceec62eae339caa5041d24ee76d84)
+        ;
+
+        
+    
+    
+            var poly_line_a2df639710162957a5e8eba61500b30a = L.polyline(
+                [[-23.677794399999996, -46.392557], [-23.677759499999997, -46.3924652], [-23.677780999999996, -46.39245540000001], [-23.677747199999995, -46.3923664], [-23.6777256, -46.3923762], [-23.677688400000005, -46.3922784], [-23.67771, -46.3922686], [-23.677669800000004, -46.3921628], [-23.6776482, -46.3921726], [-23.677611099999993, -46.3920748], [-23.677632599999995, -46.39206500000001], [-23.6775924, -46.3919592], [-23.6775708, -46.391969], [-23.677533699999998, -46.3918712], [-23.677555200000004, -46.3918614], [-23.677514999999996, -46.3917556], [-23.6774934, -46.391765400000004], [-23.6774563, -46.3916676], [-23.6774778, -46.3916578], [-23.677437599999994, -46.391552], [-23.677416, -46.3915618], [-23.677378899999994, -46.391464], [-23.677400399999993, -46.3914542], [-23.677360199999995, -46.3913484], [-23.677349200000002, -46.3913534], [-23.6773241, -46.3912874]],
+                {"bubblingMouseEvents": true, "color": "#1f77b4", "dashArray": null, "dashOffset": null, "fill": false, "fillColor": "#1f77b4", "fillOpacity": 0.2, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "noClip": false, "opacity": 0.8, "smoothFactor": 1.0, "stroke": true, "weight": 2}
+            ).addTo(feature_group_a01eda656869a55896a52ba2db5adb85);
+        
+    
+        var popup_dcecabfb808e21f705ec8adf2fb1a5b0 = L.popup({
+  "maxWidth": 300,
+});
+
+        
+            
+                var html_49120c493856fb067568ff1e3ee19245 = $(`<div id="html_49120c493856fb067568ff1e3ee19245" style="width: 100.0%; height: 100.0%;"><div style='font-family: Arial; font-size: 12px; width: 250px;'><b>Detalhes da Feature OSM</b><br><hr><b>Tipo:</b> LineString<br><b>amenity:</b> nan<br><b>highway:</b> steps<br><b>name:</b> nan<br></div></div>`)[0];
+                popup_dcecabfb808e21f705ec8adf2fb1a5b0.setContent(html_49120c493856fb067568ff1e3ee19245);
+            
+        
+
+        poly_line_a2df639710162957a5e8eba61500b30a.bindPopup(popup_dcecabfb808e21f705ec8adf2fb1a5b0)
+        ;
+
+        
+    
+    
+            var poly_line_09a8ca73f16764837820c4a60bd3f059 = L.polyline(
+                [[-23.7084658, -46.4105874], [-23.708383199999997, -46.4107038], [-23.708263399999993, -46.410789], [-23.7080797, -46.4108482], [-23.707967799999995, -46.4108668], [-23.7079095, -46.4108701], [-23.70782850000001, -46.4108594], [-23.70774009999999, -46.4108192], [-23.707681200000003, -46.4107655], [-23.7076345, -46.4106985], [-23.707614799999998, -46.4106261], [-23.7076334, -46.4103987]],
+                {"bubblingMouseEvents": true, "color": "#1f77b4", "dashArray": null, "dashOffset": null, "fill": false, "fillColor": "#1f77b4", "fillOpacity": 0.2, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "noClip": false, "opacity": 0.8, "smoothFactor": 1.0, "stroke": true, "weight": 2}
+            ).addTo(feature_group_a01eda656869a55896a52ba2db5adb85);
+        
+    
+        var popup_fb61a79f58009d06b02c2c563379c86d = L.popup({
+  "maxWidth": 300,
+});
+
+        
+            
+                var html_bebc3413ddbcabef3729d3fe6fcd4f82 = $(`<div id="html_bebc3413ddbcabef3729d3fe6fcd4f82" style="width: 100.0%; height: 100.0%;"><div style='font-family: Arial; font-size: 12px; width: 250px;'><b>Detalhes da Feature OSM</b><br><hr><b>Tipo:</b> LineString<br><b>amenity:</b> nan<br><b>highway:</b> steps<br><b>name:</b> Escada do Mirante São José<br></div></div>`)[0];
+                popup_fb61a79f58009d06b02c2c563379c86d.setContent(html_bebc3413ddbcabef3729d3fe6fcd4f82);
+            
+        
+
+        poly_line_09a8ca73f16764837820c4a60bd3f059.bindPopup(popup_fb61a79f58009d06b02c2c563379c86d)
+        ;
+
+        
+    
+    
+            var poly_line_506eff9cc4c78c4b9fd58d2498822dc7 = L.polyline(
+                [[-23.713366799999992, -46.4149256], [-23.7133978, -46.4148934], [-23.713428799999996, -46.4148613]],
+                {"bubblingMouseEvents": true, "color": "#1f77b4", "dashArray": null, "dashOffset": null, "fill": false, "fillColor": "#1f77b4", "fillOpacity": 0.2, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "noClip": false, "opacity": 0.8, "smoothFactor": 1.0, "stroke": true, "weight": 2}
+            ).addTo(feature_group_a01eda656869a55896a52ba2db5adb85);
+        
+    
+        var popup_4dedb9e32b79f33b68809c304fe9ef3a = L.popup({
+  "maxWidth": 300,
+});
+
+        
+            
+                var html_a56bb2c4974691041b2bdee9c7d4463e = $(`<div id="html_a56bb2c4974691041b2bdee9c7d4463e" style="width: 100.0%; height: 100.0%;"><div style='font-family: Arial; font-size: 12px; width: 250px;'><b>Detalhes da Feature OSM</b><br><hr><b>Tipo:</b> LineString<br><b>amenity:</b> nan<br><b>highway:</b> steps<br><b>name:</b> Passarela Inglesa<br></div></div>`)[0];
+                popup_4dedb9e32b79f33b68809c304fe9ef3a.setContent(html_a56bb2c4974691041b2bdee9c7d4463e);
+            
+        
+
+        poly_line_506eff9cc4c78c4b9fd58d2498822dc7.bindPopup(popup_4dedb9e32b79f33b68809c304fe9ef3a)
+        ;
+
+        
+    
+    
+            var poly_line_efa96b122a7a28d24fb91e97f460179f = L.polyline(
+                [[-23.7134938, -46.415084], [-23.7135272, -46.41505010000001], [-23.713560699999995, -46.4150162]],
+                {"bubblingMouseEvents": true, "color": "#1f77b4", "dashArray": null, "dashOffset": null, "fill": false, "fillColor": "#1f77b4", "fillOpacity": 0.2, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "noClip": false, "opacity": 0.8, "smoothFactor": 1.0, "stroke": true, "weight": 2}
+            ).addTo(feature_group_a01eda656869a55896a52ba2db5adb85);
+        
+    
+        var popup_0ce372b47cc6c0e0e0a6aa5a7e3fc41a = L.popup({
+  "maxWidth": 300,
+});
+
+        
+            
+                var html_5263d2f106618237ce40c42f6cea97a2 = $(`<div id="html_5263d2f106618237ce40c42f6cea97a2" style="width: 100.0%; height: 100.0%;"><div style='font-family: Arial; font-size: 12px; width: 250px;'><b>Detalhes da Feature OSM</b><br><hr><b>Tipo:</b> LineString<br><b>amenity:</b> nan<br><b>highway:</b> steps<br><b>name:</b> Passarela Inglesa<br></div></div>`)[0];
+                popup_0ce372b47cc6c0e0e0a6aa5a7e3fc41a.setContent(html_5263d2f106618237ce40c42f6cea97a2);
+            
+        
+
+        poly_line_efa96b122a7a28d24fb91e97f460179f.bindPopup(popup_0ce372b47cc6c0e0e0a6aa5a7e3fc41a)
+        ;
+
+        
+    
+    
+            var poly_line_9d7f66b8edbe02b77969b1315ec915a3 = L.polyline(
+                [[-23.720595399999997, -46.4159904], [-23.72037839999999, -46.4157173]],
+                {"bubblingMouseEvents": true, "color": "#1f77b4", "dashArray": null, "dashOffset": null, "fill": false, "fillColor": "#1f77b4", "fillOpacity": 0.2, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "noClip": false, "opacity": 0.8, "smoothFactor": 1.0, "stroke": true, "weight": 2}
+            ).addTo(feature_group_a01eda656869a55896a52ba2db5adb85);
+        
+    
+        var popup_a7bce4e0154341ee65781d68ebc737e4 = L.popup({
+  "maxWidth": 300,
+});
+
+        
+            
+                var html_a0938c4e1355604978eb553918b3a2fb = $(`<div id="html_a0938c4e1355604978eb553918b3a2fb" style="width: 100.0%; height: 100.0%;"><div style='font-family: Arial; font-size: 12px; width: 250px;'><b>Detalhes da Feature OSM</b><br><hr><b>Tipo:</b> LineString<br><b>amenity:</b> nan<br><b>highway:</b> steps<br><b>name:</b> nan<br></div></div>`)[0];
+                popup_a7bce4e0154341ee65781d68ebc737e4.setContent(html_a0938c4e1355604978eb553918b3a2fb);
+            
+        
+
+        poly_line_9d7f66b8edbe02b77969b1315ec915a3.bindPopup(popup_a7bce4e0154341ee65781d68ebc737e4)
+        ;
+
+        
+    
+    
+            var poly_line_7fe704a16bdb11003cf5883931206518 = L.polyline(
+                [[-23.713491899999998, -46.4147969], [-23.713454900000002, -46.4148342], [-23.713428799999996, -46.4148613]],
+                {"bubblingMouseEvents": true, "color": "#1f77b4", "dashArray": null, "dashOffset": null, "fill": false, "fillColor": "#1f77b4", "fillOpacity": 0.2, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "noClip": false, "opacity": 0.8, "smoothFactor": 1.0, "stroke": true, "weight": 2}
+            ).addTo(feature_group_a01eda656869a55896a52ba2db5adb85);
+        
+    
+        var popup_5a8800a98698a448eb7ccf2527cd8bff = L.popup({
+  "maxWidth": 300,
+});
+
+        
+            
+                var html_ddfb996e94f068fc2bd6bac4bdb151d1 = $(`<div id="html_ddfb996e94f068fc2bd6bac4bdb151d1" style="width: 100.0%; height: 100.0%;"><div style='font-family: Arial; font-size: 12px; width: 250px;'><b>Detalhes da Feature OSM</b><br><hr><b>Tipo:</b> LineString<br><b>amenity:</b> nan<br><b>highway:</b> steps<br><b>name:</b> Passarela Inglesa<br></div></div>`)[0];
+                popup_5a8800a98698a448eb7ccf2527cd8bff.setContent(html_ddfb996e94f068fc2bd6bac4bdb151d1);
+            
+        
+
+        poly_line_7fe704a16bdb11003cf5883931206518.bindPopup(popup_5a8800a98698a448eb7ccf2527cd8bff)
+        ;
+
+        
+    
+    
+            var poly_line_dc96fa6a90232e47253aaabcb15e9918 = L.polyline(
+                [[-23.71362, -46.4149561], [-23.713590299999996, -46.4149862], [-23.713560699999995, -46.4150162]],
+                {"bubblingMouseEvents": true, "color": "#1f77b4", "dashArray": null, "dashOffset": null, "fill": false, "fillColor": "#1f77b4", "fillOpacity": 0.2, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "noClip": false, "opacity": 0.8, "smoothFactor": 1.0, "stroke": true, "weight": 2}
+            ).addTo(feature_group_a01eda656869a55896a52ba2db5adb85);
+        
+    
+        var popup_f7d6a1886848586743f1fea9a6079ea0 = L.popup({
+  "maxWidth": 300,
+});
+
+        
+            
+                var html_38709f578a9610225399bef0d26f451d = $(`<div id="html_38709f578a9610225399bef0d26f451d" style="width: 100.0%; height: 100.0%;"><div style='font-family: Arial; font-size: 12px; width: 250px;'><b>Detalhes da Feature OSM</b><br><hr><b>Tipo:</b> LineString<br><b>amenity:</b> nan<br><b>highway:</b> steps<br><b>name:</b> Passarela Inglesa<br></div></div>`)[0];
+                popup_f7d6a1886848586743f1fea9a6079ea0.setContent(html_38709f578a9610225399bef0d26f451d);
+            
+        
+
+        poly_line_dc96fa6a90232e47253aaabcb15e9918.bindPopup(popup_f7d6a1886848586743f1fea9a6079ea0)
+        ;
+
+        
+    
+    
+            var poly_line_2365f63650d9dd3350cc404c2f4d56a8 = L.polyline(
+                [[-23.713276100000005, -46.4160394], [-23.7134814, -46.4162975]],
+                {"bubblingMouseEvents": true, "color": "#1f77b4", "dashArray": null, "dashOffset": null, "fill": false, "fillColor": "#1f77b4", "fillOpacity": 0.2, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "noClip": false, "opacity": 0.8, "smoothFactor": 1.0, "stroke": true, "weight": 2}
+            ).addTo(feature_group_a01eda656869a55896a52ba2db5adb85);
+        
+    
+        var popup_706b4d0909bb7919a1dfb2aec5330aab = L.popup({
+  "maxWidth": 300,
+});
+
+        
+            
+                var html_0fe39c45a8233c7151134659281852b7 = $(`<div id="html_0fe39c45a8233c7151134659281852b7" style="width: 100.0%; height: 100.0%;"><div style='font-family: Arial; font-size: 12px; width: 250px;'><b>Detalhes da Feature OSM</b><br><hr><b>Tipo:</b> LineString<br><b>amenity:</b> nan<br><b>highway:</b> steps<br><b>name:</b> nan<br></div></div>`)[0];
+                popup_706b4d0909bb7919a1dfb2aec5330aab.setContent(html_0fe39c45a8233c7151134659281852b7);
+            
+        
+
+        poly_line_2365f63650d9dd3350cc404c2f4d56a8.bindPopup(popup_706b4d0909bb7919a1dfb2aec5330aab)
+        ;
+
+        
+    
+    
+            var poly_line_f24591039a47a7932d79be1b26114159 = L.polyline(
+                [[-23.693196500000003, -46.442087], [-23.693190400000002, -46.4419462], [-23.6929478, -46.4417261]],
+                {"bubblingMouseEvents": true, "color": "#1f77b4", "dashArray": null, "dashOffset": null, "fill": false, "fillColor": "#1f77b4", "fillOpacity": 0.2, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "noClip": false, "opacity": 0.8, "smoothFactor": 1.0, "stroke": true, "weight": 2}
+            ).addTo(feature_group_a01eda656869a55896a52ba2db5adb85);
+        
+    
+        var popup_4603040956ac6f1a32bb53302193c662 = L.popup({
+  "maxWidth": 300,
+});
+
+        
+            
+                var html_a3915a698f7bda14496e59a65f4ddb56 = $(`<div id="html_a3915a698f7bda14496e59a65f4ddb56" style="width: 100.0%; height: 100.0%;"><div style='font-family: Arial; font-size: 12px; width: 250px;'><b>Detalhes da Feature OSM</b><br><hr><b>Tipo:</b> LineString<br><b>amenity:</b> nan<br><b>highway:</b> steps<br><b>name:</b> nan<br></div></div>`)[0];
+                popup_4603040956ac6f1a32bb53302193c662.setContent(html_a3915a698f7bda14496e59a65f4ddb56);
+            
+        
+
+        poly_line_f24591039a47a7932d79be1b26114159.bindPopup(popup_4603040956ac6f1a32bb53302193c662)
+        ;
+
+        
+    
+    
+            var poly_line_c4970ddaaf8d2a4ec5b93cf1facf7126 = L.polyline(
+                [[-23.696043600000003, -46.4381353], [-23.695635399999997, -46.4377029]],
+                {"bubblingMouseEvents": true, "color": "#1f77b4", "dashArray": null, "dashOffset": null, "fill": false, "fillColor": "#1f77b4", "fillOpacity": 0.2, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "noClip": false, "opacity": 0.8, "smoothFactor": 1.0, "stroke": true, "weight": 2}
+            ).addTo(feature_group_a01eda656869a55896a52ba2db5adb85);
+        
+    
+        var popup_e41df24138993469ca6a51d15ed1ca6d = L.popup({
+  "maxWidth": 300,
+});
+
+        
+            
+                var html_cf036b3d76575596d1f6076f77431102 = $(`<div id="html_cf036b3d76575596d1f6076f77431102" style="width: 100.0%; height: 100.0%;"><div style='font-family: Arial; font-size: 12px; width: 250px;'><b>Detalhes da Feature OSM</b><br><hr><b>Tipo:</b> LineString<br><b>amenity:</b> nan<br><b>highway:</b> steps<br><b>name:</b> nan<br></div></div>`)[0];
+                popup_e41df24138993469ca6a51d15ed1ca6d.setContent(html_cf036b3d76575596d1f6076f77431102);
+            
+        
+
+        poly_line_c4970ddaaf8d2a4ec5b93cf1facf7126.bindPopup(popup_e41df24138993469ca6a51d15ed1ca6d)
+        ;
+
+        
+    
+    
+            var poly_line_039375d06fb11433858efe2c2a8f3f00 = L.polyline(
+                [[-23.6979925, -46.4333049], [-23.698256499999992, -46.4336788]],
+                {"bubblingMouseEvents": true, "color": "#1f77b4", "dashArray": null, "dashOffset": null, "fill": false, "fillColor": "#1f77b4", "fillOpacity": 0.2, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "noClip": false, "opacity": 0.8, "smoothFactor": 1.0, "stroke": true, "weight": 2}
+            ).addTo(feature_group_a01eda656869a55896a52ba2db5adb85);
+        
+    
+        var popup_cc250187207bcc08936bd91169f73559 = L.popup({
+  "maxWidth": 300,
+});
+
+        
+            
+                var html_d6d0077f2384e23a3de23a435ec9727d = $(`<div id="html_d6d0077f2384e23a3de23a435ec9727d" style="width: 100.0%; height: 100.0%;"><div style='font-family: Arial; font-size: 12px; width: 250px;'><b>Detalhes da Feature OSM</b><br><hr><b>Tipo:</b> LineString<br><b>amenity:</b> nan<br><b>highway:</b> steps<br><b>name:</b> nan<br></div></div>`)[0];
+                popup_cc250187207bcc08936bd91169f73559.setContent(html_d6d0077f2384e23a3de23a435ec9727d);
+            
+        
+
+        poly_line_039375d06fb11433858efe2c2a8f3f00.bindPopup(popup_cc250187207bcc08936bd91169f73559)
+        ;
+
+        
+    
+    
+            feature_group_a01eda656869a55896a52ba2db5adb85.addTo(map_fcd17ce1c23ca1aceb512d21b7dd7c42);
+        
+    
+            var layer_control_30a30cf3d2d7941b9dcc61fc3a3ea099_layers = {
+                base_layers : {
+                    "cartodbpositron" : tile_layer_b39bba937d7374a7eeb8ddf8820ee4d2,
+                },
+                overlays :  {
+                    "highway" : feature_group_a01eda656869a55896a52ba2db5adb85,
+                },
+            };
+            let layer_control_30a30cf3d2d7941b9dcc61fc3a3ea099 = L.control.layers(
+                layer_control_30a30cf3d2d7941b9dcc61fc3a3ea099_layers.base_layers,
+                layer_control_30a30cf3d2d7941b9dcc61fc3a3ea099_layers.overlays,
+                {
+  "position": "topright",
+  "collapsed": true,
+  "autoZIndex": true,
+}
+            ).addTo(map_fcd17ce1c23ca1aceb512d21b7dd7c42);
+
+        
+</script>
+</html>

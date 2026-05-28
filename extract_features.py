@@ -62,6 +62,67 @@ PUBLIC_TRANSPORT_INFRASTRUCTURE_COLORS = {
 # Categorias que devem ter linhas tracejadas
 PUBLIC_TRANSPORT_INFRASTRUCTURE_DASH_LINES = {}
 
+# ==========================================
+# MAPEAMENTO DE TEMAS PARA GRUPOS
+# ==========================================
+# Mapeia cada tema/chave OSM para seu grupo correspondente
+# Alguns temas são mesclados em grupos temáticos: equipments, commercial, infrastructure
+THEME_GROUP_MAPPING = {
+    'amenity_school': 'equipments',
+    'amenity_community_centre': 'equipments',
+    'amenity_place_of_worship': 'equipments',
+    'amenity_clinic': 'equipments',
+    'amenity_hospital': 'equipments',
+    'amenity_recycling': 'equipments',
+    'leisure_park': 'equipments',
+    'leisure_pitch': 'equipments',
+    
+    'amenity_marketplace': 'commercial',
+    'amenity_kitchen': 'commercial',
+    'amenity_restaurant': 'commercial',
+    'amenity_cafe': 'commercial',
+    'amenity_fast_food': 'commercial',
+    'amenity_bar': 'commercial',
+    'leisure_garden': 'commercial',
+    'shop': 'commercial',
+    'street_vendor': 'commercial',
+    'landuse': 'commercial',
+    
+    'amenity_bicycle_parking': 'infrastructure',
+    'highway': 'infrastructure',
+    
+    # Special themed folders (no mapping, use as-is)
+    'bike_tags': 'bike_tags',
+    'footway_tags': 'footway_tags',
+    'public_transport_tags': 'public_transport_tags',
+    'water': 'water',
+}
+
+def get_group_for_theme(theme_name):
+    """
+    Determina o grupo (equipments, commercial, infrastructure) para um tema.
+    Para temas especiais (bike_tags, footway_tags, etc.), retorna o nome do tema como-é.
+    
+    Args:
+        theme_name (str): Nome do tema (ex: 'amenity', 'shop', 'bike_tags', etc.)
+    
+    Returns:
+        str: Nome do grupo (equipments, commercial, infrastructure) ou o tema especial
+    """
+    # Temas que não são mapeados para grupos (retornam como-estão)
+    special_themes = {'bike_tags', 'footway_tags', 'public_transport_tags', 'water'}
+    
+    if theme_name in special_themes:
+        return theme_name
+    
+    # Para temas regulares, buscar no mapeamento
+    # Primeiro tenta chave exata, depois tenta apenas o tema base
+    if theme_name in THEME_GROUP_MAPPING:
+        return THEME_GROUP_MAPPING[theme_name]
+    
+    # Se não encontrado, retorna o tema como-está (fallback)
+    return theme_name
+
 
 # ==========================================
 # PROCESSAMENTO DE DADOS
@@ -522,7 +583,11 @@ def create_map(features_points, city_geom, key, columns_to_show=None, use_custom
 # FUNÇÕES DE EXPORTAÇÃO E ORQUESTRAÇÃO
 # ==========================================
 def save_files(m, features_points, save_path, key, tags_name=None, cd_mun=None, theme_name=None):
-    """Salva os resultados em HTML, Parquet e PMTiles com organização por cd_mun e tema."""
+    """Salva os resultados em HTML, Parquet e PMTiles com organização por cd_mun e grupo temático.
+    
+    O theme_name é mapeado para um grupo (equipments, commercial, infrastructure) ou mantido
+    como-é para temas especiais (bike_tags, footway_tags, public_transport_tags, water).
+    """
     if cd_mun is None or str(cd_mun).strip() == "":
         raise ValueError("cd_mun is required and cannot be empty.")
 
@@ -531,17 +596,21 @@ def save_files(m, features_points, save_path, key, tags_name=None, cd_mun=None, 
 
     cd_mun = str(cd_mun)
     theme_name = str(theme_name)
+    
+    # Mapeia o tema para seu grupo (equipments, commercial, infrastructure, ou tema especial)
+    group_name = get_group_for_theme(theme_name)
+    
     features_points = features_points.copy()
 
     if "id" in features_points.columns:
         features_points["id"] = features_points["id"].astype(str)
 
-    # Dados: organização por tema (Dados/Saída/{theme}/features_{cd_mun}.{ext})
-    data_theme_dir = os.path.join(save_path, theme_name)
-    os.makedirs(data_theme_dir, exist_ok=True)
+    # Dados: organização por grupo (Dados/Saída/{group}/features_{cd_mun}.{ext})
+    data_group_dir = os.path.join(save_path, group_name)
+    os.makedirs(data_group_dir, exist_ok=True)
 
-    # Docs: organização por município/tema (docs/mapas/{cd_mun}/{theme}/features_map.html)
-    html_dir = os.path.join("docs", "mapas", cd_mun, theme_name)
+    # Docs: organização por município/grupo (docs/mapas/{cd_mun}/{group}/features_map.html)
+    html_dir = os.path.join("docs", "mapas", cd_mun, group_name)
     os.makedirs(html_dir, exist_ok=True)
     html_file = os.path.join(html_dir, "features_map.html")
     m.save(html_file)
@@ -555,7 +624,7 @@ def save_files(m, features_points, save_path, key, tags_name=None, cd_mun=None, 
                 manifest = json.load(f)
         except json.JSONDecodeError:
             manifest = {}
-    manifest.setdefault(cd_mun, {})[theme_name] = f"mapas/{cd_mun}/{theme_name}/features_map.html"
+    manifest.setdefault(cd_mun, {})[group_name] = f"mapas/{cd_mun}/{group_name}/features_map.html"
     with open(manifest_file, "w", encoding="utf-8") as f:
         json.dump(manifest, f, ensure_ascii=False, indent=2, sort_keys=True)
 
@@ -574,11 +643,11 @@ def save_files(m, features_points, save_path, key, tags_name=None, cd_mun=None, 
         if "id" in parquet_gdf.columns:
             parquet_gdf["id"] = parquet_gdf["id"].astype(str)
 
-    pq_file = os.path.join(data_theme_dir, f"features_{cd_mun}.parquet")
+    pq_file = os.path.join(data_group_dir, f"features_{cd_mun}.parquet")
     parquet_gdf.to_parquet(pq_file, compression="snappy", index=False)
     print(f"Parquet saved: {pq_file}")
 
-    pmt_file = os.path.join(data_theme_dir, f"features_{cd_mun}.pmtiles")
+    pmt_file = os.path.join(data_group_dir, f"features_{cd_mun}.pmtiles")
     if os.path.exists(pmt_file):
         os.remove(pmt_file)
     try:
@@ -589,7 +658,7 @@ def save_files(m, features_points, save_path, key, tags_name=None, cd_mun=None, 
             encoding="utf-8",
             MINZOOM=0,
             MAXZOOM=14,
-            NAME=f"layer_{theme_name}_{cd_mun}"
+            NAME=f"layer_{group_name}_{cd_mun}"
         )
         print(f"PMTiles saved: {pmt_file}")
     except UnicodeEncodeError:

@@ -664,7 +664,23 @@ def save_files(m, features_points, save_path, key, tags_name=None, cd_mun=None, 
     except UnicodeEncodeError:
         print("Warning: Could not save PMTiles due to encoding issues. Skipping PMTiles export.")
 
-def process_key(key=None, tags=None, city_geom=None, save_path="Dados/Saída/", columns_to_show=None, tags_name=None, use_custom_type=False, custom_type='bike', cd_mun=None, theme_name=None):
+def _check_if_outputs_exist(save_path, cd_mun, theme_name):
+    """
+    Verifica se os arquivos de saída já existem para um determinado cd_mun e tema.
+    Retorna True se os arquivos existem (e, portanto, o processamento já foi feito).
+    """
+    cd_mun = str(cd_mun)
+    theme_name = str(theme_name)
+    group_name = get_group_for_theme(theme_name)
+    
+    # Verifica parquet
+    pq_file = os.path.join(save_path, group_name, f"features_{cd_mun}.parquet")
+    html_file = os.path.join("docs", "mapas", cd_mun, group_name, "features_map.html")
+    
+    return os.path.exists(pq_file) and os.path.exists(html_file)
+
+
+def process_key(key=None, tags=None, city_geom=None, save_path="Dados/Saída/", columns_to_show=None, tags_name=None, use_custom_type=False, custom_type='bike', cd_mun=None, theme_name=None, skip_existing=False):
     """
     Função principal que orquestra a execução ponta a ponta.
     Se key é None, processa todas as chaves em tags simultaneamente.
@@ -673,6 +689,7 @@ def process_key(key=None, tags=None, city_geom=None, save_path="Dados/Saída/", 
     custom_type: Tipo de categorização ('bike' ou 'footway')
                  - 'bike': Categorização de infraestrutura de bicicletas
                  - 'footway': Categorização de infraestrutura de pedestres
+    skip_existing: Se True, pula processamento se os arquivos de saída já existem
     """
     if cd_mun is None or str(cd_mun).strip() == "":
         raise ValueError("cd_mun is required and cannot be empty.")
@@ -681,12 +698,25 @@ def process_key(key=None, tags=None, city_geom=None, save_path="Dados/Saída/", 
     if resolved_theme_name is None or str(resolved_theme_name).strip() == "":
         raise ValueError("theme_name could not be resolved. Provide theme_name explicitly.")
 
+    # Verifica se deve pular por já existir
+    if skip_existing and _check_if_outputs_exist(save_path, cd_mun, resolved_theme_name):
+        print(f"⊘ Output files already exist for cd_mun={cd_mun}, theme={resolved_theme_name}. Skipping...")
+        return None
+
     if key is None:
         # Processa todas as chaves simultaneamente
         output_name = tags_name if tags_name else "all"
         print(f"\n{'='*50}\nProcessing all tags ({output_name}) for cd_mun={cd_mun}...\n{'='*50}")
         
-        features_points = fetch_and_process_features(city_geom, None, tags)
+        try:
+            features_points = fetch_and_process_features(city_geom, None, tags)
+        except Exception as err:
+            # Verifica se é erro de falta de features (InsufficientResponseError)
+            if "No matching features" in str(err):
+                print(f"⊘ No features found for cd_mun={cd_mun}, theme={resolved_theme_name}. Skipping...")
+                return None
+            # Se for outro erro, relança
+            raise
         
         # Aplica categorização personalizada se solicitado
         if use_custom_type:
@@ -706,7 +736,15 @@ def process_key(key=None, tags=None, city_geom=None, save_path="Dados/Saída/", 
         # Processa uma chave específica
         print(f"\n{'='*50}\nProcessing {key} for cd_mun={cd_mun}...\n{'='*50}")
         
-        features_points = fetch_and_process_features(city_geom, key, tags)
+        try:
+            features_points = fetch_and_process_features(city_geom, key, tags)
+        except Exception as err:
+            # Verifica se é erro de falta de features (InsufficientResponseError)
+            if "No matching features" in str(err):
+                print(f"⊘ No features found for cd_mun={cd_mun}, key={key}. Skipping...")
+                return None
+            # Se for outro erro, relança
+            raise
         
         # Aplica categorização personalizada se solicitado
         if use_custom_type:
